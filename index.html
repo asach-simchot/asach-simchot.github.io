@@ -534,6 +534,7 @@ body[data-page="upcoming"] #view,body[data-page="glance"] #view,body[data-page="
 body[data-page="glance"] #ringsec,body[data-page="tree"] #treesec{padding-top:26px}
 body[data-page="log"] #view,body[data-page="inbox"] #view{padding-top:22px}
 footer{margin-top:30px}.treesec{margin-top:6px}
+body[data-page="upcoming"] .orn-div.small,body[data-page="upcoming"] footer::before{display:none!important}body[data-page="upcoming"] footer{padding-top:8px}body[data-page]:not([data-page="table"]) .ftip{display:none}
 .cdtag{font-size:12.5px;color:var(--wine);font-weight:600;margin-inline-start:6px}
 .stcell{display:flex;flex-direction:column;align-items:flex-start;gap:3px}.stcell .cdtag{margin-inline-start:2px;white-space:nowrap}
 
@@ -2204,7 +2205,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
 <div class="sdlg" id="sendDlg" hidden role="dialog" aria-modal="true" aria-labelledby="sdTitle">
   <div class="sd-card" id="sdCard"></div>
 </div>
-<footer><span id="modeNote">טוען…</span><span>טיפ: Shift + לחיצה על כותרת מוסיפה מיון משני</span><button class="secret" id="secretBtn" title="עורך הנתונים" aria-label="עורך הנתונים"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M16 7l3 3M14 9l2 2"/></svg></button></footer>
+<footer><span id="modeNote">טוען…</span><span class="ftip">טיפ: Shift + לחיצה על כותרת מוסיפה מיון משני</span><button class="secret" id="secretBtn" title="עורך הנתונים" aria-label="עורך הנתונים"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M16 7l3 3M14 9l2 2"/></svg></button></footer>
 <div class="admin" id="admin" hidden role="dialog" aria-modal="true" aria-labelledby="adTitle">
   <div class="ad-head">
     <div><h2 id="adTitle">עורך הנתונים</h2><small id="adCount"></small></div>
