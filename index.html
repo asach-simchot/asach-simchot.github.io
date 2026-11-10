@@ -521,7 +521,18 @@ tr.grp td .chev{display:inline-block;width:14px;color:var(--gold)}
 .st-engaged{background:transparent;color:var(--wine);box-shadow:inset 0 0 0 1.5px currentColor}
 .st-waiting{background:var(--surface-2);color:var(--slate);box-shadow:inset 0 0 0 1px var(--line)}
 .st-waiting::before{background:none;box-shadow:inset 0 0 0 1.5px currentColor}
-.glance-stats{margin-top:22px}.treesec{margin-top:6px}
+.glance-stats{margin-top:0}
+body[data-page]:not([data-page="upcoming"]) .hero,body[data-page]:not([data-page="upcoming"]) .orn-strip,body[data-page]:not([data-page="upcoming"]) .orn-div{display:none!important}
+body[data-page]:not([data-page="glance"]) #ringsec{display:none!important}
+body[data-page]:not([data-page="tree"]) #treesec{display:none!important}
+body[data-page]:not([data-page="stats"]) #statsec{display:none!important}
+body[data-page="stats"] #view{display:none!important}
+body[data-page="stats"] #statsec{padding-top:26px}
+body[data-page]:not([data-page="table"]) #bar{display:none!important}
+body[data-page="upcoming"] #view,body[data-page="glance"] #view,body[data-page="tree"] #view{display:none!important}
+body[data-page="glance"] #ringsec,body[data-page="tree"] #treesec{padding-top:26px}
+body[data-page="log"] #view,body[data-page="inbox"] #view{padding-top:22px}
+footer{margin-top:30px}.treesec{margin-top:6px}
 .cdtag{font-size:12.5px;color:var(--wine);font-weight:600;margin-inline-start:6px}
 .stcell{display:flex;flex-direction:column;align-items:flex-start;gap:3px}.stcell .cdtag{margin-inline-start:2px;white-space:nowrap}
 
@@ -2105,6 +2116,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
     <button data-nav="upcoming">השמחות הקרובות</button>
     <button data-nav="glance">המחזור במבט אחד</button>
     <button data-nav="table">יאכנע צעטיל</button>
+    <button data-nav="stats">נתוני השיעור</button>
     <button data-nav="log">לוח פעולות<span class="tn-badge" id="tnLogBadge" hidden></span></button>
     <button data-nav="tree">עץ השיעור</button>
     <button data-nav="inbox" class="admin-only">תיבת הודעות<span class="tn-badge" id="tnInboxBadge" hidden></span></button>
@@ -2155,10 +2167,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
     <p class="cyc-last" id="lastEng"></p>
   </div>
   <div hidden><div id="ringWrap"><svg id="ring"></svg><div id="ringCenter"></div><div id="ringTip"></div></div></div>
-  <div class="glance-stats" id="glanceStats"></div>
 </section>
-<div class="orn-div small" aria-hidden="true"></div>
-<section class="wrap treesec" id="treesec" aria-label="עץ השיעור"><div id="treeBox"></div></section>
 
 <div class="orn-div small" aria-hidden="true"></div>
 <div class="bar" id="bar">
@@ -2189,6 +2198,8 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
 </div>
 
 <main class="wrap" id="view" tabindex="-1"></main>
+<section class="wrap statsec" id="statsec" aria-labelledby="statT"><div class="pg-head"><div><h2 id="statT">נתוני השיעור</h2><p>כל המספרים המעניינים על המחזור שלנו</p></div></div><div id="glanceStats"></div></section>
+<section class="wrap treesec" id="treesec" aria-label="עץ השיעור"><div id="treeBox"></div></section>
 <div class="sdlg" id="sendDlg" hidden role="dialog" aria-modal="true" aria-labelledby="sdTitle">
   <div class="sd-card" id="sdCard"></div>
 </div>
@@ -3573,8 +3584,10 @@ async function logAct(kind,r,prev){
 }
 function newLogCount(){ return PREV_VISIT?LOG.filter(x=>x.at>PREV_VISIT&&x.by!==ROLE.uid).length:0; }
 function newInboxCount(){ return INBOX.reduce((a,b)=>a+b.msgs.filter(m=>m.status!=='done').length,0); }
-function spyCur(){ const nh=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navh'))||56)+130; const top=el=>{ const e=$(el); return e?e.getBoundingClientRect().top:1e9; }; if(top('#bar')<=nh) return S.view==='log'?'log':S.view==='inbox'?'inbox':'table'; if(top('#treesec')<=nh) return 'tree'; if(top('#ringsec')<=nh) return 'glance'; return 'upcoming'; }
+function spyCur(){ const p=document.body.dataset.page||'upcoming'; return p; }
 let SPY_T=0; window.addEventListener('scroll',()=>{ clearTimeout(SPY_T); SPY_T=setTimeout(()=>{ const c=spyCur(); for(const b of $$('#topnav .tn-links [data-nav]')) b.setAttribute('aria-current',b.dataset.nav===c?'page':'false'); },60); },{passive:true});
+function setPage(p,push){ document.body.dataset.page=p; if(p==='tree'){ const t=$('#treeBox'); if(t&&S.rows.length) t.innerHTML=renderTree(S.rows); } if(p==='upcoming'||p==='glance'){ /* refresh visible parts */ }
+  if(push){ try{ history.replaceState(null,'','#'+p); }catch(e){} } window.scrollTo({top:0}); renderNav(); }
 function renderNav(){
   const cur=spyCur();
   for(const b of $$('#topnav [data-nav]')) if(b.tagName==='BUTTON'&&b.closest('.tn-links')) b.setAttribute('aria-current',b.dataset.nav===cur?'page':'false');
@@ -3590,13 +3603,14 @@ function renderNav(){
 }
 let SESSION_DISMISS=false;
 function navGo(n){
-  if(n==='home'){ window.scrollTo({top:0,behavior:'smooth'}); return; }
+  if(n==='home'){ setPage('upcoming',true); return; }
   if(n==='send'){ openSend({}); return; }
   if(n==='admin'){ openAdmin(); return; }
   if(n==='dismiss'){ SESSION_DISMISS=true; renderNav(); return; }
   if(n==='orn') return;
-  const SCR={upcoming:'.calwrap',glance:'#ringsec',tree:'#treesec'}; if(SCR[n]){ const el=$(SCR[n]); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); return; }
-  setView(n,true); renderNav(); const bar=$('#bar'); if(bar&&bar.scrollIntoView) bar.scrollIntoView({behavior:'smooth',block:'start'});
+  if(n==='upcoming'||n==='glance'||n==='tree'||n==='stats'){ setPage(n,true); return; }
+  if(n==='table'){ setPage('table',false); setView(['table','cards','simchas','timeline','map'].includes(S.view)?S.view:'table',true); renderNav(); window.scrollTo({top:0}); return; }
+  setView(n,true); renderNav(); window.scrollTo({top:0});
 }
 function dayKey(t){ const d=new Date(t); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
 function dayLabel(t){ const n=new Date(); const k=dayKey(t), kt=dayKey(n.getTime()), ky=dayKey(n.getTime()-DAY); if(k===kt) return 'היום'; if(k===ky) return 'אתמול'; const d=new Date(t); return `${gDay(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))}, ${d.getDate()}.${d.getMonth()+1}`; }
@@ -3896,12 +3910,13 @@ $('#scrim').addEventListener('click',closeDrawer);
 
 const VIEWS=['table','cards','simchas','timeline','stats','map','tree','log','inbox'];
 function setView(v,push){
-  if(v==='stats'||v==='tree') v='table';
+  if(v==='upcoming'||v==='glance'||v==='tree'||v==='stats'){ setPage(v,push); return; }
   if(!VIEWS.includes(v)) v='table';
+  document.body.dataset.page=(v==='log'||v==='inbox')?v:'table';
   S.view=v; closePop(); renderView(); livePresence();
   if(push){ try{ if(location.hash!=='#'+v) history.replaceState(null,'','#'+v); }catch(e){ try{location.hash=v}catch(e2){} } }
 }
-window.addEventListener('hashchange',()=>{ const h=location.hash.slice(1); if(h==='admin'){ if(!ADM.open) openAdmin(); return; } if(ADM.open) closeAdmin(); if(h&&h!==S.view) setView(h,false); });
+window.addEventListener('hashchange',()=>{ const h=location.hash.slice(1); if(h==='admin'){ if(!ADM.open) openAdmin(); return; } if(ADM.open) closeAdmin(); if(h&&h!==S.view&&h!==document.body.dataset.page) setView(h,false); });
 
 document.addEventListener('click',async e=>{
   const t=e.target;
@@ -4114,6 +4129,7 @@ setTimeout(cntScan,60);
 /* ================= boot ================= */
 setRows(SEED.map(r=>({...r,_k:'g'+r.id})));
 saveUI();
+document.body.dataset.page='upcoming';
 const h0=location.hash.slice(1); if(h0==='admin') openAdmin(); else if(h0) setView(h0,false);
 P.init();
 </script>
