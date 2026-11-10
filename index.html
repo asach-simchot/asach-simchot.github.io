@@ -19,7 +19,10 @@
 (function(){
 var SB_URL='https://fqjplixvswnoyegncebh.supabase.co', SB_KEY='sb_publishable_cBNDiw702AsTekI5HRANqA_P9TokMbu';
 var W3F_KEY='e39aaa66-77aa-438a-b716-0fe43790fca4';  /* Web3Forms access key */
-var sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
+var HASH_TOK=null;
+try{ if(/access_token=/.test(location.hash)){ var hp=new URLSearchParams(location.hash.slice(1)); HASH_TOK={access_token:hp.get('access_token'),refresh_token:hp.get('refresh_token')}; history.replaceState(null,'',location.pathname+location.search); }
+  else if(/error_description=/.test(location.hash)){ var he=new URLSearchParams(location.hash.slice(1)); window.ASACH_LOGIN_ERR=he.get('error_description'); history.replaceState(null,'',location.pathname+location.search); } }catch(e){}
+var sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'implicit',detectSessionInUrl:false,persistSession:true,autoRefreshToken:true}});
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
 function ssg(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } }
 var uid=ls('asach-uid'); if(!uid||!/^v_[a-z0-9]{8,40}$/.test(uid)){ uid='v_'+Array.from(crypto.getRandomValues(new Uint8Array(12))).map(function(b){return (b%36).toString(36);}).join(''); ls('asach-uid',uid); }
@@ -29,9 +32,9 @@ var A=window.ASACH={sb:sb,code:null,isAdmin:false,email:null,uid:uid,codeReady:c
   checkCode:async function(c){ try{ var r=await sb.rpc('check_code',{p_code:c}); return !r.error&&r.data===true; }catch(e){ return false; } }
 };
 A.adminReady=(async function(){
-  try{ var s=(await sb.auth.getSession()).data.session; if(!s) return false;
+  try{ if(HASH_TOK&&HASH_TOK.access_token){ try{ await sb.auth.setSession(HASH_TOK); }catch(e){} }
+    var s=(await sb.auth.getSession()).data.session; if(!s) return false;
     var r=await sb.rpc('is_admin'); A.isAdmin=!r.error&&r.data===true; A.email=s.user.email;
-    if(s&&/[?&]code=/.test(location.search)){ history.replaceState(null,'',location.pathname+location.hash); }
     return A.isAdmin; }catch(e){ return false; }
 })();
 function adminId(){ var h=0,s=A.email||''; for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; } return 'a_'+(h>>>0).toString(36); }
@@ -73,7 +76,8 @@ async function load(){
         var r2=await sb.rpc('my_inbox',{p_code:A.code,p_uid:uid}); if(!r2.error&&r2.data) rows.push({path:'inbox/'+uid,data:r2.data});
       }
       CACHE=new Map(rows.map(function(x){ return [x.path,x.data]; }));
-      fire(false);
+      try{ ls('asach-cache',JSON.stringify(rows)); }catch(e){}
+      A.loaded=true; fire(false); goCount();
     } finally { loading=null; }
   })();
   return loading;
@@ -116,7 +120,9 @@ var DB={ collection:function(n){ return query({name:n}); }, doc:function(p){ ret
 var started=false;
 async function startDb(){
   await A.adminReady; if(!A.isAdmin) await codeReady;
-  await load();
+  var cached=null; try{ cached=JSON.parse(ls('asach-cache')||'null'); }catch(e){}
+  if(Array.isArray(cached)&&cached.length){ CACHE=new Map(cached.map(function(x){ return [x.path,x.data]; })); A.loaded=true; setTimeout(goCount,60); load().catch(function(){}); }
+  else await load();
   if(!started){ started=true;
     setInterval(function(){ if(!document.hidden) load().catch(function(){}); },25000);
     document.addEventListener('visibilitychange',function(){ if(!document.hidden) load().catch(function(){}); });
@@ -131,6 +137,13 @@ var USER={
 var DL={ save:async function(o){ var url=URL.createObjectURL(o.data); var a=document.createElement('a'); a.href=url; a.download=o.filename||'file'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},4000); } };
 window.claude={ use:async function(n){ if(n==='db') return startDb(); if(n==='user'){ await A.adminReady; if(!A.isAdmin) await codeReady; return USER; } if(n==='downloads') return DL; return null; } };
 
+function goCount(){ if(!A.loaded||!A.gateDone) return; setTimeout(function(){ window.CNT_GO=true; if(typeof window.cntScan==='function') window.cntScan(); },80); }
+A.gateOpen=function(){ A.gateDone=true; goCount(); var o=document.getElementById('asachLoading'); if(o&&A.loaded) o.remove(); };
+var loadEl=function(){ if(A.loaded||document.getElementById('asachLoading')) return; var d=document.createElement('div'); d.id='asachLoading'; d.innerHTML='<span></span>טוען את הנתונים…'; document.body.appendChild(d); };
+codeReady.then(function(){ setTimeout(loadEl,300); });
+A.adminReady.then(function(ok){ if(ok) setTimeout(loadEl,300); });
+var _f=fire; fire=function(x){ _f(x); var o=document.getElementById('asachLoading'); if(o&&A.loaded) o.remove(); };
+
 /* ---------- admin sign-in (magic link) ---------- */
 function loginDlg(){
   var o=document.getElementById('admLogin'); if(o){ o.hidden=false; return; }
@@ -143,8 +156,8 @@ function loginDlg(){
     var em=document.getElementById('alEmail').value.trim(), msg=document.getElementById('alMsg');
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ msg.textContent='כתובת המייל לא תקינה'; return; }
     msg.textContent='שולח…';
-    var r=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});
-    msg.textContent=r.error?('השליחה לא הצליחה: '+(r.error.message||'')):'נשלח! פתחו את המייל ולחצו על הקישור (בדקו גם בספאם).';
+    var r=await sb.auth.signInWithOtp({email:em.toLowerCase(),options:{emailRedirectTo:location.origin+location.pathname}});
+    msg.textContent=r.error?(/rate|limit|seconds/i.test(r.error.message||'')?'נשלחו יותר מדי קישורים. נסו שוב בעוד כמה דקות.':'השליחה לא הצליחה: '+(r.error.message||'')):'נשלח! פתחו את המייל ולחצו על הקישור (בדקו גם בספאם). אפשר לפתוח אותו גם בטלפון.';
   };
   setTimeout(function(){ document.getElementById('alEmail').focus(); },50);
 }
@@ -153,7 +166,8 @@ document.addEventListener('click',function(e){
   var li=e.target.closest&&e.target.closest('#admLoginBtn'); if(li){ e.preventDefault(); loginDlg(); }
   var lo=e.target.closest&&e.target.closest('#admLogout'); if(lo){ e.preventDefault(); sb.auth.signOut().then(function(){ location.reload(); }); }
 },true);
-A.adminReady.then(function(ok){ var f=function(){ var ft=document.querySelector('footer'); if(!ft){ return setTimeout(f,300); } var b=document.createElement('button'); b.type='button'; b.id=ok?'admLogout':'admLoginBtn'; b.className='adm-link'; b.textContent=ok?'יציאה ממצב מנהל':'כניסת מנהל'; ft.appendChild(b); }; f(); });
+A.adminReady.then(function(ok){ setTimeout(function(){ var t=null; if(window.ASACH_LOGIN_ERR) t='קישור הכניסה פג תוקף או כבר נוצל. בקשו קישור חדש.'; else if(HASH_TOK&&ok) t='נכנסת כמנהל ✓'; else if(HASH_TOK&&!ok) t='המייל הזה לא מוגדר כמנהל האתר.'; if(t){ var d=document.createElement('div'); d.className='asach-toast'; d.textContent=t; document.body.appendChild(d); setTimeout(function(){ d.remove(); },6000); } },1200);
+  var f=function(){ var ft=document.querySelector('footer'); if(!ft){ return setTimeout(f,300); } var b=document.createElement('button'); b.type='button'; b.id=ok?'admLogout':'admLoginBtn'; b.className='adm-link'; b.textContent=ok?'יציאה ממצב מנהל':'כניסת מנהל'; ft.appendChild(b); }; f(); });
 })();
 
 </script>
@@ -165,6 +179,10 @@ A.adminReady.then(function(ok){ var f=function(){ var ft=document.querySelector(
 #admLogin input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #C9AE77;border-radius:10px;font-size:16px;margin-bottom:12px}
 #admLogin .al-row{display:flex;gap:8px}#admLogin button{border:0;border-radius:10px;padding:9px 16px;font-weight:700;font-size:15px;cursor:pointer;background:#7A1F1F;color:#FFF6E2}
 #admLogin button.ghost{background:transparent;color:#7A1F1F;border:1px solid #7A1F1F}
+#asachLoading{position:fixed;inset:auto 0 24px 0;margin:auto;width:max-content;z-index:9000;background:#2A1E0E;color:#F8EDD5;padding:10px 18px;border-radius:999px;font:600 15px Assistant,sans-serif;display:flex;gap:10px;align-items:center;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+#asachLoading span{width:14px;height:14px;border-radius:50%;border:2px solid rgba(248,237,213,.35);border-top-color:#F0CF7C;animation:asSpin .8s linear infinite}
+@keyframes asSpin{to{transform:rotate(360deg)}}
+.asach-toast{position:fixed;top:70px;inset-inline:0;margin:auto;width:max-content;max-width:90vw;z-index:9999;background:#7A1F1F;color:#FFF6E2;padding:10px 18px;border-radius:12px;font:700 15px Assistant,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.3)}
 #admLogin .al-msg{margin-top:10px;min-height:1em;font-weight:600}
 .adm-link{all:unset;cursor:pointer;font-size:13px;color:var(--muted,#8a7a5a);text-decoration:underline;opacity:.75}
 </style>
@@ -2055,10 +2073,10 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
 (function(){
   var g=document.getElementById('gate'), A=window.ASACH;
   var f=document.getElementById('gateForm'), inp=document.getElementById('gateCode'), err=document.getElementById('gateErr');
-  function pass(c){ A.setCode(c); try{ if(c) sessionStorage.setItem('asach-code',c); }catch(e){} if(!g.parentNode) return; g.classList.add('out'); document.documentElement.classList.remove('gated'); setTimeout(function(){ g.remove(); },450); }
+  function pass(c){ A.setCode(c); try{ if(c) localStorage.setItem('asach-code',c); }catch(e){} if(!g.parentNode) return; g.classList.add('out'); document.documentElement.classList.remove('gated'); setTimeout(function(){ g.remove(); A.gateOpen(); },450); }
   document.documentElement.classList.add('gated');
-  var saved=null; try{ saved=sessionStorage.getItem('asach-code'); }catch(e){}
-  if(saved){ g.style.display='none'; A.checkCode(saved).then(function(ok){ if(ok) pass(saved); else { g.style.display=''; try{sessionStorage.removeItem('asach-code');}catch(e){} } }); }
+  var saved=null; try{ saved=localStorage.getItem('asach-code')||sessionStorage.getItem('asach-code'); }catch(e){}
+  if(saved){ g.style.display='none'; pass(saved); A.checkCode(saved).then(function(ok){ if(!ok){ try{localStorage.removeItem('asach-code');localStorage.removeItem('asach-cache');}catch(e){} location.reload(); } }); }
   A.adminReady.then(function(ok){ if(ok) pass(saved||''); });
   setTimeout(function(){ try{ inp.focus(); }catch(e){} },80);
   var busy=false;
@@ -2204,7 +2222,7 @@ const SHEET_KEYS = Object.keys(SHEET_MAP);
 const LBL = Object.assign(Object.fromEntries(FIELDS),{status:'מצב',region:'אזור',engM:'חודש אירוסין',wedM:'חודש חתונה',kids:'ילדים'});
 const COL_ORDER = ['ord','name','status','phone','email','res','street','apt','father','fcity','mech','mcity','shad','eng','wed','hall','shtr','music','singer','kids','id','notes'];
 const COL_LBL = Object.assign({},LBL,{ord:'#'});
-const DEFAULT_COLS = ['ord','name','status','phone','res','father','fcity','mech','shad','eng','wed','hall','shtr','kids'];
+const DEFAULT_COLS = ['ord','name','status','phone','email','res','street','apt','father','fcity','mech','shad','eng','wed','hall','shtr','kids'];
 const FACETS = ['status','region','res','fcity','hall','shtr','shad','music','singer','engM','wedM'];
 const GROUPS = [['','ללא קיבוץ'],['status','קיבוץ לפי מצב'],['region','לפי אזור'],['res','לפי עיר מגורים'],['fcity','לפי עיר ההורים'],['hall','לפי אולם'],['shtr','לפי שטריימל'],['shad','לפי שדכן'],['engM','לפי חודש אירוסין'],['wedM','לפי חודש חתונה']];
 const ST = {married:'נשוי',engaged:'מאורס',waiting:'בקרוב'};
@@ -2349,7 +2367,8 @@ const S = {
 };
 if(!S.cols.includes('name')) S.cols.unshift('name');
 if(!UI.v2){ if(!S.cols.includes('kids')) S.cols.push('kids'); }
-function saveUI(){ lsSet('yachne-ui',{sort:S.sort,group:S.group,cols:S.cols,dense:S.dense,theme:UI.theme||'',v2:1}); }
+if(!UI.v3){ for(const k of ['email','street','apt']) if(!S.cols.includes(k)) S.cols.push(k); }
+function saveUI(){ lsSet('yachne-ui',{sort:S.sort,group:S.group,cols:S.cols,dense:S.dense,theme:UI.theme||'',v2:1,v3:1}); }
 
 /* ================= derive ================= */
 function normKids(v){
@@ -4054,7 +4073,8 @@ function cntRun(el){
   const step=now=>{ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3); el.textContent=p.pre+cntFmt(p.from+(p.num-p.from)*e,p.dec)+p.post; if(k<1&&el.isConnected) requestAnimationFrame(step); else { el.textContent=p.pre+cntFmt(p.num,p.dec)+p.post; if(el.isConnected&&p.key) CNT.done.add(p.key); } };
   requestAnimationFrame(step);
 }
-function cntScan(){
+window.cntScan=cntScan;function cntScan(){
+  if(!window.CNT_GO) return;
   for(const sel of CNT_SEL){
     $$(sel).forEach((el,i)=>{
       if(el.dataset.cnt||el.children.length) return; el.dataset.cnt='1';
