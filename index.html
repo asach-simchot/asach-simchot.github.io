@@ -3073,26 +3073,36 @@ function mapMark(){ for(const [k,m] of Object.entries(MAPDOTS)){ const p=m.getEl
 function mountMap(list){
   const el=$('#map'); if(!el) return;
   mapSide(list);
-  if(MAP){ try{ MAPV.center=MAP.getCenter(); MAPV.zoom=MAP.getZoom(); MAP.remove(); }catch(e){} MAP=null; }
+  if(MAP){ try{ MAPV.center=MAP.getCenter(); MAPV.zoom=MAP.getZoom(); MAP.remove(); }catch(e){} MAP=null; } MAPL=null; ALLP=null; MAPSIG='';
   if(!window.L){ el.innerHTML='<div class="map-off">המפה לא נטענה כרגע. רעננו את הדף כדי לנסות שוב.</div>'; return; }
   MAP=L.map(el,{attributionControl:false,worldCopyJump:true,minZoom:2,maxZoom:10,zoomSnap:.5,zoomDelta:.5});
   if(MAPV.center&&MAPV.zoom!=null) MAP.setView(MAPV.center,MAPV.zoom,{animate:false});
   else MAP.fitBounds([[24,-82],[57,42]],{animate:false});
   if(GEO) L.geoJSON(GEO,{className:'m-land',interactive:false}).addTo(MAP);
   else if(window.topojson&&!window.GEO_LOADING){ window.GEO_LOADING=fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json').then(r=>r.json()).then(t=>{ GEO=topojson.feature(t,t.objects.countries); if(MAP) L.geoJSON(GEO,{className:'m-land',interactive:false}).addTo(MAP).bringToBack(); }).catch(()=>{ window.GEO_LOADING=null; }); }
+  mapMarkers(list);
+  setTimeout(()=>{ try{ MAP&&MAP.invalidateSize(); }catch(e){} },60);
+}
+let MAPL=null, MAPSIG='';
+function mapMarkers(list){
+  if(!MAP) return;
+  const sig=MAPV.field+'#'+list.map(r=>r._k+':'+cityKey(r[MAPV.field])+':'+pinQ(r)+':'+r.name).join('|');
+  if(MAPL&&MAP.hasLayer(MAPL)&&sig===MAPSIG){ mapMark(); return; }
+  MAPSIG=sig;
+  if(MAPL){ try{ MAPL.remove(); }catch(e){} } MAPL=L.layerGroup().addTo(MAP);
+  if(ALLP){ try{ ALLP.remove(); }catch(e){} ALLP=null; } PINBY={};
   MAPDOTS={}; MAPNUM={};
   const {g}=mapGroups(list);
   const ents=[...g.entries()].filter(([k])=>CITY[k]).sort((a,b)=>b[1].length-a[1].length);
   if(MAPV.field==='res'){ allPins(list); } else for(const [k,rs] of ents){
     const c=CITY[k], rad=8+Math.sqrt(rs.length)*5;
-    const m=L.circleMarker(c,{radius:rad,className:'m-dot',weight:2}).addTo(MAP);
+    const m=L.circleMarker(c,{radius:rad,className:'m-dot',weight:2}).addTo(MAPL);
     m.bindTooltip(`<b>${esc(k)}</b> · ${rs.length===1?'בוגר אחד':rs.length+' בוגרים'}`,{direction:'top',offset:[0,-rad],className:'m-tip'});
     m.on('click',()=>{ MAPV.sel=k; mapMark(); mapSide(list); cityPins(list,true); });
-    MAPNUM[k]=L.marker(c,{icon:L.divIcon({className:'m-num',html:`<span>${rs.length}</span>`,iconSize:[28,28],iconAnchor:[14,14]}),interactive:false,keyboard:false}).addTo(MAP);
+    MAPNUM[k]=L.marker(c,{icon:L.divIcon({className:'m-num',html:`<span>${rs.length}</span>`,iconSize:[28,28],iconAnchor:[14,14]}),interactive:false,keyboard:false}).addTo(MAPL);
     MAPDOTS[k]=m;
   }
   mapMark();
-  setTimeout(()=>{ try{ MAP&&MAP.invalidateSize(); }catch(e){} },60);
 }
 /* --- each graduate at his own address --- */
 const GEOC_KEY='asach-geo-v1'; let GEOC=null, GEOQ=Promise.resolve(), GEO_LAST=0;
@@ -3113,7 +3123,7 @@ function pinDecSoon(){ clearTimeout(PDT); PDT=setTimeout(pinDeclutter,60); }
 function geoSaveRow(r,q,ll){
   r.geo={q,ll};
   if(!(ROLE.ready&&ROLE.admin&&P.mode==='db'&&P.col)) return;
-  const cur=S.rows.find(x=>x._k===r._k); if(!cur) return; cur.geo={q,ll};
+  const cur=S.rows.find(x=>x._k===r._k); if(!cur) return; if(cur.geo&&cur.geo.q===q&&cur.geo.ll&&cur.geo.ll[0]===ll[0]&&cur.geo.ll[1]===ll[1]) return; cur.geo={q,ll};
   try{ P.col.doc(r._k).set(P.clean(cur)).catch(()=>{}); }catch(e){}
 }
 function allPins(list){
@@ -3156,7 +3166,7 @@ function renderView(){
   else if(S.view==='timeline') v.innerHTML=renderTimeline(list);
   else if(S.view==='stats') v.innerHTML=renderStats(list);
   else if(S.view==='simchas') v.innerHTML=renderSimchas(list);
-  else if(S.view==='map'){ v.innerHTML=mapShell(); mountMap(list); }
+  else if(S.view==='map'){ const me=$('#map'); if(me&&MAP&&MAP.getContainer()===me&&MAPV._f===MAPV.field){ mapSide(list); mapMarkers(list); } else { v.innerHTML=mapShell(); MAPV._f=MAPV.field; mountMap(list); } }
   else if(S.view==='tree') v.innerHTML=renderTree(list);
   else v.innerHTML=renderTable(list);
 }
