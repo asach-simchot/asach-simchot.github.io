@@ -4633,8 +4633,8 @@ body.tbl-lock .tbl-hscroll{display:none!important}
 body.tbl-lock footer{display:none!important}
 @media print{body.tbl-lock{overflow:visible}}
 </style><script>(function(){
-function tblFit(){ var w=document.querySelector('.tbl-wrap'); var on=false; try{ on=document.body.dataset.page==='table'&&S.view==='table'&&!!w&&!!w.offsetParent; }catch(e){}
-  document.body.classList.toggle('tbl-lock',on); if(!on){ if(w) w.style.height=''; return; }
+function tblFit(){ var w=document.querySelector('.tbl-wrap'); var on=false; try{ on=document.body.dataset.page==='table'&&S.view==='table'&&!!w&&(!!w.offsetParent||w.getClientRects().length>0); }catch(e){}
+  document.body.classList.toggle('tbl-lock',on); if(!on){ if(w) w.style.height=''; return; } if(document.body.classList.contains('tbl-max')) return;
   if(window.scrollY) window.scrollTo(0,0);
   var top=w.getBoundingClientRect().top; w.style.height=Math.max(240,Math.floor(window.innerHeight-top-12))+'px'; }
 window.tblFit=tblFit;
