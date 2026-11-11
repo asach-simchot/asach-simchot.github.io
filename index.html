@@ -3571,6 +3571,8 @@ let KVX={};
 function kvFirst(r){ if(ws(r.tname)) return ws(r.tname); const w=ws(r.name).split(' ').filter(Boolean); return w.length>1?w.slice(0,-1).join(' '):(w[0]||''); }
 function kvMale(r){ return ws(r.mother)?`${kvFirst(r)} בן ${ws(r.mother)}`:''; }
 function kvFem(r){ const k=ws(r.kala); if(!k) return ''; return ws(r.kmother)?`${k} בת ${ws(r.kmother)}`:k; }
+function kvSur(r){ const w=ws(r.name).split(' ').filter(Boolean); return w.length>1?w[w.length-1]:''; }
+function kvMaleS(r){ const m=kvMale(r); if(!m) return ''; const s=kvSur(r); return s?`${m} (${s})`:m; }
 function kvCouple(r){ return [kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).map(esc).join('<br>ו'); }
 const KV_CANDLE=`<svg class="kv-candle" viewBox="0 0 40 120" aria-hidden="true"><defs><radialGradient id="kvGlow"><stop offset="0" stop-color="#FFE7A0" stop-opacity=".85"/><stop offset="1" stop-color="#FFB24A" stop-opacity="0"/></radialGradient><linearGradient id="kvWax" x1="0" x2="1"><stop offset="0" stop-color="#DCCFB0"/><stop offset=".5" stop-color="#FBF5E6"/><stop offset="1" stop-color="#CDBF9E"/></linearGradient></defs><circle class="kv-glow" cx="20" cy="20" r="20" fill="url(#kvGlow)"/><path class="kv-flame" d="M20 6c4 7 6.5 11 6.5 15.5a6.5 6.5 0 0 1-13 0C13.5 17 16 13 20 6z" fill="#FFCE5C"/><path class="kv-flame" d="M20 14c2 4 3 6 3 8.4a3 3 0 0 1-6 0c0-2.4 1-4.4 3-8.4z" fill="#FFF6D6"/><rect x="19.3" y="27" width="1.4" height="6" fill="#2A1E0E"/><rect x="11.5" y="33" width="17" height="77" rx="2" fill="url(#kvWax)"/><rect x="6" y="108" width="28" height="7" rx="2.5" fill="#A8833A"/></svg>`;
 function kvSorted(){ return [...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name)); }
@@ -3583,7 +3585,7 @@ function renderKvitel(){
   if(today.length) top=`<div class="kv-today"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><p class="kv-tt">${today.length>1?'היום יום חתונתם':'היום יום חתונתו'}</p><p class="kv-now">זה הזמן להתפלל על</p>${today.map(r=>`<p class="kv-names">${kvCouple(r)}</p>`).join('<div class="kv-sep" aria-hidden="true"></div>')}<p class="kv-nus">${esc(KV_NUSACH)}</p><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div></div>`;
   else if(next) top=`<p class="kv-next">החתונה הבאה במחזור: <button data-id="${esc(next._k)}">${esc(next.name)}</button>${countdown(next._w)?', '+countdown(next._w):''}</p>`;
   const reb=Array.isArray(KVX.rebbeim)&&KVX.rebbeim.length?`<div class="kv-reb">${KVX.rebbeim.map((l,i,a)=>`<p class="${i===a.length-1?'kv-reb-bl':''}">${esc(l)}</p>`).join('')}</div>`:'';
-  const item=(r,d)=>{ const m=kvMale(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}${d&&r._w?`<small class="kv-d">${esc(hebLabel(r._w))}</small>`:''}</button></li>`; };
+  const item=(r,d)=>{ const m=kvMaleS(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}${d&&r._w?`<small class="kv-d">${esc(hebLabel(r._w))}</small>`:''}</button></li>`; };
   const sec=(title,list,bl,d,extra='')=>(list.length||extra)?`<section class="kv-sec"><h3 class="kv-h"><span>${title}</span></h3>${list.length?`<ul class="kv-list">${list.map(r=>item(r,d)).join('')}</ul>`:''}${extra}<p class="kv-bl">${esc(bl)}</p></section>`:'';
   const pk=Array.isArray(KVX.pokkei)&&KVX.pokkei.length?`<p class="kv-sub">פוקקי פקוקים</p><ul class="kv-list kv-list-s">${KVX.pokkei.map(n=>`<li><span class="kv-m">${esc(n)}</span></li>`).join('')}</ul>`:'';
   const eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
@@ -3607,7 +3609,7 @@ function kvNostalgia(r){
 }
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-kvcopy]'); if(!b) return;
   const rows=kvSorted();
-  const txt=[...rows.map(r=>[kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).join('\n')),...(Array.isArray(KVX.pokkei)?KVX.pokkei:[])].join('\n');
+  const txt=[...rows.map(r=>[kvMaleS(r)||ws(r.name),kvFem(r)].filter(Boolean).join('\n')),...(Array.isArray(KVX.pokkei)?KVX.pokkei:[])].join('\n');
   const done=()=>{ try{ toast('כל השמות הועתקו'); }catch(e){} };
   try{ navigator.clipboard.writeText(txt).then(done,()=>{}); }catch(e){} });
 function setRows(rows){ S.rows=derive(rows.map(r=>({...r}))); render(); if((D.key||D.isNew)&&!D.edit&&!D.kid&&!D.xtra) renderDrawer(); if(!BP_DONE) setTimeout(birthPop,700); renderKvitel(); }
