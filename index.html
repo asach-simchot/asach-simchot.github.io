@@ -3728,7 +3728,7 @@ function kvDocHtml(word){
   const box=(title,inner)=>`<table class="bx" width="100%" cellspacing="0" cellpadding="0"><tr><td class="bxi"><p class="h">${title}</p>${inner}</td></tr></table>`;
   const bl=t=>`<p class="bl">${esc(t)}</p>`;
   const left=(wt.length?box('בחורים',grid(wt.map(r=>cell(r)),2)):'')+(pk.length?box('פוקקי פקוקים',grid(pk.map(n=>`<p class="m">${esc(n)}</p>`),1)):'')+((wt.length||pk.length)?bl(KV_BL.waiting):'');
-  const right=eng.length?box('חתנים',grid(eng.map(r=>cell(r,true)),2))+bl(KV_BL.engaged):'';
+  const right=eng.length?box('חתנים',grid(eng.map(r=>cell(r,true)),3))+bl(KV_BL.engaged):'';
   const top=(left||right)?`<table width="100%" cellspacing="0" cellpadding="0"><tr><td width="49%" valign="top">${left}</td><td width="2%"></td><td width="49%" valign="top">${right}</td></tr></table>`:'';
   const mid=mr.length?box('נשואים',grid(mr.map(r=>cell(r)),4))+bl(KV_BL.married):'';
   const low='';
@@ -3737,13 +3737,13 @@ function kvDocHtml(word){
 ${word?'@page Section1{size:841.9pt 595.3pt;mso-page-orientation:landscape;margin:34pt 34pt 34pt 34pt}div.Section1{page:Section1}':''}
 body{margin:0;direction:rtl;font-family:David,'David Libre','Frank Ruhl Libre',serif;color:#2A1E0E;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 p{margin:0}
-.frame{border:4px double #6B4A1C;padding:14pt 16pt 10pt}
-.ti{text-align:center;font-size:30pt;font-weight:bold;color:#5A3E17;margin:0 0 2pt}
-.st{text-align:center;font-size:12pt;color:#8A6A30;margin:0 0 6pt}
+.frame{border:4px double #6B4A1C;padding:10pt 14pt 6pt}
+.ti{text-align:center;font-size:26pt;font-weight:bold;color:#5A3E17;margin:0}
+.st{text-align:center;font-size:11pt;color:#8A6A30;margin:0 0 4pt}
 .rb{text-align:center;font-size:13.5pt;font-weight:bold;margin:0}
 .ti2{text-align:center;font-size:16pt;font-weight:bold;color:#5A3E17;margin:0 0 6pt}
-.rbl{text-align:center;font-size:12pt;color:#8A6A30;margin:2pt 0 10pt}
-.orn{text-align:center;color:#A8833A;font-size:11pt;margin:2pt 0 8pt;letter-spacing:4pt}
+.rbl{text-align:center;font-size:11pt;color:#8A6A30;margin:1pt 0 4pt}
+.orn{text-align:center;color:#A8833A;font-size:9pt;margin:0 0 5pt;letter-spacing:4pt}
 .bx{border:3px double #8C6A2E;margin:0 0 4pt;background:#FFFCF3}
 .bxi{padding:6pt 8pt 4pt}
 .h{text-align:center;font-size:15pt;font-weight:bold;color:#5E4318;margin:0 0 6pt;border-bottom:1px solid #C9A55A;padding-bottom:3pt}
@@ -3753,7 +3753,7 @@ p{margin:0}
 .f{font-size:10.5pt;text-align:center;color:#4E3A18}
 .d{font-size:9pt;text-align:center;color:#8C6A2E}
 .sp{font-size:4pt;line-height:4pt}
-.bl{text-align:center;font-size:10pt;color:#4E3A18;margin:3pt 0 10pt;line-height:1.5}
+.bl{text-align:center;font-size:9.5pt;color:#4E3A18;margin:2pt 0 6pt;line-height:1.4}
 table{page-break-inside:auto}
 tr{page-break-inside:avoid}`;
   const pb=word?`<br clear="all" style="page-break-before:always">`:`<div style="page-break-before:always;break-before:page"></div>`;
