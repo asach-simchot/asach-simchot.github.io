@@ -2279,7 +2279,6 @@ html.gated,html.gated body{overflow:hidden}
 .bar{top:calc(env(safe-area-inset-top,0px) + var(--navh,56px))}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 70px)}
 </style>
-<link rel="stylesheet" href="compact-table.css">
 </head>
 <body class="ro">
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
@@ -4642,5 +4641,29 @@ window.tblFit=tblFit;
 ['renderView','setPage','setView','navGo'].forEach(function(n){ var f=window[n]; if(typeof f!=='function') return; window[n]=function(){ var r=f.apply(this,arguments); requestAnimationFrame(tblFit); setTimeout(tblFit,120); return r; }; });
 addEventListener('resize',function(){ requestAnimationFrame(tblFit); });
 setTimeout(tblFit,300);
+})();</script>
+<style>/* table: optional full-size view */
+.tbl-max-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:10px;border:1px solid #C9A55A;background:linear-gradient(160deg,#6E4C1D,#3E2A0F);color:#F6E3A8;font-weight:700;font-size:13.5px;cursor:pointer;box-shadow:0 6px 14px -8px rgba(40,25,5,.8),inset 0 1px 0 rgba(255,236,190,.25);white-space:nowrap}
+.tbl-max-btn:hover{filter:brightness(1.12)}
+.tbl-max-btn svg{width:15px;height:15px}
+.tbl-max-x{display:none}
+body.tbl-max{overflow:hidden}
+body.tbl-max::before{content:"";position:fixed;inset:0;z-index:58;background:radial-gradient(ellipse 80% 70% at 50% 40%,rgba(42,30,16,.55),rgba(15,10,5,.78));backdrop-filter:blur(2px)}
+body.tbl-max .tbl-wrap{position:fixed;z-index:59;top:var(--tmx-top,64px);left:max(14px,2vw);right:max(14px,2vw);bottom:14px;height:auto!important;max-height:none!important;border:2px solid #C9A55A;border-radius:14px;box-shadow:0 0 0 5px #4B3313,0 0 0 6px rgba(217,184,102,.8),0 40px 90px -20px rgba(0,0,0,.75)}
+body.tbl-max .tbl-max-x{display:inline-flex;position:fixed;z-index:60;top:calc(var(--tmx-top,64px) - 46px);left:max(14px,2vw)}
+@media print{.tbl-max-btn,.tbl-max-x{display:none!important}}
+</style><script>(function(){
+var ICO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+var ICO2='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+function setMax(on){ document.body.classList.toggle('tbl-max',on); if(on){ var n=document.getElementById('topnav'); var t=n?Math.round(n.getBoundingClientRect().bottom)+56:64; document.body.style.setProperty('--tmx-top',t+'px'); } if(window.tblFit) setTimeout(window.tblFit,30); }
+function ensure(){ var on=document.body.classList.contains('tbl-lock'); var bar=document.querySelector('#bar .bar-in')||document.getElementById('bar');
+  var b=document.getElementById('tblMaxBtn');
+  if(on&&bar&&!b){ b=document.createElement('button'); b.id='tblMaxBtn'; b.type='button'; b.className='tbl-max-btn'; b.innerHTML=ICO+'הגדלת הטבלה'; b.addEventListener('click',function(){ setMax(true); }); bar.appendChild(b); }
+  if(b) b.style.display=on?'':'none';
+  var x=document.getElementById('tblMaxX'); if(!x){ x=document.createElement('button'); x.id='tblMaxX'; x.type='button'; x.className='tbl-max-btn tbl-max-x'; x.innerHTML=ICO2+'חזרה לגודל רגיל'; x.addEventListener('click',function(){ setMax(false); }); document.body.appendChild(x); }
+  if(!on&&document.body.classList.contains('tbl-max')) setMax(false); }
+addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.body.classList.contains('tbl-max')) setMax(false); });
+new MutationObserver(function(){ ensure(); }).observe(document.body,{attributes:true,attributeFilter:['class']});
+setTimeout(ensure,400);
 })();</script>
 </body></html>
