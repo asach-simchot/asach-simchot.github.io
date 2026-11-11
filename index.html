@@ -253,7 +253,7 @@ body.ro .admin-only,body.ro #addBtn,body.ro #secretBtn,body.ro .evedit,body.ro [
 #kvsec{display:none}
 body[data-page="kvitel"] #kvsec{display:block;padding-top:26px}
 body[data-page="kvitel"] #view{display:none!important}
-.kv-wrap{max-width:900px;margin:0 auto;padding:30px clamp(14px,4vw,40px) 34px;border-radius:20px;color:#E9DCC0;background:radial-gradient(ellipse 70% 45% at 50% 0%,rgba(255,196,96,.13),rgba(255,196,96,0) 70%),linear-gradient(180deg,#1E170E 0%,#120D07 100%);box-shadow:0 30px 70px -40px #000,inset 0 0 0 1px rgba(201,151,58,.35)}
+.kv-wrap{max-width:1280px;margin:0 auto;padding:24px clamp(10px,2.5vw,32px) 28px;border-radius:18px;color:#E9DCC0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(255,196,96,.14),rgba(255,196,96,0) 70%),linear-gradient(180deg,#1E170E 0%,#120D07 100%);box-shadow:0 30px 70px -40px #000,inset 0 0 0 1px rgba(201,151,58,.35)}
 .kv-top{display:flex;align-items:flex-end;justify-content:center;gap:clamp(18px,7vw,70px)}
 .kv-candle{width:34px;height:102px;flex:none;overflow:visible}
 .kv-flame{transform-box:fill-box;transform-origin:50% 100%;animation:kvFl 3.2s ease-in-out infinite}
@@ -264,10 +264,10 @@ body[data-page="kvitel"] #view{display:none!important}
 .kv-tc h2{margin:0;font-family:var(--f-disp);font-size:clamp(40px,7vw,56px);font-weight:900;letter-spacing:.03em;color:#E5C77F;text-shadow:0 0 24px rgba(255,190,90,.18)}
 .kv-tc h2::before{display:none!important}
 .kv-tc p{margin:2px 0 0;font-family:var(--f-disp);font-size:17px;color:#B49C72}
-.kv-reb{margin:22px auto 24px;text-align:center;font-family:var(--f-disp)}
+.kv-reb{margin:14px auto 18px;text-align:center;font-family:var(--f-disp)}
 .kv-reb p{margin:2px 0;font-size:clamp(17px,2.6vw,21px);font-weight:700;line-height:1.5;color:#EADCBC}
 .kv-reb .kv-reb-bl{margin-top:4px;font-size:16px;font-weight:500;color:#C9A55A}
-.kv-today{margin:0 auto 24px;max-width:760px;text-align:center;padding:24px 22px;border-radius:14px;color:#F8EDD5;background:linear-gradient(160deg,#2C2112 0%,#3A2B15 100%);border:1px solid rgba(229,199,127,.6);box-shadow:inset 0 0 0 4px rgba(229,199,127,.08)}
+.kv-today{margin:0 auto 20px;max-width:900px;text-align:center;padding:24px 22px;border-radius:14px;color:#F8EDD5;background:linear-gradient(160deg,#2C2112 0%,#3A2B15 100%);border:1px solid rgba(229,199,127,.6);box-shadow:inset 0 0 0 4px rgba(229,199,127,.08)}
 .kv-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto}
 .kv-orn span{height:1px;width:80px;background:linear-gradient(90deg,transparent,#C9A55A,transparent)}
 .kv-orn i{width:7px;height:7px;transform:rotate(45deg);background:#C9A55A}
@@ -278,20 +278,26 @@ body[data-page="kvitel"] #view{display:none!important}
 .kv-nus{margin:4px auto 14px;max-width:600px;font-family:var(--f-disp);font-size:18px;line-height:1.8;color:rgba(248,237,213,.88)}
 .kv-next{margin:0 auto 20px;text-align:center;color:#B49C72;font-size:15px}
 .kv-next button{all:unset;cursor:pointer;font-weight:700;color:#E5C77F;border-bottom:1px dotted #8C7550}
-.kv-scroll{margin:0 auto;padding:30px clamp(16px,5vw,52px) 24px;background:linear-gradient(180deg,#F5ECD6 0%,#EBDDBD 100%);color:#2A1E0E;border:1px solid #8C6A2E;outline:1px solid rgba(140,106,46,.55);outline-offset:-9px;border-radius:4px;box-shadow:0 30px 60px -30px #000}
+.kv-scroll{margin:0 auto;padding:clamp(16px,2.5vw,28px) clamp(12px,2.5vw,30px) 20px;background:linear-gradient(180deg,#F5ECD6 0%,#EBDDBD 100%);color:#2A1E0E;border:1px solid #8C6A2E;outline:1px solid rgba(140,106,46,.55);outline-offset:-9px;border-radius:4px;box-shadow:0 30px 60px -30px #000}
 .kv-sec+.kv-sec{margin-top:10px}
 .kv-h{display:flex;align-items:center;gap:14px;margin:8px 0 16px;font-family:var(--f-disp);font-size:21px;font-weight:700;color:#5E4318}
 .kv-h::before,.kv-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#A8833A,transparent)}
-.kv-list{list-style:none;margin:0;padding:0;columns:3 200px;column-gap:28px;text-align:center}
-.kv-list li{break-inside:avoid;margin:0 0 11px}
+.kv-list{list-style:none;margin:0;padding:0;column-gap:22px;text-align:center}
+.kv-c5{columns:4 230px}.kv-c4{columns:4 230px}.kv-c3{columns:3 210px}.kv-one{columns:1}
+.kv-row{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:16px;align-items:stretch}
+.kv-row1{grid-template-columns:minmax(0,1fr)}
+@media (max-width:760px){.kv-row{grid-template-columns:minmax(0,1fr)}}
+.kv-box{position:relative;padding:12px 14px 4px;border:3px double rgba(140,106,46,.75);border-radius:6px;background:linear-gradient(180deg,rgba(255,253,245,.55),rgba(255,253,245,.15))}
+.kv-box .kv-h{margin:0 0 12px}
+.kv-list li{break-inside:avoid;margin:0 0 7px}
 .kv-list button{all:unset;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;padding:2px 6px;border-radius:4px}
 .kv-list button:hover .kv-m{color:#7A5418}
 .kv-list button:focus-visible{outline:2px solid #A8833A;outline-offset:2px}
-.kv-m{font-family:var(--f-disp);font-size:18.5px;font-weight:700;line-height:1.35;color:#2A1E0E}
-.kv-f{font-family:var(--f-disp);font-size:16.5px;line-height:1.35;color:#5E4318}
+.kv-m{font-family:var(--f-disp);font-size:16.5px;font-weight:700;line-height:1.35;color:#2A1E0E}
+.kv-f{font-family:var(--f-disp);font-size:15px;line-height:1.35;color:#5E4318}
 .kv-d{margin-top:1px;font-size:12.5px;color:#8C6A2E}
 .kv-sub{margin:16px 0 10px;text-align:center;font-family:var(--f-disp);font-size:17px;font-weight:700;color:#5E4318}
-.kv-bl{margin:14px auto 24px;max-width:640px;text-align:center;font-family:var(--f-disp);font-size:15.5px;line-height:1.8;color:#4E3A18}
+.kv-bl{margin:10px auto 18px;max-width:900px;text-align:center;font-family:var(--f-disp);font-size:15.5px;line-height:1.8;color:#4E3A18}
 .kv-foot{text-align:center;margin-top:6px}
 .kv-copy{border:1px solid #A8833A;background:transparent;color:#5E4318;font-size:13.5px;font-weight:700;padding:7px 16px;border-radius:999px;cursor:pointer}
 .kv-copy:hover{background:rgba(168,131,58,.12)}
@@ -3578,21 +3584,26 @@ function kvCouple(r){ return [kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).ma
 const KV_CANDLE=`<svg class="kv-candle" viewBox="0 0 40 120" aria-hidden="true"><defs><radialGradient id="kvGlow"><stop offset="0" stop-color="#FFE7A0" stop-opacity=".85"/><stop offset="1" stop-color="#FFB24A" stop-opacity="0"/></radialGradient><linearGradient id="kvWax" x1="0" x2="1"><stop offset="0" stop-color="#DCCFB0"/><stop offset=".5" stop-color="#FBF5E6"/><stop offset="1" stop-color="#CDBF9E"/></linearGradient></defs><circle class="kv-glow" cx="20" cy="20" r="20" fill="url(#kvGlow)"/><path class="kv-flame" d="M20 6c4 7 6.5 11 6.5 15.5a6.5 6.5 0 0 1-13 0C13.5 17 16 13 20 6z" fill="#FFCE5C"/><path class="kv-flame" d="M20 14c2 4 3 6 3 8.4a3 3 0 0 1-6 0c0-2.4 1-4.4 3-8.4z" fill="#FFF6D6"/><rect x="19.3" y="27" width="1.4" height="6" fill="#2A1E0E"/><rect x="11.5" y="33" width="17" height="77" rx="2" fill="url(#kvWax)"/><rect x="6" y="108" width="28" height="7" rx="2.5" fill="#A8833A"/></svg>`;
 function kvSorted(){ return [...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name)); }
 function renderKvitel(){
-  const box=$('#kvBox'); if(!box||document.body.dataset.page!=='kvitel') return;
+  const box_=$('#kvBox'); if(!box_||document.body.dataset.page!=='kvitel') return;
   const rows=kvSorted();
   const today=rows.filter(r=>r._w&&r._w.t===TODAY);
   const next=rows.filter(r=>r._w&&r._w.t!=null&&r._w.t>TODAY).sort((a,b)=>a._w.t-b._w.t)[0];
   let top='';
-  if(today.length) top=`<div class="kv-today"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><p class="kv-tt">${today.length>1?'היום יום חתונתם':'היום יום חתונתו'}</p><p class="kv-now">זה הזמן להתפלל על</p>${today.map(r=>`<p class="kv-names">${kvCouple(r)}</p>`).join('<div class="kv-sep" aria-hidden="true"></div>')}<p class="kv-nus">${esc(KV_NUSACH)}</p><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div></div>`;
+  if(today.length) top=`<div class="kv-today"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><p class="kv-tt">${today.length>1?'ביום שמחת לבם':'ביום שמחת לבו'}</p><p class="kv-now">נעתיר בתפילה מעומק הלב לזכות</p>${today.map(r=>`<p class="kv-names">${kvCouple(r)}</p>`).join('<div class="kv-sep" aria-hidden="true"></div>')}<p class="kv-nus">${esc(KV_NUSACH)}</p><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div></div>`;
   else if(next) top=`<p class="kv-next">החתונה הבאה במחזור: <button data-id="${esc(next._k)}">${esc(next.name)}</button>${countdown(next._w)?', '+countdown(next._w):''}</p>`;
   const reb=Array.isArray(KVX.rebbeim)&&KVX.rebbeim.length?`<div class="kv-reb">${KVX.rebbeim.map((l,i,a)=>`<p class="${i===a.length-1?'kv-reb-bl':''}">${esc(l)}</p>`).join('')}</div>`:'';
   const item=(r,d)=>{ const m=kvMaleS(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}${d&&r._w?`<small class="kv-d">${esc(hebLabel(r._w))}</small>`:''}</button></li>`; };
-  const sec=(title,list,bl,d,extra='')=>(list.length||extra)?`<section class="kv-sec"><h3 class="kv-h"><span>${title}</span></h3>${list.length?`<ul class="kv-list">${list.map(r=>item(r,d)).join('')}</ul>`:''}${extra}<p class="kv-bl">${esc(bl)}</p></section>`:'';
-  const pk=Array.isArray(KVX.pokkei)&&KVX.pokkei.length?`<p class="kv-sub">פוקקי פקוקים</p><ul class="kv-list kv-list-s">${KVX.pokkei.map(n=>`<li><span class="kv-m">${esc(n)}</span></li>`).join('')}</ul>`:'';
+  const ul=(list,d,cls='')=>`<ul class="kv-list ${cls}">${list.map(r=>item(r,d)).join('')}</ul>`;
+  const box=(title,inner,cls='')=>`<section class="kv-box ${cls}"><h3 class="kv-h"><span>${title}</span></h3>${inner}</section>`;
+  const pk=Array.isArray(KVX.pokkei)&&KVX.pokkei.length?box('פוקקי פקוקים',`<ul class="kv-list kv-one">${KVX.pokkei.map(n=>`<li><span class="kv-m">${esc(n)}</span></li>`).join('')}</ul>`,'kv-b2'):'';
   const eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
   const miss=rows.filter(r=>!ws(r.mother)).length, missK=rows.filter(r=>r._st!=='waiting'&&!ws(r.kala)).length;
   const adm=ROLE.ready&&ROLE.admin&&(miss||missK)?`<p class="kv-adm">למנהל: ${miss?`ל־${miss} בוגרים חסר שם האם`:''}${miss&&missK?', ':''}${missK?`ל־${missK} חסר שם הכלה`:''}. מוסיפים בכרטיס הבוגר, בעריכה.</p>`:'';
-  box.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${sec('בחורים',rows.filter(r=>r._st==='waiting'),KV_BL.waiting,false,pk)}${sec('נשואים',rows.filter(r=>r._st==='married'),KV_BL.married,false)}${sec('חתנים',eng,KV_BL.engaged,true)}<footer class="kv-foot"><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
+  const wt=rows.filter(r=>r._st==='waiting'), mr=rows.filter(r=>r._st==='married');
+  const top1=(wt.length||pk)?`<div class="kv-row${pk?'':' kv-row1'}">${wt.length?box('בחורים',ul(wt,false,'kv-c3'),'kv-b1'):''}${pk}</div><p class="kv-bl">${esc(KV_BL.waiting)}</p>`:'';
+  const mid=mr.length?`<div class="kv-row kv-row1">${box('נשואים',ul(mr,false,'kv-c5'))}</div><p class="kv-bl">${esc(KV_BL.married)}</p>`:'';
+  const low=eng.length?`<div class="kv-row kv-row1">${box('חתנים',ul(eng,true,'kv-c4'))}</div><p class="kv-bl">${esc(KV_BL.engaged)}</p>`:'';
+  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${top1}${mid}${low}<footer class="kv-foot"><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
 }
 function kvNostalgia(r){
   if(!r) return;
