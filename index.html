@@ -301,6 +301,9 @@ body[data-page="kvitel"] #view{display:none!important}
 .kv-foot{text-align:center;margin-top:6px}
 .kv-copy{border:1px solid #A8833A;background:transparent;color:#5E4318;font-size:13.5px;font-weight:700;padding:7px 16px;border-radius:999px;cursor:pointer}
 .kv-copy:hover{background:rgba(168,131,58,.12)}
+.kv-foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.kv-act{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(160deg,#6E4C1D,#3E2A0F);color:#F6E3A8;border-color:#C9A55A}
+.kv-act:hover{background:linear-gradient(160deg,#7E5A24,#4B3313)}
 .kv-adm{margin:14px auto 0;text-align:center;color:#9C8A66;font-size:12.5px}
 @media (prefers-reduced-motion:reduce){ .kv-flame,.kv-glow{animation:none} }
 .bp-nus{gap:2px}
@@ -3662,7 +3665,7 @@ function renderKvitel(){
   const top1=(wt.length||pk)?`<div class="kv-row${pk?'':' kv-row1'}">${wt.length?box('בחורים',ul(wt,false,'kv-c3'),'kv-b1'):''}${pk}</div><p class="kv-bl">${esc(KV_BL.waiting)}</p>`:'';
   const mid=mr.length?`<div class="kv-row kv-row1">${box('נשואים',ul(mr,false,'kv-c5'))}</div><p class="kv-bl">${esc(KV_BL.married)}</p>`:'';
   const low=eng.length?`<div class="kv-row kv-row1">${box('חתנים',ul(eng,true,'kv-c4'))}</div><p class="kv-bl">${esc(KV_BL.engaged)}</p>`:'';
-  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${top1}${mid}${low}<footer class="kv-foot"><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
+  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${top1}${mid}${low}<footer class="kv-foot"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
 }
 function kvNostalgia(r){
   if(!r) return;
@@ -3683,6 +3686,76 @@ document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closes
   const txt=[...rows.map(r=>[kvMaleS(r)||ws(r.name),kvFem(r)].filter(Boolean).join('\n')),...(Array.isArray(KVX.pokkei)?KVX.pokkei:[])].join('\n');
   const done=()=>{ try{ toast('כל השמות הועתקו'); }catch(e){} };
   try{ navigator.clipboard.writeText(txt).then(done,()=>{}); }catch(e){} });
+/* ================= print / word helpers ================= */
+function dlBlob(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ try{ URL.revokeObjectURL(a.href); }catch(e){} a.remove(); },2000); }
+function printHtml(html){
+  const f=document.createElement('iframe'); f.setAttribute('aria-hidden','true'); f.style.cssText='position:fixed;left:0;bottom:0;width:1px;height:1px;border:0;opacity:0';
+  document.body.appendChild(f); const d=f.contentDocument; d.open(); d.write(html); d.close();
+  let done=false; const go=()=>{ if(done) return; done=true; try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(e){ toast('ההדפסה אינה זמינה כאן'); } setTimeout(()=>f.remove(),60000); };
+  try{ (d.fonts&&d.fonts.ready?d.fonts.ready:Promise.resolve()).then(()=>setTimeout(go,250)); }catch(e){} setTimeout(go,2500);
+}
+const PR_FONTS='<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=David+Libre:wght@400;500;700&family=Assistant:wght@400;600;700&display=swap">';
+function printTable(){
+  const list=current(); const cols=(S.cols&&S.cols.length?S.cols:DEFAULT_COLS).filter(k=>k==='status'||k==='kids'||LBL[k]);
+  const val=(r,k)=>k==='status'?(ST[r._st]||''):k==='kids'?kidsText(r):ws(r[k]);
+  const d=new Date();
+  const html=`<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>יאכנע צעטיל</title>${PR_FONTS}<style>
+@page{size:A4 landscape;margin:11mm 9mm}
+*{box-sizing:border-box}
+body{margin:0;font-family:Assistant,Arial,sans-serif;color:#2A1E0E;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.hd{text-align:center;margin:0 0 10px;padding-bottom:6px;border-bottom:3px double #8C6A2E}
+.hd h1{margin:0;font-family:'Frank Ruhl Libre',serif;font-size:24pt;font-weight:900;color:#5A3E17}
+.hd p{margin:2px 0 0;font-size:10pt;color:#8A6A30}
+table{width:100%;border-collapse:collapse;font-size:8.6pt}
+thead{display:table-header-group}
+th{background:#5A3E17;color:#F6E3A8;font-weight:700;padding:5px 5px;border:1px solid #5A3E17;text-align:right;white-space:nowrap}
+td{padding:4px 5px;border:1px solid #DCCB9F;vertical-align:top}
+tbody tr:nth-child(even) td{background:#FBF4E2}
+tr{page-break-inside:avoid;break-inside:avoid}
+td.nm{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:10pt;white-space:nowrap}
+.ft{margin-top:8px;text-align:center;font-size:8pt;color:#8A7550}
+</style></head><body><div class="hd"><h1>יאכנע צעטיל</h1><p>בוגרי ישמח לב שיעור ד׳ · ${list.length} בוגרים · הודפס ב־${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}</p></div><table><thead><tr>${cols.map(k=>`<th>${esc(k==='status'?'מצב':k==='kids'?'ילדים':LBL[k])}</th>`).join('')}</tr></thead><tbody>${list.map(r=>`<tr>${cols.map(k=>`<td${k==='name'?' class="nm"':''}>${esc(val(r,k))}</td>`).join('')}</tr>`).join('')}</tbody></table><div class="ft">אסאך שמחות</div></body></html>`;
+  printHtml(html);
+}
+function kvDocHtml(word){
+  const rows=kvSorted(); const wt=rows.filter(r=>r._st==='waiting'), mr=rows.filter(r=>r._st==='married'), eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
+  const pk=Array.isArray(KVX.pokkei)?KVX.pokkei:[], reb=Array.isArray(KVX.rebbeim)?KVX.rebbeim:[];
+  const cell=(r,d)=>`<p class="m">${esc(kvMaleS(r)||r.name)}</p>${kvFem(r)?`<p class="f">${esc(kvFem(r))}</p>`:''}${d&&r._w?`<p class="d">${esc(hebLabel(r._w))}</p>`:''}`;
+  const grid=(items,n)=>{ if(!items.length) return ''; const per=Math.ceil(items.length/n), colsA=[]; for(let i=0;i<n;i++) colsA.push(items.slice(i*per,(i+1)*per)); return `<table class="g" width="100%" cellspacing="0" cellpadding="0"><tr>${colsA.map(c=>`<td class="gc" width="${Math.floor(100/n)}%" valign="top">${c.join('<p class="sp">&nbsp;</p>')}</td>`).join('')}</tr></table>`; };
+  const box=(title,inner)=>`<table class="bx" width="100%" cellspacing="0" cellpadding="0"><tr><td class="bxi"><p class="h">${title}</p>${inner}</td></tr></table>`;
+  const bl=t=>`<p class="bl">${esc(t)}</p>`;
+  const top=wt.length||pk.length?(pk.length?`<table width="100%" cellspacing="0" cellpadding="0"><tr><td width="66%" valign="top">${box('בחורים',grid(wt.map(r=>cell(r)),3))}</td><td width="2%"></td><td width="32%" valign="top">${box('פוקקי פקוקים',grid(pk.map(n=>`<p class="m">${esc(n)}</p>`),1))}</td></tr></table>`:box('בחורים',grid(wt.map(r=>cell(r)),4)))+bl(KV_BL.waiting):'';
+  const mid=mr.length?box('נשואים',grid(mr.map(r=>cell(r)),4))+bl(KV_BL.married):'';
+  const low=eng.length?box('חתנים',grid(eng.map(r=>cell(r,true)),4))+bl(KV_BL.engaged):'';
+  const css=`
+@page{size:A4 landscape;margin:12mm 12mm}
+${word?'@page Section1{size:841.9pt 595.3pt;mso-page-orientation:landscape;margin:34pt 34pt 34pt 34pt}div.Section1{page:Section1}':''}
+body{margin:0;direction:rtl;font-family:David,'David Libre','Frank Ruhl Libre',serif;color:#2A1E0E;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+p{margin:0}
+.frame{border:4px double #6B4A1C;padding:14pt 16pt 10pt}
+.ti{text-align:center;font-size:30pt;font-weight:bold;color:#5A3E17;margin:0 0 2pt}
+.st{text-align:center;font-size:12pt;color:#8A6A30;margin:0 0 6pt}
+.rb{text-align:center;font-size:13.5pt;font-weight:bold;margin:0}
+.rbl{text-align:center;font-size:12pt;color:#8A6A30;margin:2pt 0 10pt}
+.orn{text-align:center;color:#A8833A;font-size:11pt;margin:2pt 0 8pt;letter-spacing:4pt}
+.bx{border:3px double #8C6A2E;margin:0 0 4pt;background:#FFFCF3}
+.bxi{padding:6pt 8pt 4pt}
+.h{text-align:center;font-size:15pt;font-weight:bold;color:#5E4318;margin:0 0 6pt;border-bottom:1px solid #C9A55A;padding-bottom:3pt}
+.g{border-collapse:collapse}
+.gc{text-align:center;padding:0 4pt}
+.m{font-size:11.5pt;font-weight:bold;text-align:center}
+.f{font-size:10.5pt;text-align:center;color:#4E3A18}
+.d{font-size:9pt;text-align:center;color:#8C6A2E}
+.sp{font-size:4pt;line-height:4pt}
+.bl{text-align:center;font-size:10pt;color:#4E3A18;margin:3pt 0 10pt;line-height:1.5}
+table{page-break-inside:auto}
+tr{page-break-inside:avoid}`;
+  const body=`<div class="frame"><p class="ti">קוויטל</p><p class="st">בוגרי השיעור ובני ביתם</p>${reb.length?reb.slice(0,-1).map(l=>`<p class="rb">${esc(l)}</p>`).join('')+`<p class="rbl">${esc(reb[reb.length-1])}</p>`:''}<p class="orn">◆ ◆ ◆</p>${top}${mid}${low}</div>`;
+  if(word) return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40" dir="rtl" lang="he"><head><meta charset="utf-8"><title>קוויטל</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]--><style>${css}</style></head><body dir="rtl"><div class="Section1" dir="rtl">${body}</div></body></html>`;
+  return `<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>קוויטל</title>${PR_FONTS}<style>${css}</style></head><body>${body}</body></html>`;
+}
+function kvWord(){ dlBlob(new Blob(['﻿'+kvDocHtml(true)],{type:'application/msword'}),'קוויטל.doc'); toast('קובץ הוורד ירד למחשב'); }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-kvprint],[data-kvword]'); if(!t) return; if(t.hasAttribute('data-kvprint')) printHtml(kvDocHtml(false)); else kvWord(); });
 function setRows(rows){ S.rows=derive(rows.map(r=>({...r}))); render(); if((D.key||D.isNew)&&!D.edit&&!D.kid&&!D.xtra) renderDrawer(); if(!BP_DONE) setTimeout(birthPop,700); renderKvitel(); }
 
 /* ================= Google Sheet sync ================= */
@@ -3827,7 +3900,7 @@ function morePop(anchor){
       else if(b.dataset.m==='xlsx') exportXlsx();
       else if(b.dataset.m==='csv') exportCsv();
       else if(b.dataset.m==='phones'){ const l=current().filter(r=>r.phone); const ok=await copyText(l.map(r=>`${r.name}\t${r.phone}`).join('\n')); toast(ok?`${l.length} מספרים הועתקו`:'ההעתקה לא הצליחה'); }
-      else { if(S.view!=='table'){ S.view='table'; renderView(); } setTimeout(()=>{ try{window.print()}catch(e){toast('ההדפסה אינה זמינה כאן')} },80); }
+      else printTable();
     });
   });
 }
@@ -3851,7 +3924,7 @@ async function exportXlsx(){
   wb.Workbook={Views:[{RTL:true}]};
   let buf; try{ buf=X.write(wb,{bookType:'xlsx',type:'array',cellDates:true}); }catch(e){ toast('יצירת קובץ האקסל לא הצליחה'); return; }
   const dl=await cap('downloads');
-  if(!dl){ toast('הורדת קבצים לא זמינה בתצוגה הזו'); return; }
+  if(!dl){ dlBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),'אסאך-שמחות-שיעור-ד.xlsx'); toast('קובץ האקסל ירד למחשב'); return; }
   try{ await dl.save({filename:'אסאך-שמחות-שיעור-ד.xlsx',data:new Blob([buf])}); toast('קובץ האקסל מוכן'); }
   catch(e){ const c=e&&e.code; if(c==='declined') return; toast(c==='rate_limited'?'חלון הורדה כבר פתוח, נסו שוב בעוד רגע':'ההורדה לא זמינה כאן'); }
 }
@@ -3862,7 +3935,7 @@ async function exportCsv(){
   const csv='\uFEFF'+[['מצב',...keys.map(k=>LBL[k]),'ילדים'].map(q).join(','),...list.map(r=>[ST[r._st],...keys.map(k=>r[k]),kidsText(r)].map(q).join(','))].join('\r\n');
   const dl=await cap('downloads');
   if(dl){ try{ await dl.save({filename:'yeshmach-lev-shiur-4.csv',data:csv}); }catch(e){ if(e&&e.code==='unavailable'){ const ok=await copyText(csv); toast(ok?'הורדה לא זמינה כאן, הטבלה הועתקה ללוח':'הייצוא לא הצליח'); } } }
-  else { const ok=await copyText(csv); toast(ok?'הורדה לא זמינה כאן, הטבלה הועתקה ללוח (אפשר להדביק באקסל)':'הייצוא לא הצליח'); }
+  else { dlBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'yeshmach-lev-shiur-4.csv'); toast('הקובץ ירד למחשב'); }
 }
 
 /* ================= render all ================= */
