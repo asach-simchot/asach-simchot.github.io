@@ -250,6 +250,39 @@ body.ro .admin-only,body.ro #addBtn,body.ro #secretBtn,body.ro .evedit,body.ro [
 .tn-new button{border:0;background:#8A6420;color:#FFF6E2;border-radius:8px;padding:4px 12px;font-weight:800;cursor:pointer}
 .tn-new .x{background:none;color:#8A6420;font-size:18px;padding:0 6px}
 @media (max-width:760px){ .topnav{flex-wrap:wrap;padding:8px 12px;gap:8px} .tn-links{order:3;flex-basis:100%} .tn-user{display:none} }
+#kvsec{display:none}
+body[data-page="kvitel"] #kvsec{display:block;padding-top:26px}
+body[data-page="kvitel"] #view{display:none!important}
+.kv-today{max-width:820px;margin:0 auto 26px;text-align:center;padding:26px 24px;border-radius:18px;color:#F8EDD5;background:radial-gradient(ellipse 90% 70% at 50% 0%,rgba(240,207,124,.18),rgba(240,207,124,0) 70%),linear-gradient(160deg,#2B1E0D 0%,#45301A 60%,#56401C 100%);border:1px solid rgba(240,207,124,.7);box-shadow:0 22px 50px -28px rgba(30,18,4,.9),inset 0 0 0 4px rgba(240,207,124,.12)}
+.kv-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto}
+.kv-orn span{height:1px;width:80px;background:linear-gradient(90deg,transparent,#D9B060,transparent)}
+.kv-orn i{width:7px;height:7px;transform:rotate(45deg);background:#D9B060}
+.kv-tt{margin:12px 0 0;font-size:14px;letter-spacing:.12em;color:rgba(248,237,213,.75)}
+.kv-now{margin:6px 0 10px;font-family:var(--f-disp);font-size:22px;color:#F0CF7C}
+.kv-names{margin:0 0 14px;font-family:var(--f-disp);font-size:clamp(26px,5vw,36px);font-weight:900;line-height:1.45;color:#FBEFC4}
+.kv-sep{width:30%;height:1px;margin:0 auto 14px;background:linear-gradient(90deg,transparent,rgba(240,207,124,.55),transparent)}
+.kv-nus{margin:0 auto 16px;max-width:600px;font-family:var(--f-disp);font-size:19px;line-height:1.8;color:rgba(248,237,213,.9);white-space:pre-line}
+.kv-next{max-width:820px;margin:0 auto 18px;text-align:center;color:var(--muted);font-size:15px}
+.kv-next button{all:unset;cursor:pointer;font-weight:700;color:var(--ink);border-bottom:1px dotted var(--muted)}
+.kv-scroll{max-width:820px;margin:0 auto;padding:34px clamp(18px,5vw,56px) 26px;background:linear-gradient(180deg,#FFFDF6 0%,#FBF3DF 100%);color:#2E2110;border:1px solid #D9BE7A;outline:1px solid #D9BE7A;outline-offset:-9px;border-radius:6px;box-shadow:0 26px 60px -34px rgba(60,40,10,.55)}
+.kv-head{text-align:center;margin-bottom:8px}
+.kv-head h2{margin:12px 0 2px;font-family:var(--f-disp);font-size:clamp(34px,6vw,46px);font-weight:900;color:#5A3E17;letter-spacing:.02em}
+.kv-head p{margin:0 0 10px;font-family:var(--f-disp);font-size:17px;color:#8A6A30}
+.kv-head h2::before{display:none!important}
+.kv-h{display:flex;align-items:center;gap:14px;margin:26px 0 14px;font-family:var(--f-disp);font-size:19px;font-weight:700;color:#8A6A22}
+.kv-h::before,.kv-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#D9BE7A,transparent)}
+.kv-list{list-style:none;margin:0;padding:0;columns:3 200px;column-gap:28px;text-align:center}
+.kv-list li{break-inside:avoid;margin:0 0 10px}
+.kv-list button{all:unset;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;padding:2px 6px;border-radius:6px}
+.kv-list button:hover .kv-m{color:#8A5A14}
+.kv-list button:focus-visible{outline:2px solid #C9973A;outline-offset:2px}
+.kv-m{font-family:var(--f-disp);font-size:19px;font-weight:700;line-height:1.35;color:#2E2110}
+.kv-f{font-family:var(--f-disp);font-size:16.5px;line-height:1.35;color:#6B4E1A}
+.kv-foot{text-align:center;margin-top:22px}
+.kv-copy{border:1px solid #D9BE7A;background:transparent;color:#8A6A22;font-size:13.5px;font-weight:700;padding:7px 16px;border-radius:999px;cursor:pointer}
+.kv-copy:hover{background:rgba(217,190,122,.18)}
+.kv-adm{max-width:820px;margin:12px auto 0;text-align:center;color:var(--muted);font-size:12.5px}
+.bp-kv{margin:2px 0 0;font-family:var(--f-disp);font-size:16.5px;line-height:1.6;color:#7A4B12}
 .pg-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:6px 0 16px}
 .pg-head h2{margin:0;font-family:var(--f-disp);font-size:30px}
 .pg-head p{margin:4px 0 0;color:var(--muted)}
@@ -1971,6 +2004,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .bp-more:hover{background:rgba(255,236,190,.1)}
 .bp-tag{display:inline-block;margin:0 0 8px;padding:4px 14px;border-radius:999px;font-weight:800;font-size:12.5px;letter-spacing:.3px;color:#F6E3A8;background:rgba(240,207,124,.13);border:1px solid rgba(240,207,124,.55)}
 .bp-tag-w{color:#2B1E0D;background:linear-gradient(160deg,#FBEBB8,#E3BF66 55%,#C9973A);border-color:rgba(255,240,200,.7)}
+.bp-later{display:inline-flex;align-items:center;gap:7px;margin:12px auto 0;border:1px solid #E7C66E;background:#FFF8E6;color:#8A5A14;font-weight:700;font-size:14px;padding:8px 18px;border-radius:999px;cursor:pointer}
+.bp-later:hover{background:#FCEBC0}
+.bp-timer{width:70%;height:4px;margin:14px auto 0;border-radius:4px;overflow:hidden;background:rgba(201,151,58,.18)}
+.bp-timer i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#E4708A,#F2C55C);transition:width .1s linear}
+.bp-ok{display:block;margin-left:auto;margin-right:auto}
 .bp-never{display:block;margin:12px auto 0;border:0;background:none;color:rgba(246,237,213,.62);font-size:13px;padding:4px 8px;border-radius:8px;text-decoration:underline dotted;text-underline-offset:3px}
 .bp-never:hover{color:#F6E3A8}
 #gateCode{-webkit-text-security:disc;text-security:disc}
@@ -2169,6 +2207,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
     <button data-nav="stats">נתוני השיעור</button>
     <button data-nav="log">לוח פעולות<span class="tn-badge" id="tnLogBadge" hidden></span></button>
     <button data-nav="tree">עץ השיעור</button>
+    <button data-nav="kvitel"><svg class="tn-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v16l-6-3-6 3V4a1 1 0 0 1 1-1z"/><path d="M9.5 8h5M9.5 11.5h5"/></svg>קוויטל</button>
     <button data-nav="inbox" class="admin-only">תיבת הודעות<span class="tn-badge" id="tnInboxBadge" hidden></span></button>
     <button data-nav="admin" class="admin-only">ניהול</button>
   </div>
@@ -2250,6 +2289,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
 <main class="wrap" id="view" tabindex="-1"></main>
 <section class="wrap statsec" id="statsec" aria-labelledby="statT"><div class="pg-head"><div><h2 id="statT">נתוני השיעור</h2><p>כל המספרים המעניינים על המחזור שלנו</p></div></div><div id="glanceStats"></div></section>
 <section class="wrap treesec" id="treesec" aria-label="עץ השיעור"><div id="treeBox"></div></section>
+<section class="wrap kvsec" id="kvsec" aria-label="קוויטל"><div id="kvBox"></div></section>
 <div class="sdlg" id="sendDlg" hidden role="dialog" aria-modal="true" aria-labelledby="sdTitle">
   <div class="sd-card" id="sdCard"></div>
 </div>
@@ -2286,12 +2326,12 @@ const SEED = JSON.parse(document.getElementById('seed').textContent);
 const SHEET_ID = '1MaPb1kuQaUTKgSu8hBlMW8exk9mSura9cjVYU0wnrpM';
 const BASE_YEAR = 5785;
 const DAY = 864e5;
-const FIELDS = [['name','שם'],['phone','פלאפון'],['email','אימייל'],['street','רחוב'],['apt','בניין ודירה'],['res','עיר מגורים'],['father','שם האב'],['fcity','עיר ההורים'],['mech','מחותן'],['mcity','עיר המחותן'],['shad','שדכן'],['eng','אירוסין'],['wed','חתונה'],['hall','אולם'],['shtr','שטריימל'],['music','מוזיק'],['singer','זמר'],['ord','סדר אירוסין'],['id','מס׳ ברשימה'],['notes','הערות']];
+const FIELDS = [['name','שם'],['phone','פלאפון'],['email','אימייל'],['street','רחוב'],['apt','בניין ודירה'],['res','עיר מגורים'],['father','שם האב'],['mother','שם האם'],['fcity','עיר ההורים'],['mech','מחותן'],['mcity','עיר המחותן'],['kala','שם הכלה'],['kmother','שם אם הכלה'],['shad','שדכן'],['eng','אירוסין'],['wed','חתונה'],['hall','אולם'],['shtr','שטריימל'],['music','מוזיק'],['singer','זמר'],['ord','סדר אירוסין'],['id','מס׳ ברשימה'],['notes','הערות']];
 const KEYS = FIELDS.map(f=>f[0]);
 const SHEET_MAP = {id:0,ord:1,name:2,phone:3,street:5,apt:6,res:7,father:8,fcity:9,mech:10,mcity:11,shad:12,eng:13,wed:14,hall:15,shtr:16,music:17,singer:18};
 const SHEET_KEYS = Object.keys(SHEET_MAP);
 const LBL = Object.assign(Object.fromEntries(FIELDS),{status:'מצב',region:'אזור',engM:'חודש אירוסין',wedM:'חודש חתונה',kids:'ילדים'});
-const COL_ORDER = ['ord','name','status','phone','email','res','street','apt','father','fcity','mech','mcity','shad','eng','wed','hall','shtr','music','singer','kids','id','notes'];
+const COL_ORDER = ['ord','name','status','phone','email','res','street','apt','father','mother','fcity','mech','mcity','kala','kmother','shad','eng','wed','hall','shtr','music','singer','kids','id','notes'];
 const COL_LBL = Object.assign({},LBL,{ord:'#'});
 const DEFAULT_COLS = ['ord','name','status','phone','email','res','street','apt','father','fcity','mech','shad','eng','wed','hall','shtr','kids'];
 const FACETS = ['status','region','res','fcity','hall','shtr','shad','music','singer','engM','wedM'];
@@ -3211,7 +3251,7 @@ function closeDrawer(){
   const l=D.last; D={key:null,edit:false,isNew:false,armed:false,kid:null,xtra:null,kidArmed:null};
   if(l&&l.focus&&document.contains(l)) l.focus();
 }
-const SECTIONS=[['פרטי קשר',['phone','email','res','street','apt']],['משפחה',['father','fcity','mech','mcity']],['השידוך',['shad','eng','ord']],['החתונה',['wed','hall','shtr','music','singer']],['הערות',['notes']]];
+const SECTIONS=[['פרטי קשר',['phone','email','res','street','apt']],['משפחה',['father','mother','fcity','mech','mcity']],['השידוך',['shad','eng','ord','kala','kmother']],['החתונה',['wed','hall','shtr','music','singer']],['הערות',['notes']]];
 function kidBlock(r,k){
   const li=(l,v,sub)=>`<li><span>${l}</span><span>${v}${sub?`<small>${sub}</small>`:''}</span></li>`;
   const h=t=>{ const x=hOfT(t,false); return x?hebLabel(x):''; };
@@ -3444,13 +3484,13 @@ function bpConfetti(host){
   requestAnimationFrame(tick);
   return ()=>{ run=false; removeEventListener('resize',fit); };
 }
-function birthPop(){
-  if(BP_DONE) return; if(!((P.mode==='db'&&P.srv)||P.mode==='local')) return;
+function birthPop(force){
+  if(BP_DONE&&!force) return; if(!((P.mode==='db'&&P.srv)||P.mode==='local')) return;
   BP_DONE=true;
   if(lsGet('yachne-bp-off')===1) return;
   const wl=S.rows.filter(r=>r._w&&r._w.t===TODAY), list=birthsToday(); if(!list.length&&!wl.length) return;
   const key=TODAY+':'+[...wl.map(r=>'w'+r._k),...list.map(x=>x.k.id)].sort().join(',');
-  if(lsGet('yachne-bp')===key) return;
+  const oldP=$('#bpScrim'); if(oldP) oldP.remove();
   const sh=t=>`${hOfT(t,false)?hebLabel(hOfT(t,false),false)+', ':''}${gDate(t)}`;
   const item=({r,k})=>{ const boy=k.gnd==='m', pp=r.father?` ב״ר ${esc(r.father)}`:'';
     const det=[];
@@ -3458,22 +3498,65 @@ function birthPop(){
     if(boy){ if(k._sh) det.push(`שלום זכר: ליל שבת${esc(par)}, ${gDate(k._sh.t-DAY)}${k.shul?' · '+esc(k.shul):''}`); if(k._bris) det.push(`ברית מילה: ${gDay(k._bris.t)}, ${esc(sh(k._bris.t))}${(k.brisPlace||k.shul)?' · '+esc(k.brisPlace||k.shul):''}`); }
     else if(k._sh) det.push(`קידוש: שבת${esc(par)}, ${esc(sh(k._sh.t))}${k.shul?' · '+esc(k.shul):''}`);
     return `<div class="bp-item"><span class="bp-tag ${boy?'bp-tag-b':'bp-tag-g'}">${boy?'לידת בן':'לידת בת'}</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>להולדת ${boy?'הבן':'הבת'}${k.name?` <b>${esc(k.name)}</b>`:''} בשעה טובה ומוצלחת</p><p class="bp-bless">${boy?'יזכו לגדלו לתורה לחופה ולמעשים טובים':'יזכו לגדלה לחופה ולמעשים טובים'}</p>${det.length?`<ul class="bp-det">${det.map(d=>`<li>${d}</li>`).join('')}</ul>`:''}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
-  const wedItem=r=>{ const pp=r.father?` ב״ר ${esc(r.father)}`:''; const det=r._w?`<ul class="bp-det"><li>החתונה היום, ${esc(hebLabel(r._w))}${r.hall?' · '+esc(r.hall):''}</li></ul>`:''; return `<div class="bp-item"><span class="bp-tag bp-tag-w">חתונה</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>לרגל נישואיו בשעה טובה ומוצלחת</p><p class="bp-bless">יזכו לבנות בית נאמן בישראל</p>${det}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
+  const wedItem=r=>{ const pp=r.father?` ב״ר ${esc(r.father)}`:''; const det=r._w?`<ul class="bp-det"><li>החתונה היום, ${esc(hebLabel(r._w))}${r.hall?' · '+esc(r.hall):''}</li></ul>`:''; return `<div class="bp-item"><span class="bp-tag bp-tag-w">חתונה</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>לרגל נישואיו בשעה טובה ומוצלחת</p><p class="bp-bless">יזכו לבנות בית נאמן בישראל</p>${kvMale(r)?`<p class="bp-kv">זה הזמן להתפלל על ${kvCouple(r)}</p>`:''}${det}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
   const nb=list.filter(x=>x.k.gnd==='m').length, ng=list.length-nb;
   const parts=[wl.length?(wl.length===1?'היום יש חתונה':`היום יש ${wl.length} חתונות`):'',nb?(nb===1?'לידת בן':`${nb} לידות של בנים`):'',ng?(ng===1?'לידת בת':`${ng} לידות של בנות`):''].filter(Boolean);
   const sub=wl.length?parts.join(' · '):'היום במחזור: '+parts.join(' · ');
   const w=document.createElement('div'); w.className='bp-scrim'; w.id='bpScrim';
-  w.innerHTML=`<div class="bp" role="dialog" aria-modal="true" aria-labelledby="bpT"><button class="bp-x" data-bpclose aria-label="סגירה">×</button><div class="bp-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2 id="bpT" class="bp-t">מזל טוב!</h2><p class="bp-sub">${esc(sub)}</p>${[...wl.map(wedItem),...list.map(item)].join('<div class="bp-sep" aria-hidden="true"></div>')}<button class="bp-ok" data-bpclose>אמן, מזל טוב</button><button class="bp-never" data-bpnever>לא להציג שוב במחשב הזה</button></div>`;
+  w.innerHTML=`<div class="bp" role="dialog" aria-modal="true" aria-labelledby="bpT"><button class="bp-x" data-bpclose aria-label="סגירה">×</button><div class="bp-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2 id="bpT" class="bp-t">מזל טוב!</h2><p class="bp-sub">${esc(sub)}</p>${[...wl.map(wedItem),...list.map(item)].join('<div class="bp-sep" aria-hidden="true"></div>')}<button class="bp-ok" data-bpclose>אמן, מזל טוב</button><button class="bp-later" data-bplater><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>להזכיר לי בעוד 10 דקות</button><button class="bp-never" data-bpnever>לא להציג שוב במחשב הזה</button><div class="bp-timer" aria-hidden="true"><i></i></div></div>`;
   document.body.appendChild(w);
   requestAnimationFrame(()=>w.classList.add('on'));
-  const stopConf=bpConfetti(w);
-  const close=()=>{ stopConf(); lsSet('yachne-bp',key); w.classList.remove('on'); setTimeout(()=>w.remove(),250); document.removeEventListener('keydown',esc_); };
+  const stopConf=bpConfetti(w); let tm=null;
+  const note=sub+': '+[...wl.map(r=>r.name),...list.map(x=>x.r.name)].join(', ');
+  const close=()=>{ stopConf(); clearInterval(tm); w.classList.remove('on'); setTimeout(()=>w.remove(),250); document.removeEventListener('keydown',esc_); };
   const esc_=e=>{ if(e.key==='Escape') close(); };
   document.addEventListener('keydown',esc_);
-  w.addEventListener('click',e=>{ const m=e.target.closest('[data-bpid]'); if(m){ close(); openDrawer(m.dataset.bpid); return; } if(e.target.closest('[data-bpnever]')){ lsSet('yachne-bp-off',1); close(); return; } if(e.target===w||e.target.closest('[data-bpclose]')) close(); });
+  w.addEventListener('click',e=>{ const m=e.target.closest('[data-bpid]'); if(m){ close(); openDrawer(m.dataset.bpid); return; } if(e.target.closest('[data-bpnever]')){ lsSet('yachne-bp-off',1); lsSet('yachne-bp-remind',null); close(); return; } if(e.target.closest('[data-bplater]')){ bpRemind(note); close(); return; } if(e.target===w||e.target.closest('[data-bpclose]')) close(); });
   setTimeout(()=>{ const b=w.querySelector('.bp-ok'); b&&b.focus(); },80);
+  const card=w.querySelector('.bp'), bar=w.querySelector('.bp-timer i'); let rest=10000, hov=false, last=Date.now();
+  card.addEventListener('mouseenter',()=>{ hov=true; }); card.addEventListener('mouseleave',()=>{ hov=false; });
+  tm=setInterval(()=>{ const now=Date.now(); if(!hov) rest-=now-last; last=now; if(bar) bar.style.width=Math.max(0,rest/100)+'%'; if(rest<=0) close(); },100);
 }
-function setRows(rows){ S.rows=derive(rows.map(r=>({...r}))); render(); if((D.key||D.isNew)&&!D.edit&&!D.kid&&!D.xtra) renderDrawer(); if(!BP_DONE) setTimeout(birthPop,700); }
+function bpRemind(body){
+  lsSet('yachne-bp-remind',{at:Date.now()+10*60*1000,body}); bpSchedule();
+  try{ if('Notification' in window&&Notification.permission==='default') Notification.requestPermission(); }catch(e){}
+  try{ toast('נזכיר לך בעוד 10 דקות'); }catch(e){}
+}
+function bpSchedule(){
+  const r=lsGet('yachne-bp-remind'); clearTimeout(window.__bpRT); if(!r||!r.at) return;
+  if(Date.now()-r.at>2*60*60*1000){ lsSet('yachne-bp-remind',null); return; }
+  window.__bpRT=setTimeout(()=>{ lsSet('yachne-bp-remind',null);
+    try{ if('Notification' in window&&Notification.permission==='granted'){ const n=new Notification('מזל טוב! אסאך שמחות',{body:r.body||'',tag:'asach-bp',lang:'he',dir:'rtl'}); n.onclick=()=>{ try{ window.focus(); }catch(e){} n.close(); }; } }catch(e){}
+    try{ if(lsGet('yachne-bp-off')!==1) birthPop(true); }catch(e){}
+  },Math.max(0,r.at-Date.now()));
+}
+setTimeout(bpSchedule,2000);
+/* ================= kvitel ================= */
+const KV_NUSACH=''; /* הנוסח הקצר יבוא כאן */
+function kvFirst(r){ const w=ws(r.name).split(' ').filter(Boolean); return w.length>1?w.slice(0,-1).join(' '):(w[0]||''); }
+function kvMale(r){ return ws(r.mother)?`${kvFirst(r)} בן ${ws(r.mother)}`:''; }
+function kvFem(r){ const k=ws(r.kala); if(!k) return ''; return ws(r.kmother)?`${k} בת ${ws(r.kmother)}`:k; }
+function kvCouple(r){ return [kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).map(esc).join('<br>ו'); }
+function renderKvitel(){
+  const box=$('#kvBox'); if(!box||document.body.dataset.page!=='kvitel') return;
+  const rows=[...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name));
+  const today=rows.filter(r=>r._w&&r._w.t===TODAY);
+  const next=rows.filter(r=>r._w&&r._w.t!=null&&r._w.t>TODAY).sort((a,b)=>a._w.t-b._w.t)[0];
+  let top='';
+  if(today.length) top=`<div class="kv-today"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><p class="kv-tt">${today.length>1?'היום יום חתונתם':'היום יום חתונתו'}</p><p class="kv-now">זה הזמן להתפלל על</p>${today.map(r=>`<p class="kv-names">${kvCouple(r)}</p>`).join('<div class="kv-sep" aria-hidden="true"></div>')}${KV_NUSACH?`<p class="kv-nus">${esc(KV_NUSACH)}</p>`:''}<div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div></div>`;
+  else if(next) top=`<p class="kv-next">החתונה הבאה במחזור: <button data-id="${esc(next._k)}">${esc(next.name)}</button>${countdown(next._w)?', '+countdown(next._w):''}</p>`;
+  const item=r=>{ const m=kvMale(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}</button></li>`; };
+  const grp=(st,title)=>{ const list=rows.filter(r=>r._st===st); if(!list.length) return ''; return `<h3 class="kv-h"><span>${title}</span></h3><ul class="kv-list">${list.map(item).join('')}</ul>`; };
+  const miss=rows.filter(r=>!ws(r.mother)).length, missK=rows.filter(r=>r._st!=='waiting'&&!ws(r.kala)).length;
+  const adm=ROLE.ready&&ROLE.admin&&(miss||missK)?`<p class="kv-adm">למנהל: ${miss?`ל־${miss} בוגרים חסר שם האם`:''}${miss&&missK?', ':''}${missK?`ל־${missK} חסר שם הכלה`:''}. מוסיפים בכרטיס הבוגר, בעריכה.</p>`:'';
+  box.innerHTML=`${top}<article class="kv-scroll"><header class="kv-head"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></header>${grp('engaged','חתנים')}${grp('waiting','בחורים')}${grp('married','נשואים')}<footer class="kv-foot"><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}`;
+}
+document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-kvcopy]'); if(!b) return;
+  const rows=[...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name));
+  const txt=rows.map(r=>[kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).join('\n')).join('\n');
+  const done=()=>{ try{ toast('כל השמות הועתקו'); }catch(e){} };
+  try{ navigator.clipboard.writeText(txt).then(done,()=>{}); }catch(e){} });
+function setRows(rows){ S.rows=derive(rows.map(r=>({...r}))); render(); if((D.key||D.isNew)&&!D.edit&&!D.kid&&!D.xtra) renderDrawer(); if(!BP_DONE) setTimeout(birthPop,700); renderKvitel(); }
 
 /* ================= Google Sheet sync ================= */
 const SYNC={busy:false,at:null,on:false,mcp:undefined};
@@ -3709,7 +3792,7 @@ function newLogCount(){ return PREV_VISIT?LOG.filter(x=>x.at>PREV_VISIT&&x.by!==
 function newInboxCount(){ return INBOX.reduce((a,b)=>a+b.msgs.filter(m=>m.status!=='done').length,0); }
 function spyCur(){ const p=document.body.dataset.page||'upcoming'; return p; }
 let SPY_T=0; window.addEventListener('scroll',()=>{ clearTimeout(SPY_T); SPY_T=setTimeout(()=>{ const c=spyCur(); for(const b of $$('#topnav .tn-links [data-nav]')) b.setAttribute('aria-current',b.dataset.nav===c?'page':'false'); },60); },{passive:true});
-function setPage(p,push){ document.body.dataset.page=p; if(p==='tree'){ const t=$('#treeBox'); if(t&&S.rows.length) t.innerHTML=renderTree(S.rows); } if(p==='upcoming'||p==='glance'){ /* refresh visible parts */ }
+function setPage(p,push){ document.body.dataset.page=p; if(p==='tree'){ const t=$('#treeBox'); if(t&&S.rows.length) t.innerHTML=renderTree(S.rows); } if(p==='kvitel') setTimeout(renderKvitel,0); if(p==='upcoming'||p==='glance'){ /* refresh visible parts */ }
   if(push){ try{ history.replaceState(null,'','#'+p); }catch(e){} } window.scrollTo({top:0}); renderNav(); }
 function renderNav(){
   const cur=spyCur();
@@ -3732,7 +3815,7 @@ function navGo(n){
   if(n==='dismiss'){ SESSION_DISMISS=true; renderNav(); return; }
   if(n==='orn') return;
   if(n==='upcoming'){ setPage('upcoming',true); const c=$('.calwrap'); if(c){ let y=0,e=c; while(e){ y+=e.offsetTop; e=e.offsetParent; } const nh=($('#topnav')||{}).offsetHeight||0; window.scrollTo({top:Math.max(0,y-nh-36),behavior:'smooth'}); } return; }
-  if(n==='glance'||n==='tree'||n==='stats'){ setPage(n,true); return; }
+  if(n==='glance'||n==='tree'||n==='stats'||n==='kvitel'){ setPage(n,true); return; }
   if(n==='table'){ setPage('table',false); setView(['table','cards','simchas','timeline','map'].includes(S.view)?S.view:'table',true); renderNav(); window.scrollTo({top:0}); return; }
   setView(n,true); renderNav(); window.scrollTo({top:0});
 }
@@ -4034,7 +4117,7 @@ $('#scrim').addEventListener('click',closeDrawer);
 
 const VIEWS=['table','cards','simchas','timeline','stats','map','tree','log','inbox'];
 function setView(v,push){
-  if(v==='upcoming'||v==='glance'||v==='tree'||v==='stats'){ setPage(v,push); return; }
+  if(v==='upcoming'||v==='glance'||v==='tree'||v==='stats'||v==='kvitel'){ setPage(v,push); return; }
   if(!VIEWS.includes(v)) v='table';
   document.body.dataset.page=(v==='log'||v==='inbox')?v:'table';
   S.view=v; closePop(); renderView(); livePresence();
