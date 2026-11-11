@@ -2151,6 +2151,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .m-pin:hover span::after,.m-pin.on span::after{border-top-color:#2B1E0D}
 .ms-pinst{margin:2px 0 8px}
 .ms-pinst:empty{display:none}
+#map.m-far .m-pin{display:none}
+#map.m-res:not(.m-far) .m-dot,#map.m-res:not(.m-far) .m-num{display:none}
+#map.m-nolbl .m-pin span{display:none}
 .m-pin-ap i{background:#fff;border-color:#8A6A22;border-style:dashed}
 .m-pin-ap span{opacity:.88}
 .m-pin.nl span{opacity:0;pointer-events:none}
@@ -3101,6 +3104,7 @@ function mountMap(list){
   setTimeout(()=>{ try{ MAP&&MAP.invalidateSize(); }catch(e){} },60);
 }
 let MAPL=null, MAPSIG='';
+function mapZoomCls(){ const el=MAP&&MAP.getContainer(); if(!el) return; const z=MAP.getZoom(), res=MAPV.field==='res'; el.classList.toggle('m-res',res); el.classList.toggle('m-far',res&&z<10); el.classList.toggle('m-nolbl',z<12); if(z>=12) pinDecSoon(); }
 function mapMarkers(list){
   if(!MAP) return;
   const sig=MAPV.field+'#'+list.map(r=>r._k+':'+cityKey(r[MAPV.field])+':'+pinQ(r)+':'+r.name).join('|');
@@ -3111,7 +3115,9 @@ function mapMarkers(list){
   MAPDOTS={}; MAPNUM={};
   const {g}=mapGroups(list);
   const ents=[...g.entries()].filter(([k])=>CITY[k]).sort((a,b)=>b[1].length-a[1].length);
-  if(MAPV.field==='res'){ allPins(list); } else for(const [k,rs] of ents){
+  if(MAPV.field==='res') allPins(list);
+  mapZoomCls(); MAP.off('zoomend',mapZoomCls); MAP.on('zoomend',mapZoomCls);
+  for(const [k,rs] of ents){
     const c=CITY[k], rad=8+Math.sqrt(rs.length)*5;
     const m=L.circleMarker(c,{radius:rad,className:'m-dot',weight:2}).addTo(MAPL);
     m.bindTooltip(`<b>${esc(k)}</b> · ${rs.length===1?'בוגר אחד':rs.length+' בוגרים'}`,{direction:'top',offset:[0,-rad],className:'m-tip'});
