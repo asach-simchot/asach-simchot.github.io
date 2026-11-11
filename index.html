@@ -3600,7 +3600,7 @@ function navGo(n){
   if(n==='admin'){ openAdmin(); return; }
   if(n==='dismiss'){ SESSION_DISMISS=true; renderNav(); return; }
   if(n==='orn') return;
-  if(n==='upcoming'){ setPage('upcoming',true); const c=$('.calwrap'); if(c){ let y=0,e=c; while(e){ y+=e.offsetTop; e=e.offsetParent; } window.scrollTo({top:Math.max(0,y-24),behavior:'smooth'}); } return; }
+  if(n==='upcoming'){ setPage('upcoming',true); const c=$('.calwrap'); if(c){ let y=0,e=c; while(e){ y+=e.offsetTop; e=e.offsetParent; } const nh=($('#topnav')||{}).offsetHeight||0; window.scrollTo({top:Math.max(0,y-nh-36),behavior:'smooth'}); } return; }
   if(n==='glance'||n==='tree'||n==='stats'){ setPage(n,true); return; }
   if(n==='table'){ setPage('table',false); setView(['table','cards','simchas','timeline','map'].includes(S.view)?S.view:'table',true); renderNav(); window.scrollTo({top:0}); return; }
   setView(n,true); renderNav(); window.scrollTo({top:0});
