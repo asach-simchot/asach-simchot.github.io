@@ -575,6 +575,18 @@ body[data-page="upcoming"] .orn-div.small,body[data-page="upcoming"] footer::bef
 .fact button{all:unset;cursor:pointer;color:var(--ink);font-weight:600;border-bottom:1px dotted var(--muted)}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px}
 .panel.wide{grid-column:1/-1}
+.kp-split{display:flex;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.kp-split span{display:flex;align-items:center;justify-content:center;gap:6px;font-size:14.5px;font-weight:700;min-width:70px;white-space:nowrap}
+.kp-split b{font-size:19px}
+.kp-b{background:linear-gradient(160deg,#FBEBB8,#E3BF66 55%,#C9973A);color:#2B1E0D}
+.kp-g{background:linear-gradient(160deg,#8A6A22,#5A3E17);color:#F6EDD5}
+.kp-pct{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:6px 2px 14px}
+.kp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:10px}
+.kp-grid>div{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;background:color-mix(in srgb,var(--surface),var(--gold-soft) 35%)}
+.kp-l{font-size:12.5px;color:var(--muted)}
+.kp-grid b{font-family:var(--f-disp);font-size:24px;color:var(--wine);line-height:1.15}
+.kp-grid small{color:var(--muted);font-size:12.5px}
+.kp-grid button{all:unset;cursor:pointer;font-weight:700;font-size:15px;color:var(--ink);border-bottom:1px dotted var(--muted)}
 .panel h3{margin:0 0 12px;font-family:var(--f-disp);font-size:20px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .panel h3 small{font-family:var(--f-ui);font-size:13px;color:var(--muted);font-weight:500}
 .bars{display:grid;gap:3px}
@@ -3100,6 +3112,27 @@ function barsPanel(k,title,list,cls=''){
   const open=S.expanded.has(k), shown=open?vals:vals.slice(0,8);
   return `<section class="panel ${cls}"><h3>${title}<small>${vals.length} שונים</small></h3><div class="bars">${shown.map(v=>`<button class="barrow" data-facet-set="${k}" data-val="${esc(v)}" title="הצגת הבוגרים: ${esc(vlabel(k,v))}"><span class="lab">${esc(vlabel(k,v))}</span><span class="btrack"><span class="fill" style="width:${(counts.get(v)/max*100).toFixed(1)}%"></span></span><span class="v">${counts.get(v)}</span></button>`).join('')}</div>${vals.length>8?`<button class="more" data-expand="${k}">${open?'הצגת פחות':`הצגת כל ה־${vals.length}`}</button>`:''}</section>`;
 }
+function kidsPanel(list){
+  const all=[]; for(const r of list) for(const k of (r._kids||[])) all.push([k,r]);
+  if(!all.length) return '';
+  const boys=all.filter(([k])=>k.gnd==='m'), girls=all.filter(([k])=>k.gnd!=='m');
+  const n=all.length, pb=Math.round(boys.length/n*100), pg=100-pb;
+  const fam=list.filter(r=>r.kids.length), mar=list.filter(r=>r._st==='married').length;
+  const top=[...fam].sort((a,b)=>b.kids.length-a.kids.length)[0];
+  const last=arr=>arr.filter(([k])=>k._b&&k._b.t!=null&&k._b.t<=TODAY+DAY).sort((a,b)=>b[0]._b.t-a[0]._b.t)[0];
+  const lb=last(boys), lg=last(girls);
+  const who=x=>x?`<button data-id="${esc(x[1]._k)}">${esc(x[0].name||'עדיין בלי שם')}</button><small>אצל ${esc(x[1].name)} · ${esc(hebLabel(x[0]._b))}</small>`:'<small>עדיין אין</small>';
+  return `<section class="panel wide kidsp"><h3>בנים ובנות<small>${n===1?'ילד אחד':n+' ילדים'}</small></h3>
+    <div class="kp-split"><span class="kp-b" style="flex:${boys.length||.001}"><b>${boys.length}</b>${boys.length===1?'בן':'בנים'}</span><span class="kp-g" style="flex:${girls.length||.001}"><b>${girls.length}</b>${girls.length===1?'בת':'בנות'}</span></div>
+    <div class="kp-pct"><span>${pb}% בנים</span><span>${pg}% בנות</span></div>
+    <div class="kp-grid">
+      <div><span class="kp-l">משפחות עם ילדים</span><b>${fam.length}</b><small>מתוך ${mar} נשואים</small></div>
+      <div><span class="kp-l">ממוצע ילדים למשפחה</span><b>${fam.length?(n/fam.length).toFixed(1):0}</b><small>במשפחות שכבר יש בהן ילדים</small></div>
+      ${top&&top.kids.length>1?`<div><span class="kp-l">הכי הרבה ילדים</span><b>${top.kids.length}</b><small><button data-id="${esc(top._k)}">${esc(top.name)}</button></small></div>`:''}
+      <div><span class="kp-l">הבן האחרון שנולד</span>${who(lb)}</div>
+      <div><span class="kp-l">הבת האחרונה שנולדה</span>${who(lg)}</div>
+    </div></section>`;
+}
 function renderStats(list){
   const both=list.filter(r=>r._e?.t!=null&&r._w?.t!=null&&r._w.t>r._e.t);
   const durs=both.map(r=>[(r._w.t-r._e.t)/DAY,r]).sort((a,b)=>a[0]-b[0]);
@@ -3122,7 +3155,7 @@ function renderStats(list){
   const months=[...em.keys()].sort((a,b)=>{ const fa=list.find(r=>r._e?.y&&monthLabel(r._e)===a), fb=list.find(r=>r._e?.y&&monthLabel(r._e)===b); return monthKey(fa._e)-monthKey(fb._e); });
   const maxM=Math.max(1,...em.values());
   const chart=months.length?`<section class="panel wide"><h3>אירוסין לפי חודש<small>לחיצה על עמודה מסננת את הרשימה</small></h3><div class="mc">${months.map(m=>{const n=em.get(m);const mn=m.slice(0,m.lastIndexOf(' ')), yr=m.slice(m.lastIndexOf(' ')+1);return `<button class="col" data-facet-set="engM" data-val="${esc(m)}" title="${esc(m)}: ${n} אירוסין"><span class="b" style="height:${(n/maxM*100).toFixed(1)}%"><span>${n}</span></span><span class="l">${esc(mn)}<i>${esc(yr)}</i></span></button>`}).join('')}</div></section>`:'';
-  return `<div class="stats"><div class="facts">${facts}</div>${chart}
+  return `<div class="stats"><div class="facts">${facts}</div>${chart}${kidsPanel(list)}
     ${barsPanel('hall','אולמות',list)}${barsPanel('shtr','שטריימל',list,'g')}${barsPanel('shad','שדכנים',list)}
     ${barsPanel('res','עיר מגורים',list,'g')}${barsPanel('fcity','עיר ההורים',list)}${barsPanel('music','מוזיק',list,'g')}
     ${barsPanel('singer','זמר',list)}${barsPanel('wedM','חתונות לפי חודש',list,'g')}</div>`;
