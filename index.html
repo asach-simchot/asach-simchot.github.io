@@ -1969,6 +1969,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .bp-det{list-style:none;margin:4px 0 0;padding:10px 14px;display:grid;gap:4px;font-size:13.5px;color:rgba(248,237,213,.82);background:rgba(255,236,190,.06);border:1px solid rgba(240,207,124,.22);border-radius:12px;width:100%;box-sizing:border-box}
 .bp-more{border:0;background:none;color:#F0CF7C;font-weight:700;font-size:13.5px;padding:4px 8px;border-radius:8px}
 .bp-more:hover{background:rgba(255,236,190,.1)}
+.bp-tag{display:inline-block;margin:0 0 8px;padding:4px 14px;border-radius:999px;font-weight:800;font-size:12.5px;letter-spacing:.3px;color:#F6E3A8;background:rgba(240,207,124,.13);border:1px solid rgba(240,207,124,.55)}
+.bp-tag-w{color:#2B1E0D;background:linear-gradient(160deg,#FBEBB8,#E3BF66 55%,#C9973A);border-color:rgba(255,240,200,.7)}
+.bp-never{display:block;margin:12px auto 0;border:0;background:none;color:rgba(246,237,213,.62);font-size:13px;padding:4px 8px;border-radius:8px;text-decoration:underline dotted;text-underline-offset:3px}
+.bp-never:hover{color:#F6E3A8}
+#gateCode{-webkit-text-security:disc;text-security:disc}
 .bp-sep{height:1px;margin:16px auto;width:60%;background:linear-gradient(90deg,transparent,rgba(240,207,124,.5),transparent)}
 .bp-ok{margin-top:18px;min-height:44px;padding:0 26px;border:0;border-radius:999px;background:linear-gradient(160deg,#F6E3A8,#C49A3C);color:#2B1E0D;font-weight:800;font-size:15.5px;box-shadow:0 8px 20px -10px rgba(240,207,124,.9)}
 .bp-ok:hover{filter:brightness(1.06)}
@@ -2096,7 +2101,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
       <label for="gateName">שם מלא</label>
       <input id="gateName" class="gate-name" maxlength="60" autocomplete="name" dir="rtl" placeholder="למשל: ישראל ישראלי">
       <label for="gateCode">נא להזין את הקוד</label>
-      <input id="gateCode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" dir="ltr" aria-describedby="gateErr">
+      <input id="gateCode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" data-lpignore="true" data-1p-ignore spellcheck="false" dir="ltr" aria-describedby="gateErr">
       <button type="submit">כניסה</button>
       <p class="gate-err" id="gateErr" role="alert"></p>
     </form>
@@ -2106,6 +2111,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
 (function(){
   var g=document.getElementById('gate'), A=window.ASACH;
   var f=document.getElementById('gateForm'), inp=document.getElementById('gateCode'), err=document.getElementById('gateErr');
+  try{ if(inp&&!(window.CSS&&CSS.supports&&CSS.supports('-webkit-text-security','disc'))) inp.type='password'; }catch(e){}
   function pass(c,n){ A.setCode(c,n); if(!g.parentNode) return; g.classList.add('out'); document.documentElement.classList.remove('gated'); setTimeout(function(){ g.remove(); A.gateOpen(); },450); }
   document.documentElement.classList.add('gated');
   var saved=null;
@@ -3396,8 +3402,9 @@ function birthsToday(){ const out=[]; for(const r of S.rows) for(const k of (r._
 function birthPop(){
   if(BP_DONE) return; if(!((P.mode==='db'&&P.srv)||P.mode==='local')) return;
   BP_DONE=true;
-  const list=birthsToday(); if(!list.length) return;
-  const key=TODAY+':'+list.map(x=>x.k.id).sort().join(',');
+  if(lsGet('yachne-bp-off')===1) return;
+  const wl=S.rows.filter(r=>r._w&&r._w.t===TODAY), list=birthsToday(); if(!list.length&&!wl.length) return;
+  const key=TODAY+':'+[...wl.map(r=>'w'+r._k),...list.map(x=>x.k.id)].sort().join(',');
   if(lsGet('yachne-bp')===key) return;
   const sh=t=>`${hOfT(t,false)?hebLabel(hOfT(t,false),false)+', ':''}${gDate(t)}`;
   const item=({r,k})=>{ const boy=k.gnd==='m', pp=r.father?` ב״ר ${esc(r.father)}`:'';
@@ -3405,15 +3412,19 @@ function birthPop(){
     const par=k._sh&&typeof HC!=='undefined'&&HC.parsha(k._sh.t)?' פרשת '+HC.parsha(k._sh.t):'';
     if(boy){ if(k._sh) det.push(`שלום זכר: ליל שבת${esc(par)}, ${gDate(k._sh.t-DAY)}${k.shul?' · '+esc(k.shul):''}`); if(k._bris) det.push(`ברית מילה: ${gDay(k._bris.t)}, ${esc(sh(k._bris.t))}${(k.brisPlace||k.shul)?' · '+esc(k.brisPlace||k.shul):''}`); }
     else if(k._sh) det.push(`קידוש: שבת${esc(par)}, ${esc(sh(k._sh.t))}${k.shul?' · '+esc(k.shul):''}`);
-    return `<div class="bp-item"><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>להולדת ${boy?'הבן':'הבת'}${k.name?` <b>${esc(k.name)}</b>`:''} בשעה טובה ומוצלחת</p><p class="bp-bless">${boy?'יזכו לגדלו לתורה לחופה ולמעשים טובים':'יזכו לגדלה לחופה ולמעשים טובים'}</p>${det.length?`<ul class="bp-det">${det.map(d=>`<li>${d}</li>`).join('')}</ul>`:''}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
+    return `<div class="bp-item"><span class="bp-tag">${boy?'לידת בן':'לידת בת'}</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>להולדת ${boy?'הבן':'הבת'}${k.name?` <b>${esc(k.name)}</b>`:''} בשעה טובה ומוצלחת</p><p class="bp-bless">${boy?'יזכו לגדלו לתורה לחופה ולמעשים טובים':'יזכו לגדלה לחופה ולמעשים טובים'}</p>${det.length?`<ul class="bp-det">${det.map(d=>`<li>${d}</li>`).join('')}</ul>`:''}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
+  const wedItem=r=>{ const pp=r.father?` ב״ר ${esc(r.father)}`:''; const det=r._w?`<ul class="bp-det"><li>החתונה היום, ${esc(hebLabel(r._w))}${r.hall?' · '+esc(r.hall):''}</li></ul>`:''; return `<div class="bp-item"><span class="bp-tag bp-tag-w">חתונה</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>לרגל נישואיו בשעה טובה ומוצלחת</p><p class="bp-bless">יזכו לבנות בית נאמן בישראל</p>${det}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
+  const nb=list.filter(x=>x.k.gnd==='m').length, ng=list.length-nb;
+  const parts=[wl.length?(wl.length===1?'היום יש חתונה':`היום יש ${wl.length} חתונות`):'',nb?(nb===1?'לידת בן':`${nb} לידות של בנים`):'',ng?(ng===1?'לידת בת':`${ng} לידות של בנות`):''].filter(Boolean);
+  const sub=wl.length?parts.join(' · '):'היום במחזור: '+parts.join(' · ');
   const w=document.createElement('div'); w.className='bp-scrim'; w.id='bpScrim';
-  w.innerHTML=`<div class="bp" role="dialog" aria-modal="true" aria-labelledby="bpT"><button class="bp-x" data-bpclose aria-label="סגירה">×</button><div class="bp-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2 id="bpT" class="bp-t">מזל טוב!</h2><p class="bp-sub">${list.length>1?'שמחות כפולות במחזור היום':'שמחה במחזור היום'}</p>${list.map(item).join('<div class="bp-sep" aria-hidden="true"></div>')}<button class="bp-ok" data-bpclose>אמן, מזל טוב</button></div>`;
+  w.innerHTML=`<div class="bp" role="dialog" aria-modal="true" aria-labelledby="bpT"><button class="bp-x" data-bpclose aria-label="סגירה">×</button><div class="bp-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2 id="bpT" class="bp-t">מזל טוב!</h2><p class="bp-sub">${esc(sub)}</p>${[...wl.map(wedItem),...list.map(item)].join('<div class="bp-sep" aria-hidden="true"></div>')}<button class="bp-ok" data-bpclose>אמן, מזל טוב</button><button class="bp-never" data-bpnever>לא להציג שוב במחשב הזה</button></div>`;
   document.body.appendChild(w);
   requestAnimationFrame(()=>w.classList.add('on'));
   const close=()=>{ lsSet('yachne-bp',key); w.classList.remove('on'); setTimeout(()=>w.remove(),250); document.removeEventListener('keydown',esc_); };
   const esc_=e=>{ if(e.key==='Escape') close(); };
   document.addEventListener('keydown',esc_);
-  w.addEventListener('click',e=>{ const m=e.target.closest('[data-bpid]'); if(m){ close(); openDrawer(m.dataset.bpid); return; } if(e.target===w||e.target.closest('[data-bpclose]')) close(); });
+  w.addEventListener('click',e=>{ const m=e.target.closest('[data-bpid]'); if(m){ close(); openDrawer(m.dataset.bpid); return; } if(e.target.closest('[data-bpnever]')){ lsSet('yachne-bp-off',1); close(); return; } if(e.target===w||e.target.closest('[data-bpclose]')) close(); });
   setTimeout(()=>{ const b=w.querySelector('.bp-ok'); b&&b.focus(); },80);
 }
 function setRows(rows){ S.rows=derive(rows.map(r=>({...r}))); render(); if((D.key||D.isNew)&&!D.edit&&!D.kid&&!D.xtra) renderDrawer(); if(!BP_DONE) setTimeout(birthPop,700); }
