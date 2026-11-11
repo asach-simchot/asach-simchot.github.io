@@ -253,35 +253,71 @@ body.ro .admin-only,body.ro #addBtn,body.ro #secretBtn,body.ro .evedit,body.ro [
 #kvsec{display:none}
 body[data-page="kvitel"] #kvsec{display:block;padding-top:26px}
 body[data-page="kvitel"] #view{display:none!important}
-.kv-today{max-width:820px;margin:0 auto 26px;text-align:center;padding:26px 24px;border-radius:18px;color:#F8EDD5;background:radial-gradient(ellipse 90% 70% at 50% 0%,rgba(240,207,124,.18),rgba(240,207,124,0) 70%),linear-gradient(160deg,#2B1E0D 0%,#45301A 60%,#56401C 100%);border:1px solid rgba(240,207,124,.7);box-shadow:0 22px 50px -28px rgba(30,18,4,.9),inset 0 0 0 4px rgba(240,207,124,.12)}
+.kv-wrap{max-width:900px;margin:0 auto;padding:30px clamp(14px,4vw,40px) 34px;border-radius:20px;color:#E9DCC0;background:radial-gradient(ellipse 70% 45% at 50% 0%,rgba(255,196,96,.13),rgba(255,196,96,0) 70%),linear-gradient(180deg,#1E170E 0%,#120D07 100%);box-shadow:0 30px 70px -40px #000,inset 0 0 0 1px rgba(201,151,58,.35)}
+.kv-top{display:flex;align-items:flex-end;justify-content:center;gap:clamp(18px,7vw,70px)}
+.kv-candle{width:34px;height:102px;flex:none;overflow:visible}
+.kv-flame{transform-box:fill-box;transform-origin:50% 100%;animation:kvFl 3.2s ease-in-out infinite}
+.kv-glow{animation:kvGl 3.2s ease-in-out infinite}
+@keyframes kvFl{0%,100%{transform:scale(1,1)}35%{transform:scale(.95,1.06)}65%{transform:scale(1.03,.96)}}
+@keyframes kvGl{0%,100%{opacity:.8}50%{opacity:1}}
+.kv-tc{text-align:center;padding-bottom:6px}
+.kv-tc h2{margin:0;font-family:var(--f-disp);font-size:clamp(40px,7vw,56px);font-weight:900;letter-spacing:.03em;color:#E5C77F;text-shadow:0 0 24px rgba(255,190,90,.18)}
+.kv-tc h2::before{display:none!important}
+.kv-tc p{margin:2px 0 0;font-family:var(--f-disp);font-size:17px;color:#B49C72}
+.kv-reb{margin:22px auto 24px;text-align:center;font-family:var(--f-disp)}
+.kv-reb p{margin:2px 0;font-size:clamp(17px,2.6vw,21px);font-weight:700;line-height:1.5;color:#EADCBC}
+.kv-reb .kv-reb-bl{margin-top:4px;font-size:16px;font-weight:500;color:#C9A55A}
+.kv-today{margin:0 auto 24px;max-width:760px;text-align:center;padding:24px 22px;border-radius:14px;color:#F8EDD5;background:linear-gradient(160deg,#2C2112 0%,#3A2B15 100%);border:1px solid rgba(229,199,127,.6);box-shadow:inset 0 0 0 4px rgba(229,199,127,.08)}
 .kv-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto}
-.kv-orn span{height:1px;width:80px;background:linear-gradient(90deg,transparent,#D9B060,transparent)}
-.kv-orn i{width:7px;height:7px;transform:rotate(45deg);background:#D9B060}
-.kv-tt{margin:12px 0 0;font-size:14px;letter-spacing:.12em;color:rgba(248,237,213,.75)}
-.kv-now{margin:6px 0 10px;font-family:var(--f-disp);font-size:22px;color:#F0CF7C}
-.kv-names{margin:0 0 14px;font-family:var(--f-disp);font-size:clamp(26px,5vw,36px);font-weight:900;line-height:1.45;color:#FBEFC4}
-.kv-sep{width:30%;height:1px;margin:0 auto 14px;background:linear-gradient(90deg,transparent,rgba(240,207,124,.55),transparent)}
-.kv-nus{margin:0 auto 16px;max-width:600px;font-family:var(--f-disp);font-size:19px;line-height:1.8;color:rgba(248,237,213,.9);white-space:pre-line}
-.kv-next{max-width:820px;margin:0 auto 18px;text-align:center;color:var(--muted);font-size:15px}
-.kv-next button{all:unset;cursor:pointer;font-weight:700;color:var(--ink);border-bottom:1px dotted var(--muted)}
-.kv-scroll{max-width:820px;margin:0 auto;padding:34px clamp(18px,5vw,56px) 26px;background:linear-gradient(180deg,#FFFDF6 0%,#FBF3DF 100%);color:#2E2110;border:1px solid #D9BE7A;outline:1px solid #D9BE7A;outline-offset:-9px;border-radius:6px;box-shadow:0 26px 60px -34px rgba(60,40,10,.55)}
-.kv-head{text-align:center;margin-bottom:8px}
-.kv-head h2{margin:12px 0 2px;font-family:var(--f-disp);font-size:clamp(34px,6vw,46px);font-weight:900;color:#5A3E17;letter-spacing:.02em}
-.kv-head p{margin:0 0 10px;font-family:var(--f-disp);font-size:17px;color:#8A6A30}
-.kv-head h2::before{display:none!important}
-.kv-h{display:flex;align-items:center;gap:14px;margin:26px 0 14px;font-family:var(--f-disp);font-size:19px;font-weight:700;color:#8A6A22}
-.kv-h::before,.kv-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#D9BE7A,transparent)}
+.kv-orn span{height:1px;width:80px;background:linear-gradient(90deg,transparent,#C9A55A,transparent)}
+.kv-orn i{width:7px;height:7px;transform:rotate(45deg);background:#C9A55A}
+.kv-tt{margin:12px 0 0;font-size:14px;letter-spacing:.12em;color:rgba(248,237,213,.7)}
+.kv-now{margin:6px 0 10px;font-family:var(--f-disp);font-size:22px;color:#E5C77F}
+.kv-names{margin:0 0 12px;font-family:var(--f-disp);font-size:clamp(26px,5vw,34px);font-weight:900;line-height:1.45;color:#FBEFC4}
+.kv-sep{width:30%;height:1px;margin:0 auto 12px;background:linear-gradient(90deg,transparent,rgba(229,199,127,.5),transparent)}
+.kv-nus{margin:4px auto 14px;max-width:600px;font-family:var(--f-disp);font-size:18px;line-height:1.8;color:rgba(248,237,213,.88)}
+.kv-next{margin:0 auto 20px;text-align:center;color:#B49C72;font-size:15px}
+.kv-next button{all:unset;cursor:pointer;font-weight:700;color:#E5C77F;border-bottom:1px dotted #8C7550}
+.kv-scroll{margin:0 auto;padding:30px clamp(16px,5vw,52px) 24px;background:linear-gradient(180deg,#F5ECD6 0%,#EBDDBD 100%);color:#2A1E0E;border:1px solid #8C6A2E;outline:1px solid rgba(140,106,46,.55);outline-offset:-9px;border-radius:4px;box-shadow:0 30px 60px -30px #000}
+.kv-sec+.kv-sec{margin-top:10px}
+.kv-h{display:flex;align-items:center;gap:14px;margin:8px 0 16px;font-family:var(--f-disp);font-size:21px;font-weight:700;color:#5E4318}
+.kv-h::before,.kv-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#A8833A,transparent)}
 .kv-list{list-style:none;margin:0;padding:0;columns:3 200px;column-gap:28px;text-align:center}
-.kv-list li{break-inside:avoid;margin:0 0 10px}
-.kv-list button{all:unset;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;padding:2px 6px;border-radius:6px}
-.kv-list button:hover .kv-m{color:#8A5A14}
-.kv-list button:focus-visible{outline:2px solid #C9973A;outline-offset:2px}
-.kv-m{font-family:var(--f-disp);font-size:19px;font-weight:700;line-height:1.35;color:#2E2110}
-.kv-f{font-family:var(--f-disp);font-size:16.5px;line-height:1.35;color:#6B4E1A}
-.kv-foot{text-align:center;margin-top:22px}
-.kv-copy{border:1px solid #D9BE7A;background:transparent;color:#8A6A22;font-size:13.5px;font-weight:700;padding:7px 16px;border-radius:999px;cursor:pointer}
-.kv-copy:hover{background:rgba(217,190,122,.18)}
-.kv-adm{max-width:820px;margin:12px auto 0;text-align:center;color:var(--muted);font-size:12.5px}
+.kv-list li{break-inside:avoid;margin:0 0 11px}
+.kv-list button{all:unset;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;padding:2px 6px;border-radius:4px}
+.kv-list button:hover .kv-m{color:#7A5418}
+.kv-list button:focus-visible{outline:2px solid #A8833A;outline-offset:2px}
+.kv-m{font-family:var(--f-disp);font-size:18.5px;font-weight:700;line-height:1.35;color:#2A1E0E}
+.kv-f{font-family:var(--f-disp);font-size:16.5px;line-height:1.35;color:#5E4318}
+.kv-d{margin-top:1px;font-size:12.5px;color:#8C6A2E}
+.kv-sub{margin:16px 0 10px;text-align:center;font-family:var(--f-disp);font-size:17px;font-weight:700;color:#5E4318}
+.kv-bl{margin:14px auto 24px;max-width:640px;text-align:center;font-family:var(--f-disp);font-size:15.5px;line-height:1.8;color:#4E3A18}
+.kv-foot{text-align:center;margin-top:6px}
+.kv-copy{border:1px solid #A8833A;background:transparent;color:#5E4318;font-size:13.5px;font-weight:700;padding:7px 16px;border-radius:999px;cursor:pointer}
+.kv-copy:hover{background:rgba(168,131,58,.12)}
+.kv-adm{margin:14px auto 0;text-align:center;color:#9C8A66;font-size:12.5px}
+@media (prefers-reduced-motion:reduce){ .kv-flame,.kv-glow{animation:none} }
+.bp-nus{gap:2px}
+.bp-n1{margin:0;font-family:var(--f-disp);font-size:16.5px;line-height:1.5;color:#5A4520}
+.bp-nb{margin:6px 0;font-family:var(--f-disp);font-size:clamp(26px,6vw,32px);font-weight:900;line-height:1.25;color:#7A5418}
+.bp-nm{margin:8px 0 4px;font-family:var(--f-disp);font-size:21px;font-weight:800;line-height:1.5;color:#3A2A12}
+.bp-n2{margin:8px 0 0;font-family:var(--f-disp);font-size:15px;line-height:1.7;color:#6B4E1A}
+.bp-n3{margin:6px 0 0;font-size:13px;color:#8A7550}
+.bp-acts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:10px}
+.bp-nost{border:1px solid #B8923E;background:linear-gradient(180deg,#FFFDF5,#F1E3BE);color:#4E3A18;font-family:var(--f-disp);font-weight:700;font-size:14.5px;padding:7px 18px;border-radius:6px;cursor:pointer;box-shadow:0 4px 10px -6px rgba(90,60,10,.6)}
+.bp-nost:hover{background:#F1E3BE}
+.ns-scrim{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;padding:12px;background:rgba(18,14,9,.86)}
+.ns-bar{width:100%;max-width:900px;display:flex;justify-content:flex-start;margin-bottom:8px}
+.ns-x{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:6px 16px;font-size:14px;cursor:pointer}
+.ns-stage{flex:1;width:100%;overflow:auto;display:flex;justify-content:center;align-items:flex-start}
+.ns-wrap{position:relative;flex:none;direction:ltr;box-shadow:0 20px 60px rgba(0,0,0,.6);margin-bottom:12px}
+.ns-page{position:absolute;top:0;left:0;width:794px;height:1123px;background:#fff;color:#000;transform-origin:0 0;direction:rtl;font-family:'David','David Libre','Times New Roman',serif}
+.ns-frame{position:absolute;inset:32px;border:1px solid #000;box-shadow:inset 0 0 0 2px #fff,inset 0 0 0 4px #000,inset 0 0 0 6px #fff,inset 0 0 0 7px #000}
+.ns-in{position:absolute;top:96px;right:96px;bottom:96px;left:96px}
+.ns-p{margin:0 0 10.7px;text-align:center;font-size:36px;line-height:1.3}
+.ns-b{font-weight:700;text-align:right}
+.ns-big{font-size:48px;font-weight:700}
+.ns-t{margin-bottom:0;line-height:1.15}
 .bp-kv{margin:2px 0 0;font-family:var(--f-disp);font-size:16.5px;line-height:1.6;color:#7A4B12}
 .pg-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:6px 0 16px}
 .pg-head h2{margin:0;font-family:var(--f-disp);font-size:30px}
@@ -2021,17 +2057,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .bp-scrim{background:radial-gradient(circle at 50% 35%,rgba(255,232,170,.38),rgba(40,26,10,.58) 75%)}
 .bp-conf{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
 .bp{z-index:1;color:#3A2A12;background:radial-gradient(ellipse 120% 60% at 50% -8%,#FFEDB5 0%,rgba(255,237,181,0) 62%),linear-gradient(180deg,#FFFDF7 0%,#FFF5DE 100%);border:2px solid #E7C66E;box-shadow:0 30px 80px -20px rgba(60,35,5,.65),0 0 0 7px rgba(255,236,190,.4);padding:36px 26px 24px}
-.bp::before{content:"";position:absolute;top:0;left:0;right:0;height:9px;background:repeating-linear-gradient(90deg,#E8B84A 0 20px,#E4708A 20px 40px,#5FB0D8 40px 60px,#7CC59A 60px 80px,#B08AD8 80px 100px)}
+.bp::before{content:"";position:absolute;top:8px;left:8px;right:8px;bottom:8px;border:1px solid rgba(201,151,58,.55);border-radius:16px;pointer-events:none}
 .bp-scrim.on .bp{animation:bpPop .55s cubic-bezier(.2,.9,.25,1.15)}
 @keyframes bpPop{0%{transform:translateY(20px) scale(.82);opacity:.4}100%{transform:none;opacity:1}}
 .bp-x{color:#8A6A22;border-color:rgba(138,106,34,.35);background:#FFF8E6}
 .bp-x:hover{background:#FCEBC0}
 .bp-orn span{background:linear-gradient(90deg,transparent,#E0B04E,transparent)}
-.bp-orn i{background:#E4708A;box-shadow:16px 0 0 -1px #5FB0D8,-16px 0 0 -1px #7CC59A}
-.bp-t{background:linear-gradient(90deg,#C9973A 0%,#E4708A 30%,#E8B84A 55%,#C9973A 80%,#E4708A 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 4px 12px rgba(228,112,138,.22));animation:bpShine 4s linear infinite}
+.bp-orn i{background:#C9973A;box-shadow:16px 0 0 -1px #E8C670,-16px 0 0 -1px #E8C670}
+.bp-t{background:linear-gradient(90deg,#A8792A 0%,#E8C670 30%,#FFF1C4 50%,#E8C670 70%,#A8792A 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 4px 12px rgba(228,112,138,.22));animation:bpShine 4s linear infinite}
 @keyframes bpShine{to{background-position:-220% 0}}
 .bp-sub{color:#A0612A;font-weight:800;font-size:16px;letter-spacing:.02em}
-.bp-line b{color:#9A3550}
+.bp-line b{color:#7A5418}
 .bp-bless{color:#B07A1F}
 .bp-det{color:#5A4520;background:#FFF8E6;border-color:#EED9A0}
 .bp-more{color:#A0612A}
@@ -2041,7 +2077,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .bp-tag-w{color:#3A2A12;background:linear-gradient(135deg,#FCE7A6,#E8B84A 60%,#D49A2E)}
 .bp-tag-b{background:linear-gradient(135deg,#7FCBEA,#3C8DBC)}
 .bp-tag-g{background:linear-gradient(135deg,#F7A8BC,#D9587A)}
-.bp-ok{background:linear-gradient(135deg,#F2C55C 0%,#EE9A6A 50%,#E4708A 100%);color:#fff;text-shadow:0 1px 2px rgba(80,30,10,.3);box-shadow:0 12px 24px -10px rgba(228,112,138,.75);font-size:16.5px;padding:0 32px}
+.bp-ok{background:linear-gradient(135deg,#F6E3A8 0%,#D9AE4E 55%,#B8862C 100%);color:#2B1E0D;text-shadow:none;box-shadow:0 12px 24px -10px rgba(184,134,44,.8);font-size:16.5px;padding:0 32px}
 .bp-ok:focus-visible,.bp-x:focus-visible,.bp-more:focus-visible{outline:2px solid #E4708A}
 .bp-never{color:#9A8460}
 .bp-never:hover{color:#6B4E1A}
@@ -2326,12 +2362,12 @@ const SEED = JSON.parse(document.getElementById('seed').textContent);
 const SHEET_ID = '1MaPb1kuQaUTKgSu8hBlMW8exk9mSura9cjVYU0wnrpM';
 const BASE_YEAR = 5785;
 const DAY = 864e5;
-const FIELDS = [['name','שם'],['phone','פלאפון'],['email','אימייל'],['street','רחוב'],['apt','בניין ודירה'],['res','עיר מגורים'],['father','שם האב'],['mother','שם האם'],['fcity','עיר ההורים'],['mech','מחותן'],['mcity','עיר המחותן'],['kala','שם הכלה'],['kmother','שם אם הכלה'],['shad','שדכן'],['eng','אירוסין'],['wed','חתונה'],['hall','אולם'],['shtr','שטריימל'],['music','מוזיק'],['singer','זמר'],['ord','סדר אירוסין'],['id','מס׳ ברשימה'],['notes','הערות']];
+const FIELDS = [['name','שם'],['phone','פלאפון'],['email','אימייל'],['street','רחוב'],['apt','בניין ודירה'],['res','עיר מגורים'],['father','שם האב'],['tname','שם לתפילה'],['mother','שם האם'],['fcity','עיר ההורים'],['mech','מחותן'],['mcity','עיר המחותן'],['kala','שם הכלה'],['kmother','שם אם הכלה'],['shad','שדכן'],['eng','אירוסין'],['wed','חתונה'],['hall','אולם'],['shtr','שטריימל'],['music','מוזיק'],['singer','זמר'],['ord','סדר אירוסין'],['id','מס׳ ברשימה'],['notes','הערות']];
 const KEYS = FIELDS.map(f=>f[0]);
 const SHEET_MAP = {id:0,ord:1,name:2,phone:3,street:5,apt:6,res:7,father:8,fcity:9,mech:10,mcity:11,shad:12,eng:13,wed:14,hall:15,shtr:16,music:17,singer:18};
 const SHEET_KEYS = Object.keys(SHEET_MAP);
 const LBL = Object.assign(Object.fromEntries(FIELDS),{status:'מצב',region:'אזור',engM:'חודש אירוסין',wedM:'חודש חתונה',kids:'ילדים'});
-const COL_ORDER = ['ord','name','status','phone','email','res','street','apt','father','mother','fcity','mech','mcity','kala','kmother','shad','eng','wed','hall','shtr','music','singer','kids','id','notes'];
+const COL_ORDER = ['ord','name','status','phone','email','res','street','apt','father','tname','mother','fcity','mech','mcity','kala','kmother','shad','eng','wed','hall','shtr','music','singer','kids','id','notes'];
 const COL_LBL = Object.assign({},LBL,{ord:'#'});
 const DEFAULT_COLS = ['ord','name','status','phone','email','res','street','apt','father','fcity','mech','shad','eng','wed','hall','shtr','kids'];
 const FACETS = ['status','region','res','fcity','hall','shtr','shad','music','singer','engM','wedM'];
@@ -3251,7 +3287,7 @@ function closeDrawer(){
   const l=D.last; D={key:null,edit:false,isNew:false,armed:false,kid:null,xtra:null,kidArmed:null};
   if(l&&l.focus&&document.contains(l)) l.focus();
 }
-const SECTIONS=[['פרטי קשר',['phone','email','res','street','apt']],['משפחה',['father','mother','fcity','mech','mcity']],['השידוך',['shad','eng','ord','kala','kmother']],['החתונה',['wed','hall','shtr','music','singer']],['הערות',['notes']]];
+const SECTIONS=[['פרטי קשר',['phone','email','res','street','apt']],['משפחה',['father','tname','mother','fcity','mech','mcity']],['השידוך',['shad','eng','ord','kala','kmother']],['החתונה',['wed','hall','shtr','music','singer']],['הערות',['notes']]];
 function kidBlock(r,k){
   const li=(l,v,sub)=>`<li><span>${l}</span><span>${v}${sub?`<small>${sub}</small>`:''}</span></li>`;
   const h=t=>{ const x=hOfT(t,false); return x?hebLabel(x):''; };
@@ -3473,7 +3509,7 @@ function bpConfetti(host){
   const c=document.createElement('canvas'); c.className='bp-conf'; host.appendChild(c);
   const x=c.getContext('2d'); if(!x) return ()=>{}; let W=0,H=0,run=true; const dpr=Math.min(2,window.devicePixelRatio||1);
   const fit=()=>{ W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; x.setTransform(dpr,0,0,dpr,0,0); }; fit(); addEventListener('resize',fit);
-  const COL=['#F2C55C','#E8B84A','#E4708A','#F29BB0','#6EC1E4','#7CC59A','#B08AD8','#FFF6DA'];
+  const COL=['#F6E3A8','#EBCB78','#D9AE4E','#C49A3C','#B8862C','#FFF6DA','#F2D898'];
   const P=[]; const add=(b,side)=>P.push({x:b?(side?-10:W+10):Math.random()*W,y:b?H*.9:-20,vx:b?(side?1:-1)*(Math.random()*W/90+3):(Math.random()-.5)*1.4,vy:b?-(Math.random()*H/45+9):Math.random()*2+1.4,s:Math.random()*7+6,r:Math.random()*6.28,vr:(Math.random()-.5)*.3,c:COL[Math.random()*COL.length|0],o:Math.random()<.25,w:Math.random()*6.28});
   for(let i=0;i<170;i++) add(true,i%2);
   const t0=performance.now();
@@ -3498,12 +3534,12 @@ function birthPop(force){
     if(boy){ if(k._sh) det.push(`שלום זכר: ליל שבת${esc(par)}, ${gDate(k._sh.t-DAY)}${k.shul?' · '+esc(k.shul):''}`); if(k._bris) det.push(`ברית מילה: ${gDay(k._bris.t)}, ${esc(sh(k._bris.t))}${(k.brisPlace||k.shul)?' · '+esc(k.brisPlace||k.shul):''}`); }
     else if(k._sh) det.push(`קידוש: שבת${esc(par)}, ${esc(sh(k._sh.t))}${k.shul?' · '+esc(k.shul):''}`);
     return `<div class="bp-item"><span class="bp-tag ${boy?'bp-tag-b':'bp-tag-g'}">${boy?'לידת בן':'לידת בת'}</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>להולדת ${boy?'הבן':'הבת'}${k.name?` <b>${esc(k.name)}</b>`:''} בשעה טובה ומוצלחת</p><p class="bp-bless">${boy?'יזכו לגדלו לתורה לחופה ולמעשים טובים':'יזכו לגדלה לחופה ולמעשים טובים'}</p>${det.length?`<ul class="bp-det">${det.map(d=>`<li>${d}</li>`).join('')}</ul>`:''}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
-  const wedItem=r=>{ const pp=r.father?` ב״ר ${esc(r.father)}`:''; const det=r._w?`<ul class="bp-det"><li>החתונה היום, ${esc(hebLabel(r._w))}${r.hall?' · '+esc(r.hall):''}</li></ul>`:''; return `<div class="bp-item"><span class="bp-tag bp-tag-w">חתונה</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>לרגל נישואיו בשעה טובה ומוצלחת</p><p class="bp-bless">יזכו לבנות בית נאמן בישראל</p>${kvMale(r)?`<p class="bp-kv">זה הזמן להתפלל על ${kvCouple(r)}</p>`:''}${det}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
+  const wedItem=r=>{ const m=kvMale(r), f=kvFem(r); return `<div class="bp-item bp-nus"><span class="bp-tag bp-tag-w">חתונה</span><p class="bp-n1">התפילות והלימוד היום של חברי השיעור</p><p class="bp-n1">לזכות</p><p class="bp-n1">החתן החשוב מבוגרי שיעורנו בישיבתה"ק</p><p class="bp-nb">הרב ${esc(r.name)} ני"ו</p><p class="bp-n1">אשר זוכה להיכנס היום תחת החופה למז"ט ובשעטומ"צ</p>${m?`<p class="bp-n1">נא לכוין בעת התפילה והלימוד</p><p class="bp-nm">החתן ${esc(m)}${f?`<br>והכלה ${esc(f)}`:''}</p>`:''}<p class="bp-n2">${esc(KV_NUSACH)}</p>${r._w?`<p class="bp-n3">${esc(hebLabel(r._w))}${r.hall?' · '+esc(r.hall):''}</p>`:''}<div class="bp-acts"><button class="bp-nost" data-bpnost="${esc(r._k)}">תצוגת נוסטלגיה</button><button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div></div>`; };
   const nb=list.filter(x=>x.k.gnd==='m').length, ng=list.length-nb;
   const parts=[wl.length?(wl.length===1?'היום יש חתונה':`היום יש ${wl.length} חתונות`):'',nb?(nb===1?'לידת בן':`${nb} לידות של בנים`):'',ng?(ng===1?'לידת בת':`${ng} לידות של בנות`):''].filter(Boolean);
   const sub=wl.length?parts.join(' · '):'היום במחזור: '+parts.join(' · ');
   const w=document.createElement('div'); w.className='bp-scrim'; w.id='bpScrim';
-  w.innerHTML=`<div class="bp" role="dialog" aria-modal="true" aria-labelledby="bpT"><button class="bp-x" data-bpclose aria-label="סגירה">×</button><div class="bp-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2 id="bpT" class="bp-t">מזל טוב!</h2><p class="bp-sub">${esc(sub)}</p>${[...wl.map(wedItem),...list.map(item)].join('<div class="bp-sep" aria-hidden="true"></div>')}<button class="bp-ok" data-bpclose>אמן, מזל טוב</button><button class="bp-later" data-bplater><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>להזכיר לי בעוד 10 דקות</button><button class="bp-never" data-bpnever>לא להציג שוב במחשב הזה</button><div class="bp-timer" aria-hidden="true"><i></i></div></div>`;
+  w.innerHTML=`<div class="bp" role="dialog" aria-modal="true" aria-labelledby="bpT"><button class="bp-x" data-bpclose aria-label="סגירה">×</button><div class="bp-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2 id="bpT" class="bp-t">מזל טוב!</h2><p class="bp-sub">${esc(sub)}</p>${[...wl.map(wedItem),...list.map(item)].join('<div class="bp-sep" aria-hidden="true"></div>')}<button class="bp-ok" data-bpclose>אמן, מזל טוב</button><button class="bp-later" data-bplater><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>להזכיר לי בעוד 10 דקות</button><button class="bp-never" data-bpnever>לא להציג שוב במחשב הזה</button></div>`;
   document.body.appendChild(w);
   requestAnimationFrame(()=>w.classList.add('on'));
   const stopConf=bpConfetti(w); let tm=null;
@@ -3511,11 +3547,8 @@ function birthPop(force){
   const close=()=>{ stopConf(); clearInterval(tm); w.classList.remove('on'); setTimeout(()=>w.remove(),250); document.removeEventListener('keydown',esc_); };
   const esc_=e=>{ if(e.key==='Escape') close(); };
   document.addEventListener('keydown',esc_);
-  w.addEventListener('click',e=>{ const m=e.target.closest('[data-bpid]'); if(m){ close(); openDrawer(m.dataset.bpid); return; } if(e.target.closest('[data-bpnever]')){ lsSet('yachne-bp-off',1); lsSet('yachne-bp-remind',null); close(); return; } if(e.target.closest('[data-bplater]')){ bpRemind(note); close(); return; } if(e.target===w||e.target.closest('[data-bpclose]')) close(); });
+  w.addEventListener('click',e=>{ const m=e.target.closest('[data-bpid]'); if(m){ close(); openDrawer(m.dataset.bpid); return; } if(e.target.closest('[data-bpnever]')){ lsSet('yachne-bp-off',1); lsSet('yachne-bp-remind',null); close(); return; } if(e.target.closest('[data-bplater]')){ bpRemind(note); close(); return; } const nb_=e.target.closest('[data-bpnost]'); if(nb_){ close(); kvNostalgia(byKey(nb_.dataset.bpnost)); return; } if(e.target===w||e.target.closest('[data-bpclose]')) close(); });
   setTimeout(()=>{ const b=w.querySelector('.bp-ok'); b&&b.focus(); },80);
-  const card=w.querySelector('.bp'), bar=w.querySelector('.bp-timer i'); let rest=10000, hov=false, last=Date.now();
-  card.addEventListener('mouseenter',()=>{ hov=true; }); card.addEventListener('mouseleave',()=>{ hov=false; });
-  tm=setInterval(()=>{ const now=Date.now(); if(!hov) rest-=now-last; last=now; if(bar) bar.style.width=Math.max(0,rest/100)+'%'; if(rest<=0) close(); },100);
 }
 function bpRemind(body){
   lsSet('yachne-bp-remind',{at:Date.now()+10*60*1000,body}); bpSchedule();
@@ -3532,28 +3565,49 @@ function bpSchedule(){
 }
 setTimeout(bpSchedule,2000);
 /* ================= kvitel ================= */
-const KV_NUSACH=''; /* הנוסח הקצר יבוא כאן */
-function kvFirst(r){ const w=ws(r.name).split(' ').filter(Boolean); return w.length>1?w.slice(0,-1).join(' '):(w[0]||''); }
+const KV_NUSACH='ויה"ר שיזכו לבנות בית נאמן בישראל על אדני התורה והיראה ויהא קשר של קיימא ובנין עדי עד ויזכו לדורות ישרים ומבורכים, והשכינה תהא שרויה בכל מעשה ידיהם.';
+const KV_BL={waiting:'לזיווג הגון בקרוב ובניקל, חיבור אמיתי לתורה, לבנות בית נאמן בישראל, אושר ועושר כל הימים בלא לחצים ודאגות, אהבת ה\', יראת ה\', קירבת ה\', לזכות לשבת בבית ה\' כל החיים, הצלחה וסייעתא דשמיא בכל הענינים, בריאות איתנה, בנים טובים, ומאירים בתורה וביר"ש וכט"ס',married:'יראת השם, אהבת השם, הצלחה עם המשפחה משני הצדדים, להתנתק מכל הבלי העולם ולעסוק רק בתוה"ק, פרנסה ברווח ובהיתר, הצלחה וסייעתא דשמיא בכל הענינים, בנים טובים ומאירים בתורה וביר"ש וכט"ס.',engaged:'לבנות בית נאמן בישראל, הזיווג יעלה יפה, החתונה תהיה בשעטו"מ, להתחיל את החיים ברגל ימין, אושר ועושר כל הימים בלא לחצים ודאגות, ההורים יוכלו לשמוח בחתונה באמת, ושהחתונה תהיה שמחה בלי שום מכשול, לזכות לשבת בבית ה\' כל החיים, כולל מוצלח, חברותות טובות, הצלחה וסייעתא דשמיא בלימוד, פרנסה ברווח, דירה נאה, שלום בית, בריאות איתנה, בנים טובים ומאירים בתורה וביר"ש וכט"ס.'};
+let KVX={};
+function kvFirst(r){ if(ws(r.tname)) return ws(r.tname); const w=ws(r.name).split(' ').filter(Boolean); return w.length>1?w.slice(0,-1).join(' '):(w[0]||''); }
 function kvMale(r){ return ws(r.mother)?`${kvFirst(r)} בן ${ws(r.mother)}`:''; }
 function kvFem(r){ const k=ws(r.kala); if(!k) return ''; return ws(r.kmother)?`${k} בת ${ws(r.kmother)}`:k; }
 function kvCouple(r){ return [kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).map(esc).join('<br>ו'); }
+const KV_CANDLE=`<svg class="kv-candle" viewBox="0 0 40 120" aria-hidden="true"><defs><radialGradient id="kvGlow"><stop offset="0" stop-color="#FFE7A0" stop-opacity=".85"/><stop offset="1" stop-color="#FFB24A" stop-opacity="0"/></radialGradient><linearGradient id="kvWax" x1="0" x2="1"><stop offset="0" stop-color="#DCCFB0"/><stop offset=".5" stop-color="#FBF5E6"/><stop offset="1" stop-color="#CDBF9E"/></linearGradient></defs><circle class="kv-glow" cx="20" cy="20" r="20" fill="url(#kvGlow)"/><path class="kv-flame" d="M20 6c4 7 6.5 11 6.5 15.5a6.5 6.5 0 0 1-13 0C13.5 17 16 13 20 6z" fill="#FFCE5C"/><path class="kv-flame" d="M20 14c2 4 3 6 3 8.4a3 3 0 0 1-6 0c0-2.4 1-4.4 3-8.4z" fill="#FFF6D6"/><rect x="19.3" y="27" width="1.4" height="6" fill="#2A1E0E"/><rect x="11.5" y="33" width="17" height="77" rx="2" fill="url(#kvWax)"/><rect x="6" y="108" width="28" height="7" rx="2.5" fill="#A8833A"/></svg>`;
+function kvSorted(){ return [...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name)); }
 function renderKvitel(){
   const box=$('#kvBox'); if(!box||document.body.dataset.page!=='kvitel') return;
-  const rows=[...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name));
+  const rows=kvSorted();
   const today=rows.filter(r=>r._w&&r._w.t===TODAY);
   const next=rows.filter(r=>r._w&&r._w.t!=null&&r._w.t>TODAY).sort((a,b)=>a._w.t-b._w.t)[0];
   let top='';
-  if(today.length) top=`<div class="kv-today"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><p class="kv-tt">${today.length>1?'היום יום חתונתם':'היום יום חתונתו'}</p><p class="kv-now">זה הזמן להתפלל על</p>${today.map(r=>`<p class="kv-names">${kvCouple(r)}</p>`).join('<div class="kv-sep" aria-hidden="true"></div>')}${KV_NUSACH?`<p class="kv-nus">${esc(KV_NUSACH)}</p>`:''}<div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div></div>`;
+  if(today.length) top=`<div class="kv-today"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><p class="kv-tt">${today.length>1?'היום יום חתונתם':'היום יום חתונתו'}</p><p class="kv-now">זה הזמן להתפלל על</p>${today.map(r=>`<p class="kv-names">${kvCouple(r)}</p>`).join('<div class="kv-sep" aria-hidden="true"></div>')}<p class="kv-nus">${esc(KV_NUSACH)}</p><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div></div>`;
   else if(next) top=`<p class="kv-next">החתונה הבאה במחזור: <button data-id="${esc(next._k)}">${esc(next.name)}</button>${countdown(next._w)?', '+countdown(next._w):''}</p>`;
-  const item=r=>{ const m=kvMale(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}</button></li>`; };
-  const grp=(st,title)=>{ const list=rows.filter(r=>r._st===st); if(!list.length) return ''; return `<h3 class="kv-h"><span>${title}</span></h3><ul class="kv-list">${list.map(item).join('')}</ul>`; };
+  const reb=Array.isArray(KVX.rebbeim)&&KVX.rebbeim.length?`<div class="kv-reb">${KVX.rebbeim.map((l,i,a)=>`<p class="${i===a.length-1?'kv-reb-bl':''}">${esc(l)}</p>`).join('')}</div>`:'';
+  const item=(r,d)=>{ const m=kvMale(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}${d&&r._w?`<small class="kv-d">${esc(hebLabel(r._w))}</small>`:''}</button></li>`; };
+  const sec=(title,list,bl,d,extra='')=>(list.length||extra)?`<section class="kv-sec"><h3 class="kv-h"><span>${title}</span></h3>${list.length?`<ul class="kv-list">${list.map(r=>item(r,d)).join('')}</ul>`:''}${extra}<p class="kv-bl">${esc(bl)}</p></section>`:'';
+  const pk=Array.isArray(KVX.pokkei)&&KVX.pokkei.length?`<p class="kv-sub">פוקקי פקוקים</p><ul class="kv-list kv-list-s">${KVX.pokkei.map(n=>`<li><span class="kv-m">${esc(n)}</span></li>`).join('')}</ul>`:'';
+  const eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
   const miss=rows.filter(r=>!ws(r.mother)).length, missK=rows.filter(r=>r._st!=='waiting'&&!ws(r.kala)).length;
   const adm=ROLE.ready&&ROLE.admin&&(miss||missK)?`<p class="kv-adm">למנהל: ${miss?`ל־${miss} בוגרים חסר שם האם`:''}${miss&&missK?', ':''}${missK?`ל־${missK} חסר שם הכלה`:''}. מוסיפים בכרטיס הבוגר, בעריכה.</p>`:'';
-  box.innerHTML=`${top}<article class="kv-scroll"><header class="kv-head"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></header>${grp('engaged','חתנים')}${grp('waiting','בחורים')}${grp('married','נשואים')}<footer class="kv-foot"><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}`;
+  box.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${sec('בחורים',rows.filter(r=>r._st==='waiting'),KV_BL.waiting,false,pk)}${sec('נשואים',rows.filter(r=>r._st==='married'),KV_BL.married,false)}${sec('חתנים',eng,KV_BL.engaged,true)}<footer class="kv-foot"><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
+}
+function kvNostalgia(r){
+  if(!r) return;
+  if(!document.getElementById('kvDavid')){ const l=document.createElement('link'); l.id='kvDavid'; l.rel='stylesheet'; l.href='https://fonts.googleapis.com/css2?family=David+Libre:wght@400;700&display=swap'; document.head.appendChild(l); }
+  const m=kvMale(r), f=kvFem(r);
+  const o=document.createElement('div'); o.className='ns-scrim'; o.setAttribute('role','dialog'); o.setAttribute('aria-label','תצוגת נוסטלגיה');
+  o.innerHTML=`<div class="ns-bar"><button class="ns-x" data-nsclose>סגירה ×</button></div><div class="ns-stage"><div class="ns-wrap"><div class="ns-page" dir="rtl"><div class="ns-frame"></div><div class="ns-in"><p class="ns-p ns-b">בס"ד</p><p class="ns-p">התפילות והלימוד היום של חברי השיעור</p><p class="ns-p">לזכות</p><p class="ns-p">החתן החשוב מבוגרי שיעורנו בישיבתה"ק</p><p class="ns-p ns-big ns-t">הרב ${esc(r.name)} ני"ו</p><p class="ns-p">אשר זוכה להיכנס היום תחת החופה למז"ט ובשעטומ"צ</p><p class="ns-p">נא לכוין בעת התפילה והלימוד</p><p class="ns-p ns-big ns-t">החתן ${esc(m||kvFirst(r))}</p>${f?`<p class="ns-p ns-big ns-t">והכלה ${esc(f)}</p>`:''}<p class="ns-p ns-big ns-t">&nbsp;</p><p class="ns-p ns-t">${esc(KV_NUSACH)}</p></div></div></div></div>`;
+  document.body.appendChild(o);
+  const st=o.querySelector('.ns-stage'), wr=o.querySelector('.ns-wrap'), pg=o.querySelector('.ns-page');
+  const fit=()=>{ const sc=Math.min((st.clientWidth-16)/794,1); wr.style.width=(794*sc)+'px'; wr.style.height=(1123*sc)+'px'; pg.style.transform=`scale(${sc})`; };
+  fit(); addEventListener('resize',fit);
+  const close=()=>{ removeEventListener('resize',fit); document.removeEventListener('keydown',k); o.remove(); };
+  const k=e=>{ if(e.key==='Escape') close(); }; document.addEventListener('keydown',k);
+  o.addEventListener('click',e=>{ if(e.target===o||e.target===st||e.target.closest('[data-nsclose]')) close(); });
 }
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-kvcopy]'); if(!b) return;
-  const rows=[...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name));
-  const txt=rows.map(r=>[kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).join('\n')).join('\n');
+  const rows=kvSorted();
+  const txt=[...rows.map(r=>[kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).join('\n')),...(Array.isArray(KVX.pokkei)?KVX.pokkei:[])].join('\n');
   const done=()=>{ try{ toast('כל השמות הועתקו'); }catch(e){} };
   try{ navigator.clipboard.writeText(txt).then(done,()=>{}); }catch(e){} });
 function setRows(rows){ S.rows=derive(rows.map(r=>({...r}))); render(); if((D.key||D.isNew)&&!D.edit&&!D.kid&&!D.xtra) renderDrawer(); if(!BP_DONE) setTimeout(birthPop,700); renderKvitel(); }
@@ -3753,6 +3807,7 @@ async function initRole(db){
   if(db){
     try{ db.collection('log').orderBy('at','desc').limit(150).onSnapshot(sn=>{ LOG=sn.docs.map(d=>({id:d.id,...d.data()})); resolveNames(LOG.map(x=>x.by)); renderNav(); if(S.view==='log') renderView(); },()=>{}); }catch(e){}
     try{ db.doc('meta/settings').onSnapshot(sn=>{ SETTINGS=sn.exists?(sn.data()||{}):{}; if(S.view==='inbox') renderView(); },()=>{}); }catch(e){}
+    try{ db.doc('meta/kvitel').onSnapshot(sn=>{ KVX=sn.exists?(sn.data()||{}):{}; renderKvitel(); },()=>{}); }catch(e){}
     if(ROLE.admin){ try{ db.collection('visits').onSnapshot(sn=>{ VISITS=sn.docs.map(d=>({uid:d.id,...d.data()})); resolveNames(VISITS.map(v=>v.uid)); if(S.view==='log') renderView(); },()=>{}); }catch(e){} }
     if(ROLE.admin){ try{ db.collection('inbox').onSnapshot(sn=>{ INBOX=sn.docs.map(d=>({uid:d.id,msgs:Array.isArray(d.data().msgs)?d.data().msgs:[]})); resolveNames(INBOX.map(x=>x.uid)); renderNav(); if(S.view==='inbox') renderView(); },()=>{}); }catch(e){} }
     if(ROLE.uid){
