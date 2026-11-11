@@ -1,0 +1,63 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>תצוגה מקדימה</title></head><body>
+<template id="pvx"><style>/* ===== PREVIEW ONLY ===== */
+.pv-sw{position:fixed;z-index:9999;bottom:16px;left:16px;display:flex;gap:6px;align-items:center;padding:6px 8px 6px 12px;border-radius:999px;background:#2B1E0D;border:1px solid #C9A55A;box-shadow:0 10px 30px -10px rgba(0,0,0,.6);font:700 13px/1 system-ui,sans-serif;color:#F6E3A8;direction:rtl}
+.pv-sw a{color:#F6E3A8;text-decoration:none;padding:7px 12px;border-radius:999px;border:1px solid transparent}
+.pv-sw a.on{background:linear-gradient(160deg,#E9C976,#B88A2E);color:#2B1E0D}
+.pv-sw a:not(.on):hover{border-color:#C9A55A}
+@media print{.pv-sw{display:none!important}}
+
+/* ---- A: filters drawer ---- */
+body.pv-a .fbox{position:relative}
+body.pv-a .fbox-h{display:none!important}
+body.pv-a .fbox-in{display:flex;align-items:center;gap:10px;padding:8px 10px!important;border-color:#D9C08A;background:linear-gradient(180deg,var(--surface),var(--surface-2,var(--surface)))}
+body.pv-a .fbox .search{flex:1 1 auto;width:auto!important;max-width:none!important;margin:0!important}
+.pv-fbtn{flex:none;position:relative;display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 18px;border-radius:11px;border:1px solid #C9A55A;background:linear-gradient(160deg,#6E4C1D,#3E2A0F);color:#F6E3A8;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 6px 14px -8px rgba(40,25,5,.8),inset 0 1px 0 rgba(255,236,190,.25);font-family:inherit}
+.pv-fbtn:hover{filter:brightness(1.12)}
+.pv-fbtn svg{width:16px;height:16px;transition:transform .25s}
+.pv-fbtn .pv-car{width:11px;height:11px}
+.fbox.pv-open .pv-fbtn .pv-car{transform:rotate(180deg)}
+.pv-fbtn b{display:none;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:linear-gradient(160deg,#F6E3A8,#C9973A);color:#2B1E0D;font-size:12px;line-height:20px;text-align:center;box-sizing:border-box}
+.pv-fbtn b.on{display:inline-block}
+body.pv-a .fbox .facets{position:absolute;z-index:35;top:calc(100% + 8px);left:24px;right:24px;justify-content:center;gap:10px 12px;padding:22px 22px 18px!important;border-radius:16px;background:var(--surface);border:1.5px solid #C9A55A;box-shadow:0 0 0 4px #4B3313,0 0 0 5px rgba(217,184,102,.85),0 30px 60px -20px rgba(30,20,5,.6);opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .22s,transform .22s,visibility 0s .22s}
+body.pv-a .fbox .facets::before{content:"סינון לפי";position:absolute;top:-11px;right:50%;transform:translateX(50%);padding:3px 16px;border-radius:999px;background:linear-gradient(160deg,#6E4C1D,#3E2A0F);border:1px solid #C9A55A;color:#F6E3A8;font-weight:800;font-size:12.5px;white-space:nowrap}
+body.pv-a .fbox.pv-open .facets{opacity:1;visibility:visible;transform:none;transition:opacity .22s,transform .22s}
+@media (max-width:760px){body.pv-a .fbox .facets{left:12px;right:12px}}
+
+/* ---- B: vitrine ---- */
+body.pv-b.tbl-lock #view.wrap{max-width:none;padding-inline:max(16px,1.4vw)}
+body.pv-b.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
+body.pv-b .tbl-wrap{border:2px solid #C9A55A!important;border-radius:14px;margin:6px 5px 0;box-shadow:0 0 0 4px #4B3313,0 0 0 5px rgba(217,184,102,.85),0 26px 60px -26px rgba(40,25,5,.65)}
+body.pv-b .tbl-wrap th{background:linear-gradient(180deg,#5E4119,#3A270E)!important;color:#F3D998!important;border-bottom:2px solid #C9A55A!important;letter-spacing:.2px}
+body.pv-b .tbl-wrap th button:hover,body.pv-b .tbl-wrap th[aria-sort] button{color:#fff!important}
+body.pv-b .tbl-wrap th+th{box-shadow:inset -1px 0 0 rgba(217,184,102,.22)}
+body.pv-b .tbl-wrap tbody tr:nth-child(even) td{background-image:linear-gradient(rgba(201,165,90,.06),rgba(201,165,90,.06))}
+</style><script>(function(){
+var V=(new URLSearchParams(location.search).get('v')||'a')==='b'?'b':'a';
+document.body.classList.add('pv-'+V);
+var sw=document.createElement('div'); sw.className='pv-sw';
+sw.innerHTML='<span>תצוגה מקדימה:</span><a href="?v=a" class="'+(V==='a'?'on':'')+'">א · מסננים במגירה</a><a href="?v=b" class="'+(V==='b'?'on':'')+'">ב · ויטרינה</a>';
+document.body.appendChild(sw);
+if(V!=='a'){ if(window.tblFit) setTimeout(window.tblFit,200); return; }
+var FI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>';
+var CA='<svg class="pv-car" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+function count(){ var b=document.querySelector('.pv-fbtn b'); if(!b) return; var n=document.querySelectorAll('#facets .fbtn.on').length; b.textContent=n; b.classList.toggle('on',n>0); }
+function setup(){ var box=document.querySelector('.fbox'); if(!box||box.querySelector('.pv-fbtn')) return !!box; var inn=box.querySelector('.fbox-in'), se=inn&&inn.querySelector('.search'); if(!se) return false;
+  var b=document.createElement('button'); b.type='button'; b.className='pv-fbtn'; b.innerHTML=FI+'<span>סינון</span><b></b>'+CA;
+  se.after(b); b.addEventListener('click',function(e){ e.stopPropagation(); box.classList.toggle('pv-open'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') box.classList.remove('pv-open'); });
+  document.addEventListener('click',function(e){ var v=document.getElementById('view'); if(v&&v.contains(e.target)) box.classList.remove('pv-open'); });
+  var f=document.getElementById('facets'); if(f) new MutationObserver(count).observe(f,{subtree:true,attributes:true,attributeFilter:['class'],childList:true});
+  count(); if(window.tblFit) setTimeout(window.tblFit,60); return true; }
+var tries=0; (function t(){ if(!setup()&&tries++<40) setTimeout(t,250); })();
+})();</script></template>
+<script>
+(function(){
+  var x=document.getElementById('pvx').innerHTML;
+  fetch('/index.html?x='+Date.now(),{cache:'no-store'}).then(function(r){return r.text();}).then(function(t){
+    var i=t.toLowerCase().lastIndexOf('</body>');
+    t=i>=0?t.slice(0,i)+x+t.slice(i):t+x;
+    document.open(); document.write(t); document.close();
+  });
+})();
+</script>
+</body></html>
