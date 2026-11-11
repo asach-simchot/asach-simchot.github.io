@@ -260,7 +260,20 @@ body[data-page="kvitel"] #view{display:none!important}
 .kv-glow{animation:kvGl 3.2s ease-in-out infinite}
 @keyframes kvFl{0%,100%{transform:scale(1,1)}35%{transform:scale(.95,1.06)}65%{transform:scale(1.03,.96)}}
 @keyframes kvGl{0%,100%{opacity:.8}50%{opacity:1}}
-.kv-tc{text-align:center;padding-bottom:6px}
+.kv-tc{text-align:center;padding-bottom:4px}
+.kv-tc .kv-bsd{margin:0 0 2px;font-family:var(--f-disp);font-size:13px;color:#A88F62;letter-spacing:.1em}
+.kv-tc h2{margin:0;display:flex;flex-direction:column;align-items:center;line-height:.95;font-family:'Frank Ruhl Libre',var(--f-disp);font-weight:900;text-shadow:none}
+.kv-tc h2 span{text-shadow:none;background:linear-gradient(180deg,#FFF3C9 0%,#F2D27E 38%,#C9973A 62%,#F6DE95 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 rgba(60,35,5,.55)) drop-shadow(0 0 18px rgba(255,190,90,.22))}
+.kv-tc .kv-t1{font-size:clamp(58px,10vw,96px);letter-spacing:.02em}
+.kv-tc .kv-t2{font-family:Bellefair,var(--f-disp);font-weight:400;font-size:clamp(28px,4.4vw,40px);letter-spacing:.32em;margin-top:2px;padding-inline-start:.32em}
+.kv-flour{display:block;width:min(300px,70vw);height:26px;margin:8px auto 4px;color:#C9A55A}
+.kv-tc .kv-sub2{margin:0;font-family:Bellefair,var(--f-disp);font-size:clamp(17px,2.2vw,20px);letter-spacing:.08em;color:#C8B088}
+.kv-tools{margin:16px 0 18px}
+.kv-tools .kv-copy{border-color:#A8833A;color:#E9D6A6}
+.kv-tools .kv-copy:hover{background:rgba(229,199,127,.12)}
+.kv-tools .kv-act{color:#F6E3A8}
+@media (max-width:760px){.kv-candle{width:24px;height:72px}}
+@media print{.kv-tools{display:none}}
 .kv-tc h2{margin:0;font-family:var(--f-disp);font-size:clamp(40px,7vw,56px);font-weight:900;letter-spacing:.03em;color:#E5C77F;text-shadow:0 0 24px rgba(255,190,90,.18)}
 .kv-tc h2::before{display:none!important}
 .kv-tc p{margin:2px 0 0;font-family:var(--f-disp);font-size:17px;color:#B49C72}
@@ -3371,7 +3384,7 @@ function closeDrawer(){
   const l=D.last; D={key:null,edit:false,isNew:false,armed:false,kid:null,xtra:null,kidArmed:null};
   if(l&&l.focus&&document.contains(l)) l.focus();
 }
-const SECTIONS=[['פרטי קשר',['phone','email','res','street','apt']],['משפחה',['father','tname','mother','fcity','mech','mcity']],['השידוך',['shad','eng','ord','kala','kmother']],['החתונה',['wed','hall','shtr','music','singer']],['הערות',['notes']]];
+const SECTIONS=[['פרטי קשר',['phone','email','street','res']],['משפחה',['father','tname','mother','fcity','mech','mcity']],['השידוך',['shad','eng','ord','kala','kmother']],['החתונה',['wed','hall','shtr','music','singer']],['הערות',['notes']]];
 function kidBlock(r,k){
   const li=(l,v,sub)=>`<li><span>${l}</span><span>${v}${sub?`<small>${sub}</small>`:''}</span></li>`;
   const h=t=>{ const x=hOfT(t,false); return x?hebLabel(x):''; };
@@ -3413,7 +3426,7 @@ function renderDrawer(){
         let v=r[k];
         if(k==='phone'&&v) v=`<span class="ltr">${esc(v)}</span>`;
         else if(k==='email'&&v) v=`<a class="ltr ph" href="mailto:${esc(v)}">${esc(v)}</a>`;
-        else if(k==='street'&&ws(v)) v=`<a class="ph" href="${mapsHref(r)}" target="_blank" rel="noopener" title="פתיחה במפות Google">${esc(v)}</a>`;
+        else if(k==='street'){ const t=[ws(r.street),ws(r.apt)].filter(Boolean).join(' '); v=ws(r.street)?`<a class="ph" href="${mapsHref(r)}" target="_blank" rel="noopener" title="פתיחה במפות Google">${esc(t)}</a>`:esc(t); return `<dt>${LBL[k]}</dt><dd class="${t?'':'none'}">${t?v:'לא צוין'}</dd>`; }
         else if(k==='eng'&&r._e) v=`${esc(hebLabel(r._e))}<small>${gWhen(r._e)}${r._e.guess?' (השנה חושבה לפי סדר הרשימה)':''}</small>`;
         else if(k==='wed'&&r._w) v=`${esc(hebLabel(r._w))}<small>${gWhen(r._w)}${r._w.t!=null?`, ${countdown(r._w)||(r._w.t<TODAY?'התקיימה':'')}`:''}${r._w.fix?' (השנה תוקנה כי קדמה לאירוסין)':''}</small>`;
         else v=esc(v);
@@ -3446,7 +3459,7 @@ function renderDrawer(){
     body=`<form id="ef" novalidate>
       ${false?'<p class="note">הפרטים כאן מתעדכנים מהגיליון בגוגל דרייב. שינוי שתעשו כאן יוחלף בעדכון הבא מהגיליון, לכן עדיף לתקן בגיליון עצמו. ההערות והילדים נשמרים רק כאן.</p>':''}
       <section class="dsec"><h4>פרטים</h4>${fld('name','data-autofocus required')}<div class="grid2">${fld('father')}${fld('phone')}</div>${fld('email','placeholder="name@example.com"')}</section>
-      <section class="dsec"><h4>מגורים</h4><div class="grid2">${fld('res')}${fld('street')}</div>${fld('apt')}</section>
+      <section class="dsec"><h4>מגורים</h4><div class="grid2">${fld('street')}${fld('apt')}</div>${fld('res')}</section>
       <section class="dsec"><h4>משפחה</h4><div class="grid2">${fld('fcity')}${fld('mech')}</div>${fld('mcity')}</section>
       <section class="dsec"><h4>השידוך</h4>${fld('shad')}<div class="grid2">${fld('eng','placeholder="למשל: כ״ה כסלו תשפ״ו"')}${fld('ord')}</div></section>
       <section class="dsec"><h4>החתונה</h4>${fld('wed','placeholder="למשל: אור לי״ט כסלו תשפ״ז"')}<div class="grid2">${fld('hall')}${fld('shtr')}${fld('music')}${fld('singer')}</div></section>
@@ -3661,6 +3674,8 @@ function kvSur(r){ const w=ws(r.name).split(' ').filter(Boolean); return w.lengt
 function kvMaleS(r){ const m=kvMale(r); if(!m) return ''; const s=kvSur(r); return s?`${m} (${s})`:m; }
 function kvCouple(r){ return [kvMale(r)||ws(r.name),kvFem(r)].filter(Boolean).map(esc).join('<br>ו'); }
 const KV_CANDLE=`<svg class="kv-candle" viewBox="0 0 40 120" aria-hidden="true"><defs><radialGradient id="kvGlow"><stop offset="0" stop-color="#FFE7A0" stop-opacity=".85"/><stop offset="1" stop-color="#FFB24A" stop-opacity="0"/></radialGradient><linearGradient id="kvWax" x1="0" x2="1"><stop offset="0" stop-color="#DCCFB0"/><stop offset=".5" stop-color="#FBF5E6"/><stop offset="1" stop-color="#CDBF9E"/></linearGradient></defs><circle class="kv-glow" cx="20" cy="20" r="20" fill="url(#kvGlow)"/><path class="kv-flame" d="M20 6c4 7 6.5 11 6.5 15.5a6.5 6.5 0 0 1-13 0C13.5 17 16 13 20 6z" fill="#FFCE5C"/><path class="kv-flame" d="M20 14c2 4 3 6 3 8.4a3 3 0 0 1-6 0c0-2.4 1-4.4 3-8.4z" fill="#FFF6D6"/><rect x="19.3" y="27" width="1.4" height="6" fill="#2A1E0E"/><rect x="11.5" y="33" width="17" height="77" rx="2" fill="url(#kvWax)"/><rect x="6" y="108" width="28" height="7" rx="2.5" fill="#A8833A"/></svg>`;
+function kvByWed(l){ return [...l].sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15)||(numOr(a.ord)??9999)-(numOr(b.ord)??9999)); }
+const KV_FLOUR=`<svg class="kv-flour" viewBox="0 0 320 28" aria-hidden="true"><path d="M160 14c-14-11-30-11-44-2s-30 9-44-1c-10-7-24-8-38 0M160 14c14-11 30-11 44-2s30 9 44-1c10-7 24-8 38 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M34 11c-6-5-14-4-16 2 4 4 11 3 16-2zM286 11c6-5 14-4 16 2-4 4-11 3-16-2z" fill="currentColor" opacity=".8"/><path d="M160 6l7 8-7 8-7-8z" fill="currentColor"/><circle cx="140" cy="14" r="2" fill="currentColor"/><circle cx="180" cy="14" r="2" fill="currentColor"/></svg>`;
 function kvSorted(){ return [...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(b.ord)??9999)||collator.compare(a.name,b.name)); }
 function renderKvitel(){
   const box_=$('#kvBox'); if(!box_||document.body.dataset.page!=='kvitel') return;
@@ -3678,11 +3693,11 @@ function renderKvitel(){
   const eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
   const miss=rows.filter(r=>!ws(r.mother)).length, missK=rows.filter(r=>r._st!=='waiting'&&!ws(r.kala)).length;
   const adm=ROLE.ready&&ROLE.admin&&(miss||missK)?`<p class="kv-adm">למנהל: ${miss?`ל־${miss} בוגרים חסר שם האם`:''}${miss&&missK?', ':''}${missK?`ל־${missK} חסר שם הכלה`:''}. מוסיפים בכרטיס הבוגר, בעריכה.</p>`:'';
-  const wt=rows.filter(r=>r._st==='waiting'), mr=rows.filter(r=>r._st==='married');
+  const wt=rows.filter(r=>r._st==='waiting'), mr=kvByWed(rows.filter(r=>r._st==='married'));
   const top1=(wt.length||pk)?`<div class="kv-row${pk?'':' kv-row1'}">${wt.length?box('בחורים',ul(wt,false,'kv-c3'),'kv-b1'):''}${pk}</div><p class="kv-bl">${esc(KV_BL.waiting)}</p>`:'';
   const mid=mr.length?`<div class="kv-row kv-row1">${box('נשואים',ul(mr,false,'kv-c5'))}</div><p class="kv-bl">${esc(KV_BL.married)}</p>`:'';
   const low=eng.length?`<div class="kv-row kv-row1">${box('חתנים',ul(eng,true,'kv-c4'))}</div><p class="kv-bl">${esc(KV_BL.engaged)}</p>`:'';
-  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל השיעור</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${top1}${mid}${low}<footer class="kv-foot"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
+  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><p class="kv-bsd">בס״ד</p><h2><span class="kv-t1">קוויטל</span><span class="kv-t2">השיעור</span></h2>${KV_FLOUR}<p class="kv-sub2">בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header><div class="kv-foot kv-tools"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></div>${reb}${top}<article class="kv-scroll">${top1}${low}${mid}</article>${adm}</div>`;
 }
 function kvNostalgia(r){
   if(!r) return;
@@ -3700,7 +3715,7 @@ function kvNostalgia(r){
   o.addEventListener('click',e=>{ if(e.target===o||e.target===st||e.target.closest('[data-nsclose]')) close(); });
 }
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-kvcopy]'); if(!b) return;
-  const rows=kvSorted();
+  const all=kvSorted(); const rows=[...all.filter(r=>r._st==='waiting'),...all.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15)),...kvByWed(all.filter(r=>r._st==='married')),...all.filter(r=>!['waiting','engaged','married'].includes(r._st))];
   const txt=[...rows.map(r=>[kvMaleS(r)||ws(r.name),kvFem(r)].filter(Boolean).join('\n')),...(Array.isArray(KVX.pokkei)?KVX.pokkei:[])].join('\n');
   const done=()=>{ try{ toast('כל השמות הועתקו'); }catch(e){} };
   try{ navigator.clipboard.writeText(txt).then(done,()=>{}); }catch(e){} });
@@ -3736,7 +3751,7 @@ td.nm{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:10pt;white-
   printHtml(html);
 }
 function kvDocHtml(word){
-  const rows=kvSorted(); const wt=rows.filter(r=>r._st==='waiting'), mr=rows.filter(r=>r._st==='married'), eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
+  const rows=kvSorted(); const wt=rows.filter(r=>r._st==='waiting'), mr=kvByWed(rows.filter(r=>r._st==='married')), eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
   const pk=Array.isArray(KVX.pokkei)?KVX.pokkei:[], reb=Array.isArray(KVX.rebbeim)?KVX.rebbeim:[];
   const cell=(r,d)=>`<p class="m">${esc(kvMaleS(r)||r.name)}</p>${kvFem(r)?`<p class="f">${esc(kvFem(r))}</p>`:''}${d&&r._w?`<p class="d">${esc(hebLabel(r._w))}</p>`:''}`;
   const grid=(items,n)=>{ if(!items.length) return ''; const per=Math.ceil(items.length/n), colsA=[]; for(let i=0;i<n;i++) colsA.push(items.slice(i*per,(i+1)*per)); return `<table class="g" width="100%" cellspacing="0" cellpadding="0"><tr>${colsA.map(c=>`<td class="gc" width="${Math.floor(100/n)}%" valign="top">${c.join('<p class="sp">&nbsp;</p>')}</td>`).join('')}</tr></table>`; };
@@ -3753,7 +3768,7 @@ ${word?'@page Section1{size:841.9pt 595.3pt;mso-page-orientation:landscape;margi
 body{margin:0;direction:rtl;font-family:David,'David Libre','Frank Ruhl Libre',serif;color:#2A1E0E;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 p{margin:0}
 .frame{border:4px double #6B4A1C;padding:10pt 14pt 6pt}
-.ti{text-align:center;font-size:26pt;font-weight:bold;color:#5A3E17;margin:0}
+.ti{text-align:center;font-size:36pt;font-weight:900;color:#6B4A1C;margin:0;letter-spacing:1pt;font-family:'Frank Ruhl Libre',David,serif}
 .st{text-align:center;font-size:11pt;color:#8A6A30;margin:0 0 4pt}
 .rb{text-align:center;font-size:13.5pt;font-weight:bold;margin:0}
 .ti2{text-align:center;font-size:16pt;font-weight:bold;color:#5A3E17;margin:0 0 6pt}
@@ -4127,7 +4142,7 @@ function renderExtra(){ const k=S.rows.map(r=>r._k+':'+r._st+':'+(r._kids||[]).l
 function render(){ renderHero(); renderRing(); renderExtra(); renderFacetBar(); renderView(); admSync(); renderNav(); }
 /* ================= admin grid editor ================= */
 const ADM={open:false,tab:'grads',q:'',sort:{k:'ord',d:1},keys:'',pinned:new Set(),kpinned:new Set(),armed:null};
-const ADM_COLS=[['name',200],['father',130],['phone',145],['email',220],['res',125],['street',145],['apt',100],['fcity',125],['mech',175],['mcity',125],['shad',195],['ord',70],['eng',135],['wed',155],['hall',145],['shtr',115],['music',135],['singer',155],['notes',280]];
+const ADM_COLS=[['ord',70],['name',200],['phone',145],['email',220],['street',145],['apt',100],['res',125],['father',130],['fcity',125],['mech',175],['mcity',125],['shad',195],['eng',135],['wed',155],['hall',145],['shtr',115],['music',135],['singer',155],['notes',280]];
 const TRASH='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
 function admList(){
   let l=S.rows; const q=norm(ADM.q).split(' ').filter(Boolean);
