@@ -2084,7 +2084,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--navh,56px) + 7
       <label for="gateName">שם מלא</label>
       <input id="gateName" class="gate-name" maxlength="60" autocomplete="name" dir="rtl" placeholder="למשל: ישראל ישראלי">
       <label for="gateCode">נא להזין את הקוד</label>
-      <input id="gateCode" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" dir="ltr" aria-describedby="gateErr">
+      <input id="gateCode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" dir="ltr" aria-describedby="gateErr">
       <button type="submit">כניסה</button>
       <p class="gate-err" id="gateErr" role="alert"></p>
     </form>
