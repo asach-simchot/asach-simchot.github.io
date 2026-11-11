@@ -1979,6 +1979,35 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .bp-ok:hover{filter:brightness(1.06)}
 .bp-ok:focus-visible,.bp-x:focus-visible,.bp-more:focus-visible{outline:2px solid #F6E3A8;outline-offset:2px}
 @media (prefers-reduced-motion:reduce){ .bp-scrim,.bp{transition:none} }
+/* festive look */
+.bp-scrim{background:radial-gradient(circle at 50% 35%,rgba(255,232,170,.38),rgba(40,26,10,.58) 75%)}
+.bp-conf{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.bp{z-index:1;color:#3A2A12;background:radial-gradient(ellipse 120% 60% at 50% -8%,#FFEDB5 0%,rgba(255,237,181,0) 62%),linear-gradient(180deg,#FFFDF7 0%,#FFF5DE 100%);border:2px solid #E7C66E;box-shadow:0 30px 80px -20px rgba(60,35,5,.65),0 0 0 7px rgba(255,236,190,.4);padding:36px 26px 24px}
+.bp::before{content:"";position:absolute;top:0;left:0;right:0;height:9px;background:repeating-linear-gradient(90deg,#E8B84A 0 20px,#E4708A 20px 40px,#5FB0D8 40px 60px,#7CC59A 60px 80px,#B08AD8 80px 100px)}
+.bp-scrim.on .bp{animation:bpPop .55s cubic-bezier(.2,.9,.25,1.15)}
+@keyframes bpPop{0%{transform:translateY(20px) scale(.82);opacity:.4}100%{transform:none;opacity:1}}
+.bp-x{color:#8A6A22;border-color:rgba(138,106,34,.35);background:#FFF8E6}
+.bp-x:hover{background:#FCEBC0}
+.bp-orn span{background:linear-gradient(90deg,transparent,#E0B04E,transparent)}
+.bp-orn i{background:#E4708A;box-shadow:16px 0 0 -1px #5FB0D8,-16px 0 0 -1px #7CC59A}
+.bp-t{background:linear-gradient(90deg,#C9973A 0%,#E4708A 30%,#E8B84A 55%,#C9973A 80%,#E4708A 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 4px 12px rgba(228,112,138,.22));animation:bpShine 4s linear infinite}
+@keyframes bpShine{to{background-position:-220% 0}}
+.bp-sub{color:#A0612A;font-weight:800;font-size:16px;letter-spacing:.02em}
+.bp-line b{color:#9A3550}
+.bp-bless{color:#B07A1F}
+.bp-det{color:#5A4520;background:#FFF8E6;border-color:#EED9A0}
+.bp-more{color:#A0612A}
+.bp-more:hover{background:#FCEBC0}
+.bp-sep{background:linear-gradient(90deg,transparent,rgba(201,151,58,.55),transparent)}
+.bp-tag{color:#fff;border:0;font-size:13px;padding:5px 16px;box-shadow:0 6px 14px -6px rgba(0,0,0,.35)}
+.bp-tag-w{color:#3A2A12;background:linear-gradient(135deg,#FCE7A6,#E8B84A 60%,#D49A2E)}
+.bp-tag-b{background:linear-gradient(135deg,#7FCBEA,#3C8DBC)}
+.bp-tag-g{background:linear-gradient(135deg,#F7A8BC,#D9587A)}
+.bp-ok{background:linear-gradient(135deg,#F2C55C 0%,#EE9A6A 50%,#E4708A 100%);color:#fff;text-shadow:0 1px 2px rgba(80,30,10,.3);box-shadow:0 12px 24px -10px rgba(228,112,138,.75);font-size:16.5px;padding:0 32px}
+.bp-ok:focus-visible,.bp-x:focus-visible,.bp-more:focus-visible{outline:2px solid #E4708A}
+.bp-never{color:#9A8460}
+.bp-never:hover{color:#6B4E1A}
+@media (prefers-reduced-motion:reduce){ .bp-t,.bp-scrim.on .bp{animation:none} }
 /* ===== map view ===== */
 .mapv{display:grid;gap:12px}
 .map-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
@@ -3399,6 +3428,22 @@ function modeNote(){ $('#modeNote').textContent = P.mode==='db' ? 'שינויי�
 /* ================= birth popup ================= */
 let BP_DONE=false;
 function birthsToday(){ const out=[]; for(const r of S.rows) for(const k of (r._kids||[])) if(k._b&&(k._b.hd===TODAY||k._b.t===TODAY)) out.push({r,k}); return out; }
+function bpConfetti(host){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return ()=>{};
+  const c=document.createElement('canvas'); c.className='bp-conf'; host.appendChild(c);
+  const x=c.getContext('2d'); if(!x) return ()=>{}; let W=0,H=0,run=true; const dpr=Math.min(2,window.devicePixelRatio||1);
+  const fit=()=>{ W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; x.setTransform(dpr,0,0,dpr,0,0); }; fit(); addEventListener('resize',fit);
+  const COL=['#F2C55C','#E8B84A','#E4708A','#F29BB0','#6EC1E4','#7CC59A','#B08AD8','#FFF6DA'];
+  const P=[]; const add=(b,side)=>P.push({x:b?(side?-10:W+10):Math.random()*W,y:b?H*.9:-20,vx:b?(side?1:-1)*(Math.random()*W/90+3):(Math.random()-.5)*1.4,vy:b?-(Math.random()*H/45+9):Math.random()*2+1.4,s:Math.random()*7+6,r:Math.random()*6.28,vr:(Math.random()-.5)*.3,c:COL[Math.random()*COL.length|0],o:Math.random()<.25,w:Math.random()*6.28});
+  for(let i=0;i<170;i++) add(true,i%2);
+  const t0=performance.now();
+  const tick=now=>{ if(!run) return; x.clearRect(0,0,W,H); if(now-t0<10000&&P.length<230&&Math.random()<.55) add(false);
+    for(let i=P.length-1;i>=0;i--){ const p=P[i]; p.vy=Math.min(p.vy+.25,4.3); p.vx*=.985; p.w+=.09; p.x+=p.vx+Math.sin(p.w)*.7; p.y+=p.vy; p.r+=p.vr; if(p.y>H+30){ P.splice(i,1); continue; }
+      x.save(); x.translate(p.x,p.y); x.rotate(p.r); x.fillStyle=p.c; if(p.o){ x.beginPath(); x.arc(0,0,p.s*.38,0,6.28); x.fill(); } else { x.scale(1,Math.cos(p.w*2)); x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); } x.restore(); }
+    if(P.length||now-t0<10000) requestAnimationFrame(tick); else c.remove(); };
+  requestAnimationFrame(tick);
+  return ()=>{ run=false; removeEventListener('resize',fit); };
+}
 function birthPop(){
   if(BP_DONE) return; if(!((P.mode==='db'&&P.srv)||P.mode==='local')) return;
   BP_DONE=true;
@@ -3412,7 +3457,7 @@ function birthPop(){
     const par=k._sh&&typeof HC!=='undefined'&&HC.parsha(k._sh.t)?' פרשת '+HC.parsha(k._sh.t):'';
     if(boy){ if(k._sh) det.push(`שלום זכר: ליל שבת${esc(par)}, ${gDate(k._sh.t-DAY)}${k.shul?' · '+esc(k.shul):''}`); if(k._bris) det.push(`ברית מילה: ${gDay(k._bris.t)}, ${esc(sh(k._bris.t))}${(k.brisPlace||k.shul)?' · '+esc(k.brisPlace||k.shul):''}`); }
     else if(k._sh) det.push(`קידוש: שבת${esc(par)}, ${esc(sh(k._sh.t))}${k.shul?' · '+esc(k.shul):''}`);
-    return `<div class="bp-item"><span class="bp-tag">${boy?'לידת בן':'לידת בת'}</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>להולדת ${boy?'הבן':'הבת'}${k.name?` <b>${esc(k.name)}</b>`:''} בשעה טובה ומוצלחת</p><p class="bp-bless">${boy?'יזכו לגדלו לתורה לחופה ולמעשים טובים':'יזכו לגדלה לחופה ולמעשים טובים'}</p>${det.length?`<ul class="bp-det">${det.map(d=>`<li>${d}</li>`).join('')}</ul>`:''}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
+    return `<div class="bp-item"><span class="bp-tag ${boy?'bp-tag-b':'bp-tag-g'}">${boy?'לידת בן':'לידת בת'}</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>להולדת ${boy?'הבן':'הבת'}${k.name?` <b>${esc(k.name)}</b>`:''} בשעה טובה ומוצלחת</p><p class="bp-bless">${boy?'יזכו לגדלו לתורה לחופה ולמעשים טובים':'יזכו לגדלה לחופה ולמעשים טובים'}</p>${det.length?`<ul class="bp-det">${det.map(d=>`<li>${d}</li>`).join('')}</ul>`:''}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
   const wedItem=r=>{ const pp=r.father?` ב״ר ${esc(r.father)}`:''; const det=r._w?`<ul class="bp-det"><li>החתונה היום, ${esc(hebLabel(r._w))}${r.hall?' · '+esc(r.hall):''}</li></ul>`:''; return `<div class="bp-item"><span class="bp-tag bp-tag-w">חתונה</span><p class="bp-line">לידידנו <b>${esc(r.name)}</b>${pp}<br>לרגל נישואיו בשעה טובה ומוצלחת</p><p class="bp-bless">יזכו לבנות בית נאמן בישראל</p>${det}<button class="bp-more" data-bpid="${esc(r._k)}">לכרטיס של ${esc(r.name)}</button></div>`; };
   const nb=list.filter(x=>x.k.gnd==='m').length, ng=list.length-nb;
   const parts=[wl.length?(wl.length===1?'היום יש חתונה':`היום יש ${wl.length} חתונות`):'',nb?(nb===1?'לידת בן':`${nb} לידות של בנים`):'',ng?(ng===1?'לידת בת':`${ng} לידות של בנות`):''].filter(Boolean);
@@ -3421,7 +3466,8 @@ function birthPop(){
   w.innerHTML=`<div class="bp" role="dialog" aria-modal="true" aria-labelledby="bpT"><button class="bp-x" data-bpclose aria-label="סגירה">×</button><div class="bp-orn" aria-hidden="true"><span></span><i></i><span></span></div><h2 id="bpT" class="bp-t">מזל טוב!</h2><p class="bp-sub">${esc(sub)}</p>${[...wl.map(wedItem),...list.map(item)].join('<div class="bp-sep" aria-hidden="true"></div>')}<button class="bp-ok" data-bpclose>אמן, מזל טוב</button><button class="bp-never" data-bpnever>לא להציג שוב במחשב הזה</button></div>`;
   document.body.appendChild(w);
   requestAnimationFrame(()=>w.classList.add('on'));
-  const close=()=>{ lsSet('yachne-bp',key); w.classList.remove('on'); setTimeout(()=>w.remove(),250); document.removeEventListener('keydown',esc_); };
+  const stopConf=bpConfetti(w);
+  const close=()=>{ stopConf(); lsSet('yachne-bp',key); w.classList.remove('on'); setTimeout(()=>w.remove(),250); document.removeEventListener('keydown',esc_); };
   const esc_=e=>{ if(e.key==='Escape') close(); };
   document.addEventListener('keydown',esc_);
   w.addEventListener('click',e=>{ const m=e.target.closest('[data-bpid]'); if(m){ close(); openDrawer(m.dataset.bpid); return; } if(e.target.closest('[data-bpnever]')){ lsSet('yachne-bp-off',1); close(); return; } if(e.target===w||e.target.closest('[data-bpclose]')) close(); });
