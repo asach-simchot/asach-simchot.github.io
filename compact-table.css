@@ -1,0 +1,31 @@
+/* ===== מצב טבלה: כותרת וכפתורים מצומצמים כדי לתת לטבלה יותר מקום ===== */
+body.tbl-lock #topnav{flex-wrap:nowrap!important;padding:4px 10px;gap:8px;align-items:center}
+body.tbl-lock .tn-brand{font-size:15px;height:auto;white-space:nowrap}
+body.tbl-lock #topnav .tn-links{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;padding:0!important;min-width:0;flex:1 1 0!important;order:0!important}
+body.tbl-lock .tn-links::-webkit-scrollbar{display:none}
+body.tbl-lock .tn-links button{height:28px;padding:0 9px;font-size:12.5px;white-space:nowrap;flex:0 0 auto}
+body.tbl-lock .tn-end .tn-send{height:28px;padding:0 10px;font-size:12.5px;white-space:nowrap}
+body.tbl-lock #themeBtn{width:28px;height:28px;flex:0 0 auto}
+
+body.tbl-lock #bar{margin-top:4px;top:38px}
+body.tbl-lock .bar-in{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:4px 12px;gap:6px;align-items:center}
+body.tbl-lock .bar-in::-webkit-scrollbar{display:none}
+body.tbl-lock .bar-in > *{flex:0 0 auto}
+body.tbl-lock #views{padding:2px}
+body.tbl-lock #views button{height:26px;padding:0 8px;font-size:12.5px}
+body.tbl-lock #grpHint{display:none}
+body.tbl-lock #group{height:28px;padding-block:0;font-size:12.5px}
+body.tbl-lock #colsBtn,body.tbl-lock #moreBtn{height:28px;min-height:0;padding:0 8px;font-size:12.5px}
+
+body.tbl-lock .fbox{margin:0 0 4px;padding:0 12px}
+body.tbl-lock .fbox-in{display:flex;align-items:center;gap:8px;padding:4px 8px}
+body.tbl-lock .fbox-h{display:none}
+body.tbl-lock .fbox .search{flex:0 0 230px;margin:0;height:30px}
+body.tbl-lock .fbox .search input{height:30px;font-size:13px}
+body.tbl-lock .fbox .search kbd{display:none}
+body.tbl-lock #facets{flex:1 1 auto;min-width:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:5px}
+body.tbl-lock #facets::-webkit-scrollbar{display:none}
+body.tbl-lock #facets > *{flex:0 0 auto}
+body.tbl-lock #facets .fbtn{height:26px;padding:0 8px;font-size:12px}
+body.tbl-lock #facets .count{font-size:12px;white-space:nowrap}
+@media (max-width:640px){body.tbl-lock .fbox .search{flex-basis:150px}}
