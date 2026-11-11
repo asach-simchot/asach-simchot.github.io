@@ -267,6 +267,9 @@ body[data-page="kvitel"] #view{display:none!important}
 .kv-reb{margin:14px auto 18px;text-align:center;font-family:var(--f-disp)}
 .kv-reb p{margin:2px 0;font-size:clamp(17px,2.6vw,21px);font-weight:700;line-height:1.5;color:#EADCBC}
 .kv-reb .kv-reb-bl{margin-top:4px;font-size:16px;font-weight:500;color:#C9A55A}
+.kv-today-s{margin:0 auto 14px;max-width:900px;text-align:center;font-family:var(--f-disp);font-size:15px;color:#D9C79A;line-height:1.6}
+.kv-today-s b{color:#F0D58C;font-weight:700}
+.kv-tt-s{color:#C9A55A;letter-spacing:.06em}
 .kv-today{margin:0 auto 20px;max-width:900px;text-align:center;padding:24px 22px;border-radius:14px;color:#F8EDD5;background:linear-gradient(160deg,#2C2112 0%,#3A2B15 100%);border:1px solid rgba(229,199,127,.6);box-shadow:inset 0 0 0 4px rgba(229,199,127,.08)}
 .kv-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto}
 .kv-orn span{height:1px;width:80px;background:linear-gradient(90deg,transparent,#C9A55A,transparent)}
@@ -3651,7 +3654,7 @@ function renderKvitel(){
   const today=rows.filter(r=>r._w&&r._w.t===TODAY);
   const next=rows.filter(r=>r._w&&r._w.t!=null&&r._w.t>TODAY).sort((a,b)=>a._w.t-b._w.t)[0];
   let top='';
-  if(today.length) top=`<div class="kv-today"><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div><p class="kv-tt">${today.length>1?'ביום שמחת לבם':'ביום שמחת לבו'}</p><p class="kv-now">נעתיר בתפילה מעומק הלב לזכות</p>${today.map(r=>`<p class="kv-names">${kvCouple(r)}</p>`).join('<div class="kv-sep" aria-hidden="true"></div>')}<p class="kv-nus">${esc(KV_NUSACH)}</p><div class="kv-orn" aria-hidden="true"><span></span><i></i><span></span></div></div>`;
+  if(today.length) top=`<p class="kv-today-s"><span class="kv-tt-s">${today.length>1?'ביום שמחת לבם':'ביום שמחת לבו'}</span> נעתיר בתפילה לזכות ${today.map(r=>`<b>${[kvMaleS(r)||ws(r.name),kvFem(r)].filter(Boolean).map(esc).join(' ו')}</b>`).join(' · ')}</p>`;
   else if(next) top=`<p class="kv-next">החתונה הבאה במחזור: <button data-id="${esc(next._k)}">${esc(next.name)}</button>${countdown(next._w)?', '+countdown(next._w):''}</p>`;
   const reb=Array.isArray(KVX.rebbeim)&&KVX.rebbeim.length?`<div class="kv-reb">${KVX.rebbeim.map((l,i,a)=>`<p class="${i===a.length-1?'kv-reb-bl':''}">${esc(l)}</p>`).join('')}</div>`:'';
   const item=(r,d)=>{ const m=kvMaleS(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}${d&&r._w?`<small class="kv-d">${esc(hebLabel(r._w))}</small>`:''}</button></li>`; };
@@ -3665,7 +3668,7 @@ function renderKvitel(){
   const top1=(wt.length||pk)?`<div class="kv-row${pk?'':' kv-row1'}">${wt.length?box('בחורים',ul(wt,false,'kv-c3'),'kv-b1'):''}${pk}</div><p class="kv-bl">${esc(KV_BL.waiting)}</p>`:'';
   const mid=mr.length?`<div class="kv-row kv-row1">${box('נשואים',ul(mr,false,'kv-c5'))}</div><p class="kv-bl">${esc(KV_BL.married)}</p>`:'';
   const low=eng.length?`<div class="kv-row kv-row1">${box('חתנים',ul(eng,true,'kv-c4'))}</div><p class="kv-bl">${esc(KV_BL.engaged)}</p>`:'';
-  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${top1}${mid}${low}<footer class="kv-foot"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
+  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><h2>קוויטל השיעור</h2><p>בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header>${reb}${top}<article class="kv-scroll">${top1}${mid}${low}<footer class="kv-foot"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></footer></article>${adm}</div>`;
 }
 function kvNostalgia(r){
   if(!r) return;
@@ -3724,9 +3727,11 @@ function kvDocHtml(word){
   const grid=(items,n)=>{ if(!items.length) return ''; const per=Math.ceil(items.length/n), colsA=[]; for(let i=0;i<n;i++) colsA.push(items.slice(i*per,(i+1)*per)); return `<table class="g" width="100%" cellspacing="0" cellpadding="0"><tr>${colsA.map(c=>`<td class="gc" width="${Math.floor(100/n)}%" valign="top">${c.join('<p class="sp">&nbsp;</p>')}</td>`).join('')}</tr></table>`; };
   const box=(title,inner)=>`<table class="bx" width="100%" cellspacing="0" cellpadding="0"><tr><td class="bxi"><p class="h">${title}</p>${inner}</td></tr></table>`;
   const bl=t=>`<p class="bl">${esc(t)}</p>`;
-  const top=wt.length||pk.length?(pk.length?`<table width="100%" cellspacing="0" cellpadding="0"><tr><td width="66%" valign="top">${box('בחורים',grid(wt.map(r=>cell(r)),3))}</td><td width="2%"></td><td width="32%" valign="top">${box('פוקקי פקוקים',grid(pk.map(n=>`<p class="m">${esc(n)}</p>`),1))}</td></tr></table>`:box('בחורים',grid(wt.map(r=>cell(r)),4)))+bl(KV_BL.waiting):'';
+  const left=(wt.length?box('בחורים',grid(wt.map(r=>cell(r)),2)):'')+(pk.length?box('פוקקי פקוקים',grid(pk.map(n=>`<p class="m">${esc(n)}</p>`),1)):'')+((wt.length||pk.length)?bl(KV_BL.waiting):'');
+  const right=eng.length?box('חתנים',grid(eng.map(r=>cell(r,true)),2))+bl(KV_BL.engaged):'';
+  const top=(left||right)?`<table width="100%" cellspacing="0" cellpadding="0"><tr><td width="49%" valign="top">${left}</td><td width="2%"></td><td width="49%" valign="top">${right}</td></tr></table>`:'';
   const mid=mr.length?box('נשואים',grid(mr.map(r=>cell(r)),4))+bl(KV_BL.married):'';
-  const low=eng.length?box('חתנים',grid(eng.map(r=>cell(r,true)),4))+bl(KV_BL.engaged):'';
+  const low='';
   const css=`
 @page{size:A4 landscape;margin:12mm 12mm}
 ${word?'@page Section1{size:841.9pt 595.3pt;mso-page-orientation:landscape;margin:34pt 34pt 34pt 34pt}div.Section1{page:Section1}':''}
@@ -3736,6 +3741,7 @@ p{margin:0}
 .ti{text-align:center;font-size:30pt;font-weight:bold;color:#5A3E17;margin:0 0 2pt}
 .st{text-align:center;font-size:12pt;color:#8A6A30;margin:0 0 6pt}
 .rb{text-align:center;font-size:13.5pt;font-weight:bold;margin:0}
+.ti2{text-align:center;font-size:16pt;font-weight:bold;color:#5A3E17;margin:0 0 6pt}
 .rbl{text-align:center;font-size:12pt;color:#8A6A30;margin:2pt 0 10pt}
 .orn{text-align:center;color:#A8833A;font-size:11pt;margin:2pt 0 8pt;letter-spacing:4pt}
 .bx{border:3px double #8C6A2E;margin:0 0 4pt;background:#FFFCF3}
@@ -3750,7 +3756,8 @@ p{margin:0}
 .bl{text-align:center;font-size:10pt;color:#4E3A18;margin:3pt 0 10pt;line-height:1.5}
 table{page-break-inside:auto}
 tr{page-break-inside:avoid}`;
-  const body=`<div class="frame"><p class="ti">קוויטל</p><p class="st">בוגרי השיעור ובני ביתם</p>${reb.length?reb.slice(0,-1).map(l=>`<p class="rb">${esc(l)}</p>`).join('')+`<p class="rbl">${esc(reb[reb.length-1])}</p>`:''}<p class="orn">◆ ◆ ◆</p>${top}${mid}${low}</div>`;
+  const pb=word?`<br clear="all" style="page-break-before:always">`:`<div style="page-break-before:always;break-before:page"></div>`;
+  const body=`<div class="frame"><p class="ti">קוויטל השיעור</p><p class="st">בוגרי השיעור ובני ביתם</p>${reb.length?reb.slice(0,-1).map(l=>`<p class="rb">${esc(l)}</p>`).join('')+`<p class="rbl">${esc(reb[reb.length-1])}</p>`:''}<p class="orn">◆ ◆ ◆</p>${top}</div>${mid?pb+`<div class="frame"><p class="ti2">קוויטל השיעור · נשואים</p>${mid}</div>`:''}`;
   if(word) return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40" dir="rtl" lang="he"><head><meta charset="utf-8"><title>קוויטל</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]--><style>${css}</style></head><body dir="rtl"><div class="Section1" dir="rtl">${body}</div></body></html>`;
   return `<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>קוויטל</title>${PR_FONTS}<style>${css}</style></head><body>${body}</body></html>`;
 }
