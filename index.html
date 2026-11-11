@@ -2133,6 +2133,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .m-pin:hover span,.m-pin.on span{background:#2B1E0D;color:#F0CF7C;border-color:#F0CF7C;transform:translateX(-50%) scale(1.07)}
 .m-pin:hover span::after,.m-pin.on span::after{border-top-color:#2B1E0D}
 .ms-pinst{margin:2px 0 8px}
+.ms-pinst:empty{display:none}
+.m-pin-ap i{background:#fff;border-color:#8A6A22;border-style:dashed}
+.m-pin-ap span{opacity:.88}
 .m-pin.nl span{opacity:0;pointer-events:none}
 .m-pin.nl:hover span,.m-pin.nl.on span{opacity:1}
 .leaflet-tooltip.m-tip{direction:rtl;background:var(--ink);color:var(--bg);border:0;border-radius:8px;padding:5px 10px;font:600 13px var(--f-ui);box-shadow:var(--shadow)}
@@ -3080,7 +3083,7 @@ function mountMap(list){
   MAPDOTS={}; MAPNUM={};
   const {g}=mapGroups(list);
   const ents=[...g.entries()].filter(([k])=>CITY[k]).sort((a,b)=>b[1].length-a[1].length);
-  for(const [k,rs] of ents){
+  if(MAPV.field==='res'){ allPins(list); } else for(const [k,rs] of ents){
     const c=CITY[k], rad=8+Math.sqrt(rs.length)*5;
     const m=L.circleMarker(c,{radius:rad,className:'m-dot',weight:2}).addTo(MAP);
     m.bindTooltip(`<b>${esc(k)}</b> · ${rs.length===1?'בוגר אחד':rs.length+' בוגרים'}`,{direction:'top',offset:[0,-rad],className:'m-tip'});
@@ -3089,7 +3092,6 @@ function mountMap(list){
     MAPDOTS[k]=m;
   }
   mapMark();
-  cityPins(list,false);
   setTimeout(()=>{ try{ MAP&&MAP.invalidateSize(); }catch(e){} },60);
 }
 /* --- each graduate at his own address --- */
@@ -3100,24 +3102,36 @@ function pinQ(r){ let st=ws(r.street); if(!st) return ''; const bm=ws(r.apt).mat
 function geoFetch(q,c){ return GEOQ=GEOQ.then(async()=>{ const w=1100-(Date.now()-GEO_LAST); if(w>0) await new Promise(r=>setTimeout(r,w)); GEO_LAST=Date.now(); const d=.12; const u='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=he&bounded=1&viewbox='+[c[1]-d,c[0]+d,c[1]+d,c[0]-d].join(',')+'&q='+encodeURIComponent(q); try{ const j=await fetch(u).then(r=>r.ok?r.json():null); if(!j) return null; return j[0]?[+(+j[0].lat).toFixed(5),+(+j[0].lon).toFixed(5)]:0; }catch(e){ return null; } }); }
 async function geoPerson(r,k){ const c=CITY[k], st=pinQ(r); if(!st||!c) return null; const il=c[0]>29&&c[0]<34&&c[1]>34&&c[1]<36; const C=geoc(); const bare=st.replace(/["'׳״]/g,''), nonum=st.replace(/\s+\d+[א-תA-Za-z]?$/,''); for(const q0 of [...new Set([st,bare,nonum])]){ const q=il?q0+', '+k:q0, key=k+'|'+q0; if(!(key in C)){ const v=await geoFetch(q,c); if(v===null) return null; C[key]=v; geocSave(); } if(C[key]) return C[key]; } return null; }
 function cityPins(list,fly){
-  if(PINS){ try{ PINS.remove(); }catch(e){} } PINS=null; PINBY={};
-  const k=MAPV.sel, on=!!(MAP&&k&&CITY[k]&&MAPV.field==='res'); const el=$('#map'); if(el) el.classList.toggle('m-city',on);
-  if(!MAP) return;
-  if(!k||!CITY[k]){ if(fly&&!k) MAP.flyToBounds(REGIONS.il.b,{duration:.8}); return; }
-  if(!on){ if(fly) MAP.flyTo(CITY[k],Math.max(MAP.getZoom(),8),{duration:.8}); return; }
-  const layer=PINS=L.layerGroup().addTo(MAP); MAP.off('zoomend moveend',pinDeclutter); MAP.on('zoomend moveend',pinDeclutter);
-  const rs=(mapGroups(list).g.get(k)||[]).filter(r=>pinQ(r));
-  if(fly) MAP.flyTo(CITY[k],13,{duration:.9});
-  const used={}, pts=[]; let left=rs.length;
-  const stat=()=>{ const s=$('#mapSide .ms-pinst'); if(!s) return; s.textContent=!rs.length?'אין כתובות רחוב לבוגרים בעיר הזו':left?`מאתר כתובות על המפה… ${rs.length-left}/${rs.length}`:pts.length?`${pts.length===1?'בוגר אחד מסומן':pts.length+' בוגרים מסומנים'} על המפה`+(rs.length>pts.length?` · ${rs.length-pts.length} כתובות לא אותרו`:''):'הכתובות לא אותרו על המפה'; };
-  stat();
-  for(const r of rs){ geoPerson(r,k).then(p=>{ if(PINS!==layer) return; left--;
-    if(p){ const key=p.join(','); const n=used[key]=(used[key]||0)+1; let ll=p; if(n>1){ const a=n*2.4, d=.00025*Math.sqrt(n); ll=[p[0]+d*Math.sin(a),p[1]+d*1.2*Math.cos(a)]; }
-      const m=L.marker(ll,{riseOnHover:true,icon:L.divIcon({className:'m-pin',html:`<i></i><span>${esc(r.name)}</span>`,iconSize:[0,0],iconAnchor:[0,0]})}).addTo(layer);
-      m.bindTooltip(esc(pinQ(r)),{direction:'bottom',offset:[0,10],className:'m-tip'}); m.on('click',()=>openDrawer(r._k)); PINBY[r._k]=m; pts.push(ll); pinDeclutter(); }
-    stat();
-    if(!left&&pts.length&&fly){ if(pts.length>1) MAP.flyToBounds(L.latLngBounds(pts).pad(.3),{maxZoom:15,duration:.8}); else MAP.flyTo(pts[0],15,{duration:.8}); }
-  }); }
+  if(!MAP||!fly) return; const k=MAPV.sel;
+  if(!k||!CITY[k]){ if(!k) MAP.flyToBounds(REGIONS.il.b,{duration:.8}); return; }
+  if(MAPV.field!=='res'){ MAP.flyTo(CITY[k],Math.max(MAP.getZoom(),8),{duration:.8}); return; }
+  const pts=[]; for(const [id,m] of Object.entries(PINBY)){ const r=list.find(x=>x._k===id); if(r&&cityKey(r.res)===k) pts.push(m.getLatLng()); }
+  if(pts.length>1) MAP.flyToBounds(L.latLngBounds(pts).pad(.3),{maxZoom:15,duration:.8}); else MAP.flyTo(pts[0]||CITY[k],14,{duration:.8});
+}
+let ALLP=null, PDT=0;
+function pinDecSoon(){ clearTimeout(PDT); PDT=setTimeout(pinDeclutter,60); }
+function geoSaveRow(r,q,ll){
+  r.geo={q,ll};
+  if(!(ROLE.ready&&ROLE.admin&&P.mode==='db'&&P.col)) return;
+  const cur=S.rows.find(x=>x._k===r._k); if(!cur) return; cur.geo={q,ll};
+  try{ P.col.doc(r._k).set(P.clean(cur)).catch(()=>{}); }catch(e){}
+}
+function allPins(list){
+  if(ALLP){ try{ ALLP.remove(); }catch(e){} } PINBY={}; const layer=ALLP=L.layerGroup().addTo(MAP);
+  MAP.off('zoomend moveend',pinDeclutter); MAP.on('zoomend moveend',pinDeclutter);
+  const used={};
+  const place=(r,p,approx)=>{ if(ALLP!==layer||!MAP) return;
+    const key=(+p[0]).toFixed(4)+','+(+p[1]).toFixed(4); const n=used[key]=(used[key]||0)+1; let ll=[+p[0],+p[1]];
+    if(n>1){ const a=n*2.4, d=(approx?.0012:.00025)*Math.sqrt(n); ll=[ll[0]+d*Math.sin(a),ll[1]+d*1.2*Math.cos(a)]; }
+    const m=L.marker(ll,{riseOnHover:true,icon:L.divIcon({className:'m-pin'+(approx?' m-pin-ap':''),html:`<i></i><span>${esc(r.name)}</span>`,iconSize:[0,0],iconAnchor:[0,0]})}).addTo(layer);
+    m.bindTooltip(approx?'הכתובת המדויקת לא ידועה, מסומן במרכז העיר':esc(pinQ(r)+', '+cityKey(r.res)),{direction:'bottom',offset:[0,10],className:'m-tip'});
+    m.on('click',()=>openDrawer(r._k)); PINBY[r._k]=m; pinDecSoon(); };
+  for(const r of list){ const k=cityKey(r.res), c=CITY[k]; if(!c) continue; const q=pinQ(r);
+    if(!q){ place(r,c,true); continue; }
+    const id=k+'|'+q, g=r.geo;
+    if(g&&g.q===id&&Array.isArray(g.ll)&&g.ll.length===2){ place(r,g.ll,false); continue; }
+    geoPerson(r,k).then(p=>{ if(p){ place(r,p,false); geoSaveRow(r,id,p); } else place(r,c,true); });
+  }
 }
 function pinDeclutter(){ const placed=[]; for(const m of Object.values(PINBY)){ const el=m.getElement&&m.getElement(); if(!el) continue; el.classList.remove('nl'); const sp=el.querySelector('span'); if(!sp) continue; const r=sp.getBoundingClientRect(); if(placed.some(p=>!(r.right+2<p.left||r.left-2>p.right||r.bottom+2<p.top||r.top-2>p.bottom))) el.classList.add('nl'); else placed.push(r); } }
 document.addEventListener('mouseover',e=>{ const row=e.target.closest&&e.target.closest('#mapSide .ms-row'); const id=row?row.dataset.id:null; for(const [i,m] of Object.entries(PINBY)){ const p=m.getElement&&m.getElement(); if(p) p.classList.toggle('on',i===id); m.setZIndexOffset(i===id?1000:0); } });
@@ -3475,6 +3489,7 @@ const P={
   clean(r){
     const o={}; for(const k of KEYS) o[k]=k==='notes'?String(r[k]??'').trim():ws(r[k]);
     o.extra=normExtra(r.extra);
+    if(r.geo&&r.geo.q&&Array.isArray(r.geo.ll)&&r.geo.ll.length===2&&isFinite(r.geo.ll[0])&&isFinite(r.geo.ll[1])) o.geo={q:String(r.geo.q),ll:[+r.geo.ll[0],+r.geo.ll[1]]};
     o.kids=normKids(r.kids).map(k=>({id:k.id,gnd:k.gnd,name:k.name,birth:k.birth,shul:k.shul,brisPlace:k.brisPlace,brisDate:k.brisDate,shabbatDate:k.shabbatDate,pidyon:k.pidyon,pidyonDate:k.pidyonDate,pidyonPlace:k.pidyonPlace}));
     return o;
   },
