@@ -1261,6 +1261,11 @@ footer{max-width:1280px;margin:0 auto;padding:6px 24px 40px;color:var(--muted);f
 @media (max-width:900px){ .calwrap{grid-template-columns:minmax(0,1fr);padding:0 12px} }
 @media (max-width:560px){ .cday{min-height:50px;padding:4px} .cday .lbl{display:none} .cday .hd{font-size:15px} .cal-title b{font-size:26px} .cal-grid,.cal-wd{padding-inline:6px} .cal-grid{gap:3px} }
 @media (prefers-reduced-motion:reduce){ .cal-page.flip-n,.cal-page.flip-p,.cal-head::before,.nextcard::before,.calwrap{animation:none} .calwrap{opacity:1} }
+/* fast return: after first navigation, skip the slow intro animations */
+body.intro-done .calwrap,body.intro-done .tline,body.intro-done .side,body.intro-done .pre,body.intro-done .shine,body.intro-done .hero .shiur,body.intro-done .orn,body.intro-done .hero .today,body.intro-done .hero .sync-line,body.intro-done .house,body.intro-done .chatbtn,body.intro-done .swash .sw-d{animation:none!important;opacity:1!important;transform:none}
+body.intro-done .swash .sw-l{animation:none!important;stroke-dashoffset:0}
+body.nav-quick[data-page="upcoming"] .calwrap{animation:calQuick .28s ease-out!important}
+@keyframes calQuick{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
 .qaform .fld label{color:#7A6A52}
 .qaform .sel{height:40px}
 .qaform .note{margin:4px 0 10px}
@@ -4183,7 +4188,7 @@ function newLogCount(){ return PREV_VISIT?LOG.filter(x=>x.at>PREV_VISIT&&x.by!==
 function newInboxCount(){ return INBOX.reduce((a,b)=>a+b.msgs.filter(m=>m.status!=='done').length,0); }
 function spyCur(){ const p=document.body.dataset.page||'upcoming'; return p; }
 let SPY_T=0; window.addEventListener('scroll',()=>{ clearTimeout(SPY_T); SPY_T=setTimeout(()=>{ const c=spyCur(); for(const b of $$('#topnav .tn-links [data-nav]')) b.setAttribute('aria-current',b.dataset.nav===c?'page':'false'); },60); },{passive:true});
-function setPage(p,push){ document.body.dataset.page=p; if(p==='tree'){ const t=$('#treeBox'); if(t&&S.rows.length) t.innerHTML=renderTree(S.rows); } if(p==='kvitel') renderKvitel(); if(p==='upcoming'||p==='glance'){ /* refresh visible parts */ }
+function setPage(p,push){ if(push) document.body.classList.add('intro-done','nav-quick'); document.body.dataset.page=p; if(p==='tree'){ const t=$('#treeBox'); if(t&&S.rows.length) t.innerHTML=renderTree(S.rows); } if(p==='kvitel') renderKvitel(); if(p==='upcoming'||p==='glance'){ /* refresh visible parts */ }
   if(push){ try{ history.replaceState(null,'','#'+p); }catch(e){} } window.scrollTo({top:0}); renderNav(); }
 function renderNav(){
   const cur=spyCur();
@@ -4205,7 +4210,7 @@ function navGo(n){
   if(n==='admin'){ openAdmin(); return; }
   if(n==='dismiss'){ SESSION_DISMISS=true; renderNav(); return; }
   if(n==='orn') return;
-  if(n==='upcoming'){ setPage('upcoming',true); const c=$('.calwrap'); if(c){ let y=0,e=c; while(e){ y+=e.offsetTop; e=e.offsetParent; } const nh=($('#topnav')||{}).offsetHeight||0; window.scrollTo({top:Math.max(0,y-nh-36),behavior:'smooth'}); } return; }
+  if(n==='upcoming'){ setPage('upcoming',true); const c=$('.calwrap'); if(c){ let y=0,e=c; while(e){ y+=e.offsetTop; e=e.offsetParent; } const nh=($('#topnav')||{}).offsetHeight||0; window.scrollTo({top:Math.max(0,y-nh-36),behavior:'instant'}); } return; }
   if(n==='glance'||n==='tree'||n==='stats'||n==='kvitel'){ setPage(n,true); return; }
   if(n==='table'){ setPage('table',false); setView(['table','cards','simchas','timeline','map'].includes(S.view)?S.view:'table',true); renderNav(); window.scrollTo({top:0}); return; }
   setView(n,true); renderNav(); window.scrollTo({top:0});
@@ -4733,7 +4738,7 @@ setTimeout(cntScan,60);
 /* ================= boot ================= */
 setRows(SEED.map(r=>({...r,_k:'g'+r.id})));
 saveUI();
-document.body.dataset.page='upcoming';
+document.body.dataset.page='upcoming'; setTimeout(()=>document.body.classList.add('intro-done'),4500);
 const h0=location.hash.slice(1); if(h0==='admin') openAdmin(); else if(h0) setView(h0,false);
 P.init();
 </script>
