@@ -21,6 +21,12 @@
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+<link rel="preload" as="script" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js">
+<link rel="preload" as="script" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js">
+<link rel="preload" as="style" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js">
+<link rel="preload" as="script" href="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js">
+<link rel="preload" as="fetch" crossorigin="anonymous" href="https://tiles.openfreemap.org/styles/liberty">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
@@ -2410,6 +2416,29 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
 .card{content-visibility:auto;contain-intrinsic-size:auto 330px}
 .logi{content-visibility:auto;contain-intrinsic-size:auto 56px}
 </style>
+<style>
+/* ===== luxury pendant lamps lighting the title ===== */
+.stage{position:relative;display:inline-block;padding-top:var(--lamp-h);--lamp-h:clamp(74px,8.5vw,118px);max-width:100%}
+.stage .shine{position:relative;z-index:2}
+.lamps{position:absolute;inset:0;pointer-events:none;z-index:1}
+.lamp{position:absolute;top:calc(var(--lamp-h) * .34);left:var(--x);width:0;height:calc(100% - var(--lamp-h) * .34)}
+.lamp .cord{position:absolute;bottom:100%;left:-.75px;width:1.5px;height:900px;background:linear-gradient(0deg,#C9A55A,rgba(201,165,90,.55) 140px,rgba(201,165,90,.25))}
+.lamp .cap{position:absolute;bottom:calc(100% + 0px);left:-4px;width:8px;height:6px;border-radius:2px 2px 0 0;background:linear-gradient(180deg,#F6E3A8,#9C7428)}
+.lamp svg{position:absolute;top:0;left:0;width:clamp(40px,4.2vw,58px);height:auto;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 3px 4px rgba(60,40,10,.35))}
+.lamp .bulb{position:absolute;top:calc(clamp(40px,4.2vw,58px) * .5);left:0;width:clamp(26px,2.6vw,36px);aspect-ratio:1;border-radius:50%;transform:translate(-50%,-38%);background:radial-gradient(circle,#FFFBEA 0,#FFE9A8 28%,rgba(255,214,120,.55) 50%,rgba(255,214,120,0) 72%);opacity:0;animation:lampOn 1.5s steps(1,end) var(--d) forwards}
+.lamp .beam{position:absolute;top:calc(clamp(40px,4.2vw,58px) * .42);left:0;width:var(--bw,clamp(150px,19vw,280px));height:calc(100% + 26px);transform:translateX(-50%);background:conic-gradient(from 155deg at 50% 0,rgba(255,226,150,0) 0deg,rgba(255,222,140,.62) 12deg,rgba(255,238,190,.8) 25deg,rgba(255,222,140,.62) 38deg,rgba(255,226,150,0) 50deg);-webkit-mask-image:linear-gradient(180deg,#000 0,#000 45%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 45%,transparent 100%);opacity:0;animation:beamOn 1.5s ease-out var(--d) forwards}
+.lamp .pool{position:absolute;bottom:-14px;left:0;width:calc(var(--bw,clamp(150px,19vw,280px)) * 1.05);height:42%;transform:translateX(-50%);background:radial-gradient(ellipse 50% 50% at 50% 60%,rgba(255,228,160,.62),rgba(255,228,160,0) 70%);opacity:0;animation:beamOn 1.5s ease-out calc(var(--d) + .2s) forwards}
+@keyframes lampOn{0%{opacity:0}12%{opacity:1}18%{opacity:.25}26%{opacity:1}32%{opacity:.5}42%,100%{opacity:1}}
+@keyframes beamOn{0%{opacity:0}12%{opacity:.7}18%{opacity:.1}26%{opacity:.85}32%{opacity:.35}42%,100%{opacity:1}}
+:root[data-theme="dark"] .lamp .beam{background:conic-gradient(from 155deg at 50% 0,rgba(255,220,140,0) 0deg,rgba(255,220,140,.22) 13deg,rgba(255,232,175,.3) 25deg,rgba(255,220,140,.22) 37deg,rgba(255,220,140,0) 50deg)}
+:root[data-theme="dark"] .lamp .pool{background:radial-gradient(ellipse 50% 50% at 50% 60%,rgba(255,220,140,.28),rgba(255,220,140,0) 70%)}
+:root[data-theme="dark"] .stage .shine{filter:drop-shadow(0 0 22px rgba(255,214,120,.28)) drop-shadow(0 8px 18px rgba(0,0,0,.35))}
+.lamps.lit .bulb,.lamps.lit .beam,.lamps.lit .pool{animation:none!important;opacity:1}
+@media (prefers-reduced-motion:reduce){ .lamp .bulb,.lamp .beam,.lamp .pool{animation:none;opacity:1} }
+@media print{ .lamps{display:none} .stage{padding-top:0} }
+/* count-up numbers keep the size and look of the number they replace */
+.cnt-n{position:static!important;top:auto!important;font:inherit!important;color:inherit!important;letter-spacing:inherit!important;font-variant-numeric:tabular-nums!important}
+</style>
 </head>
 <body class="ro intro-done">
 <div id="bootCover" aria-hidden="true"><i></i><span>טוען את השמחות…</span></div>
@@ -2483,7 +2512,8 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
   <div class="glow" aria-hidden="true"></div>
   <div class="hero3">
     <div class="center brand">
-      <h1 class="shine">אסאך שמחות</h1>
+      <div class="stage"><div class="lamps" aria-hidden="true"><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lmpG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8A6420"/><stop offset=".28" stop-color="#E9C976"/><stop offset=".45" stop-color="#FFF1C4"/><stop offset=".62" stop-color="#D4AC55"/><stop offset="1" stop-color="#7A5618"/></linearGradient><linearGradient id="lmpR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6E4C1D"/><stop offset=".5" stop-color="#F6E3A8"/><stop offset="1" stop-color="#6E4C1D"/></linearGradient></defs></svg><span class="lamp" style="--x:14%;--d:.25s"><i class="cord"></i><i class="cap"></i><em class="beam"></em><i class="pool"></i><svg viewBox="0 0 48 30"><path d="M22 0h4v4h-4z" fill="url(#lmpR)"/><path d="M3 26C3 12 12 4.5 24 4.5S45 12 45 26z" fill="url(#lmpG)"/><path d="M9 21c2-7 7-11 13-12" stroke="#FFF6D6" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/><rect x="1" y="25" width="46" height="3.2" rx="1.6" fill="url(#lmpR)"/></svg><b class="bulb"></b></span><span class="lamp" style="--x:50%;--d:.55s"><i class="cord"></i><i class="cap"></i><em class="beam"></em><i class="pool"></i><svg viewBox="0 0 48 30"><path d="M22 0h4v4h-4z" fill="url(#lmpR)"/><path d="M3 26C3 12 12 4.5 24 4.5S45 12 45 26z" fill="url(#lmpG)"/><path d="M9 21c2-7 7-11 13-12" stroke="#FFF6D6" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/><rect x="1" y="25" width="46" height="3.2" rx="1.6" fill="url(#lmpR)"/></svg><b class="bulb"></b></span><span class="lamp" style="--x:86%;--d:.85s"><i class="cord"></i><i class="cap"></i><em class="beam"></em><i class="pool"></i><svg viewBox="0 0 48 30"><path d="M22 0h4v4h-4z" fill="url(#lmpR)"/><path d="M3 26C3 12 12 4.5 24 4.5S45 12 45 26z" fill="url(#lmpG)"/><path d="M9 21c2-7 7-11 13-12" stroke="#FFF6D6" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/><rect x="1" y="25" width="46" height="3.2" rx="1.6" fill="url(#lmpR)"/></svg><b class="bulb"></b></span></div><h1 class="shine">אסאך שמחות</h1></div>
+      <script>(function(){var l=document.querySelector('.lamps');if(!l)return;var n=0;l.addEventListener('animationend',function(){if(++n>=9)l.classList.add('lit');});setTimeout(function(){l.classList.add('lit');},15000);})();</script>
       <svg class="swash" viewBox="0 0 600 20" preserveAspectRatio="xMaxYMid meet" aria-hidden="true"><defs><linearGradient id="swg" x1="1" x2="0" y1="0" y2="0"><stop offset="0" stop-color="#C49A3C"/><stop offset=".7" stop-color="#C49A3C" stop-opacity=".55"/><stop offset="1" stop-color="#C49A3C" stop-opacity="0"/></linearGradient></defs><path class="sw-l" d="M574 7 H0 M574 13 H120"/><path class="sw-d" d="M588 10 L594 4 L600 10 L594 16 Z M578 10 L581 7 L584 10 L581 13 Z"/></svg>
       <p class="house"><span class="ln"></span>מבית ״אסאך צאט״</p>
       <p class="shiur">בוגרי ״ישמח לב״ שיעור ד׳</p>
@@ -3276,7 +3306,7 @@ function mountMap(list){
   if(MAPV.center&&MAPV.zoom!=null) MAP.setView(MAPV.center,MAPV.zoom,{animate:false});
   else MAP.fitBounds([[24,-82],[57,42]],{animate:false});
   if(GEO) L.geoJSON(GEO,{className:'m-land',interactive:false}).addTo(MAP);
-  else if(window.topojson&&!window.GEO_LOADING){ window.GEO_LOADING=fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json').then(r=>r.json()).then(t=>{ GEO=topojson.feature(t,t.objects.countries); if(MAP) L.geoJSON(GEO,{className:'m-land',interactive:false}).addTo(MAP).bringToBack(); }).catch(()=>{ window.GEO_LOADING=null; }); }
+  else if(window.topojson&&!window.GEO_LOADING){ setTimeout(()=>{ if(window.GEO_LOADING||!MAP||MAP.getContainer().classList.contains('has-tiles')) return; window.GEO_LOADING=fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json').then(r=>r.json()).then(t=>{ GEO=topojson.feature(t,t.objects.countries); if(MAP) L.geoJSON(GEO,{className:'m-land',interactive:false}).addTo(MAP).bringToBack(); }).catch(()=>{ window.GEO_LOADING=null; }); },4000); }
   mapMarkers(list);
   setTimeout(()=>{ try{ MAP&&MAP.invalidateSize(); }catch(e){} },60);
 }
