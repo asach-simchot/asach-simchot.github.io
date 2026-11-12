@@ -2417,25 +2417,28 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
 .logi{content-visibility:auto;contain-intrinsic-size:auto 56px}
 </style>
 <style>
-/* ===== luxury pendant lamps lighting the title ===== */
-.stage{position:relative;display:inline-block;padding-top:var(--lamp-h);--lamp-h:clamp(74px,8.5vw,118px);max-width:100%}
-.stage .shine{position:relative;z-index:2}
-.lamps{position:absolute;inset:0;pointer-events:none;z-index:1}
-.lamp{position:absolute;top:calc(var(--lamp-h) * .34);left:var(--x);width:0;height:calc(100% - var(--lamp-h) * .34)}
-.lamp .cord{position:absolute;bottom:100%;left:-.75px;width:1.5px;height:900px;background:linear-gradient(0deg,#C9A55A,rgba(201,165,90,.55) 140px,rgba(201,165,90,.25))}
-.lamp .cap{position:absolute;bottom:calc(100% + 0px);left:-4px;width:8px;height:6px;border-radius:2px 2px 0 0;background:linear-gradient(180deg,#F6E3A8,#9C7428)}
-.lamp svg{position:absolute;top:0;left:0;width:clamp(40px,4.2vw,58px);height:auto;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 3px 4px rgba(60,40,10,.35))}
-.lamp .bulb{position:absolute;top:calc(clamp(40px,4.2vw,58px) * .5);left:0;width:clamp(26px,2.6vw,36px);aspect-ratio:1;border-radius:50%;transform:translate(-50%,-38%);background:radial-gradient(circle,#FFFBEA 0,#FFE9A8 28%,rgba(255,214,120,.55) 50%,rgba(255,214,120,0) 72%);opacity:0;animation:lampOn 1.5s steps(1,end) var(--d) forwards}
-.lamp .beam{position:absolute;top:calc(clamp(40px,4.2vw,58px) * .42);left:0;width:var(--bw,clamp(150px,19vw,280px));height:calc(100% + 26px);transform:translateX(-50%);background:conic-gradient(from 155deg at 50% 0,rgba(255,226,150,0) 0deg,rgba(255,222,140,.62) 12deg,rgba(255,238,190,.8) 25deg,rgba(255,222,140,.62) 38deg,rgba(255,226,150,0) 50deg);-webkit-mask-image:linear-gradient(180deg,#000 0,#000 45%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 45%,transparent 100%);opacity:0;animation:beamOn 1.5s ease-out var(--d) forwards}
-.lamp .pool{position:absolute;bottom:-14px;left:0;width:calc(var(--bw,clamp(150px,19vw,280px)) * 1.05);height:42%;transform:translateX(-50%);background:radial-gradient(ellipse 50% 50% at 50% 60%,rgba(255,228,160,.62),rgba(255,228,160,0) 70%);opacity:0;animation:beamOn 1.5s ease-out calc(var(--d) + .2s) forwards}
-@keyframes lampOn{0%{opacity:0}12%{opacity:1}18%{opacity:.25}26%{opacity:1}32%{opacity:.5}42%,100%{opacity:1}}
-@keyframes beamOn{0%{opacity:0}12%{opacity:.7}18%{opacity:.1}26%{opacity:.85}32%{opacity:.35}42%,100%{opacity:1}}
-:root[data-theme="dark"] .lamp .beam{background:conic-gradient(from 155deg at 50% 0,rgba(255,220,140,0) 0deg,rgba(255,220,140,.22) 13deg,rgba(255,232,175,.3) 25deg,rgba(255,220,140,.22) 37deg,rgba(255,220,140,0) 50deg)}
-:root[data-theme="dark"] .lamp .pool{background:radial-gradient(ellipse 50% 50% at 50% 60%,rgba(255,220,140,.28),rgba(255,220,140,0) 70%)}
-:root[data-theme="dark"] .stage .shine{filter:drop-shadow(0 0 22px rgba(255,214,120,.28)) drop-shadow(0 8px 18px rgba(0,0,0,.35))}
-.lamps.lit .bulb,.lamps.lit .beam,.lamps.lit .pool{animation:none!important;opacity:1}
-@media (prefers-reduced-motion:reduce){ .lamp .bulb,.lamp .beam,.lamp .pool{animation:none;opacity:1} }
-@media print{ .lamps{display:none} .stage{padding-top:0} }
+/* ===== ceiling spotlights: small gold cylinders under the top bar, each aimed a different way ===== */
+.ceil{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.spot{position:absolute;top:0;left:var(--x);width:0;height:0}
+.spot .canopy{position:absolute;top:0;left:-8px;width:16px;height:4px;border-radius:0 0 8px 8px/0 0 4px 4px;background:linear-gradient(90deg,#6E4C1D,#F6E3A8 42%,#C9A55A 62%,#5E4119);box-shadow:0 1px 2px rgba(40,25,5,.45)}
+.spot .arm{position:absolute;top:3px;left:0;width:0;height:0;transform:rotate(var(--r));transform-origin:0 0}
+.spot .stem{position:absolute;top:0;left:-1px;width:2px;height:5px;background:linear-gradient(90deg,#6E4C1D,#E9C976,#6E4C1D)}
+.spot .knuckle{position:absolute;top:3px;left:-3px;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFF1C4,#B88A2E 60%,#5E4119)}
+.spot .can{position:absolute;top:7px;left:-6.5px;width:13px;height:19px;border-radius:2.5px 2.5px 1px 1px;background:linear-gradient(90deg,#4B3313 0%,#A9802F 16%,#F3DC9C 34%,#FFF6D6 41%,#D9B567 56%,#8F6824 82%,#3E2A0F 100%);box-shadow:0 3px 5px -1px rgba(30,20,5,.45)}
+.spot .can::before{content:"";position:absolute;left:0;right:0;top:4px;height:1px;background:rgba(62,42,15,.55);box-shadow:0 1px 0 rgba(255,241,196,.45)}
+.spot .can::after{content:"";position:absolute;left:-.5px;right:-.5px;bottom:-2.5px;height:5px;border-radius:50%;background:radial-gradient(ellipse at 50% 45%,#FFFEF6 0,#FFF0BE 38%,#E6BE62 75%,#8F6824 100%);opacity:.35;animation:lensOn 1.6s linear var(--d) forwards}
+.spot .ray{position:absolute;top:24px;left:0;width:var(--rw,1100px);height:var(--rh,820px);transform:translateX(-50%);background:conic-gradient(from 148deg at 50% 0,rgba(255,222,140,0) 0deg,rgba(255,214,125,.2) 14deg,rgba(255,232,170,.36) 32deg,rgba(255,214,125,.2) 50deg,rgba(255,222,140,0) 64deg);-webkit-mask-image:radial-gradient(ellipse 60% 100% at 50% 0,#000 0,rgba(0,0,0,.75) 45%,transparent 100%);mask-image:radial-gradient(ellipse 60% 100% at 50% 0,#000 0,rgba(0,0,0,.75) 45%,transparent 100%);opacity:0;animation:rayOn 1.6s ease-out var(--d) forwards}
+.spot .flare{position:absolute;top:21px;left:-17px;width:34px;height:14px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,246,214,.95) 0,rgba(255,222,140,.55) 35%,rgba(255,222,140,0) 70%);opacity:0;animation:rayOn 1.6s ease-out var(--d) forwards}
+@keyframes rayOn{0%{opacity:0}10%{opacity:.8}16%{opacity:.15}24%{opacity:.9}30%{opacity:.4}42%,100%{opacity:1}}
+@keyframes lensOn{0%{opacity:.35}10%{opacity:1}16%{opacity:.45}24%{opacity:1}30%{opacity:.6}42%,100%{opacity:1}}
+.ceil.lit .ray,.ceil.lit .flare{animation:none!important;opacity:1}
+.ceil.lit .can::after{animation:none!important;opacity:1}
+:root[data-theme="dark"] .spot .ray{background:conic-gradient(from 148deg at 50% 0,rgba(255,214,120,0) 0deg,rgba(255,214,120,.12) 14deg,rgba(255,232,175,.22) 32deg,rgba(255,214,120,.12) 50deg,rgba(255,214,120,0) 64deg)}
+@media (max-width:760px){ .spot{--rw:640px;--rh:620px} .ceil .spot:nth-child(even){display:none} }
+@media (prefers-reduced-motion:reduce){ .spot .ray,.spot .flare,.spot .can::after{animation:none;opacity:1} }
+@media print{ .ceil{display:none} }
+.ceil::before{content:"";position:absolute;left:0;right:0;top:0;height:60px;background:linear-gradient(180deg,rgba(255,226,150,.28),rgba(255,226,150,0))}
+:root[data-theme="dark"] .ceil::before{background:linear-gradient(180deg,rgba(255,214,120,.14),rgba(255,214,120,0))}
 /* count-up numbers keep the size and look of the number they replace */
 .cnt-n{position:static!important;top:auto!important;font:inherit!important;color:inherit!important;letter-spacing:inherit!important;font-variant-numeric:tabular-nums!important}
 </style>
@@ -2507,13 +2510,14 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
 </nav>
 <div class="tn-new" id="tnNew" hidden></div>
 <header class="hero">
+  <div class="ceil" aria-hidden="true"><span class="spot" style="--x:3%;--r:-34deg;--d:0.15s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:14%;--r:22deg;--d:0.31s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:25%;--r:-16deg;--d:0.47s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:36%;--r:30deg;--d:0.63s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:47%;--r:-4deg;--d:0.79s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:58%;--r:-28deg;--d:0.95s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:69%;--r:12deg;--d:1.11s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:80%;--r:-22deg;--d:1.27s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span><span class="spot" style="--x:91%;--r:34deg;--d:1.43s"><i class="canopy"></i><span class="arm"><em class="ray"></em><i class="stem"></i><i class="knuckle"></i><i class="can"></i><i class="flare"></i></span></span></div>
+  <script>(function(){var l=document.querySelector('.ceil');if(!l)return;var n=0;l.addEventListener('animationend',function(){if(++n>=27)l.classList.add('lit');});setTimeout(function(){l.classList.add('lit');},15000);})();</script>
   <div class="rays" aria-hidden="true"></div>
   <div class="sparkles" aria-hidden="true" id="sparkles"></div>
   <div class="glow" aria-hidden="true"></div>
   <div class="hero3">
     <div class="center brand">
-      <div class="stage"><div class="lamps" aria-hidden="true"><svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lmpG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8A6420"/><stop offset=".28" stop-color="#E9C976"/><stop offset=".45" stop-color="#FFF1C4"/><stop offset=".62" stop-color="#D4AC55"/><stop offset="1" stop-color="#7A5618"/></linearGradient><linearGradient id="lmpR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6E4C1D"/><stop offset=".5" stop-color="#F6E3A8"/><stop offset="1" stop-color="#6E4C1D"/></linearGradient></defs></svg><span class="lamp" style="--x:14%;--d:.25s"><i class="cord"></i><i class="cap"></i><em class="beam"></em><i class="pool"></i><svg viewBox="0 0 48 30"><path d="M22 0h4v4h-4z" fill="url(#lmpR)"/><path d="M3 26C3 12 12 4.5 24 4.5S45 12 45 26z" fill="url(#lmpG)"/><path d="M9 21c2-7 7-11 13-12" stroke="#FFF6D6" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/><rect x="1" y="25" width="46" height="3.2" rx="1.6" fill="url(#lmpR)"/></svg><b class="bulb"></b></span><span class="lamp" style="--x:50%;--d:.55s"><i class="cord"></i><i class="cap"></i><em class="beam"></em><i class="pool"></i><svg viewBox="0 0 48 30"><path d="M22 0h4v4h-4z" fill="url(#lmpR)"/><path d="M3 26C3 12 12 4.5 24 4.5S45 12 45 26z" fill="url(#lmpG)"/><path d="M9 21c2-7 7-11 13-12" stroke="#FFF6D6" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/><rect x="1" y="25" width="46" height="3.2" rx="1.6" fill="url(#lmpR)"/></svg><b class="bulb"></b></span><span class="lamp" style="--x:86%;--d:.85s"><i class="cord"></i><i class="cap"></i><em class="beam"></em><i class="pool"></i><svg viewBox="0 0 48 30"><path d="M22 0h4v4h-4z" fill="url(#lmpR)"/><path d="M3 26C3 12 12 4.5 24 4.5S45 12 45 26z" fill="url(#lmpG)"/><path d="M9 21c2-7 7-11 13-12" stroke="#FFF6D6" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/><rect x="1" y="25" width="46" height="3.2" rx="1.6" fill="url(#lmpR)"/></svg><b class="bulb"></b></span></div><h1 class="shine">אסאך שמחות</h1></div>
-      <script>(function(){var l=document.querySelector('.lamps');if(!l)return;var n=0;l.addEventListener('animationend',function(){if(++n>=9)l.classList.add('lit');});setTimeout(function(){l.classList.add('lit');},15000);})();</script>
+      <h1 class="shine">אסאך שמחות</h1>
       <svg class="swash" viewBox="0 0 600 20" preserveAspectRatio="xMaxYMid meet" aria-hidden="true"><defs><linearGradient id="swg" x1="1" x2="0" y1="0" y2="0"><stop offset="0" stop-color="#C49A3C"/><stop offset=".7" stop-color="#C49A3C" stop-opacity=".55"/><stop offset="1" stop-color="#C49A3C" stop-opacity="0"/></linearGradient></defs><path class="sw-l" d="M574 7 H0 M574 13 H120"/><path class="sw-d" d="M588 10 L594 4 L600 10 L594 16 Z M578 10 L581 7 L584 10 L581 13 Z"/></svg>
       <p class="house"><span class="ln"></span>מבית ״אסאך צאט״</p>
       <p class="shiur">בוגרי ״ישמח לב״ שיעור ד׳</p>
