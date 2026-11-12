@@ -322,6 +322,30 @@ body[data-page="kvitel"] #view{display:none!important}
 .kv-act:hover{background:linear-gradient(160deg,#7E5A24,#4B3313)}
 .kv-adm{margin:14px auto 0;text-align:center;color:#9C8A66;font-size:12.5px}
 @media (prefers-reduced-motion:reduce){ .kv-flame,.kv-glow{animation:none} }
+/* compact kvitel */
+body[data-page="kvitel"] #kvsec{padding-top:6px}
+.kv-wrap{padding-top:10px;padding-bottom:16px}
+.kv-top{gap:clamp(14px,5vw,48px)}
+.kv-candle{width:30px;height:104px}
+.kv-tc .kv-t1{font-size:clamp(36px,5.6vw,62px);line-height:1.05}
+.kv-flour{height:16px;margin:2px auto 0}
+.kv-tc .kv-sub2{font-size:15px}
+.kv-tools{margin:8px 0 10px}
+.kv-reb{margin:4px auto 10px}
+.kv-reb p{font-size:clamp(15px,2.2vw,18px);line-height:1.4}
+.kv-today-s,.kv-next{margin-bottom:10px}
+.kv-scroll{padding:clamp(10px,1.8vw,18px) clamp(10px,2vw,22px) 12px}
+.kv-scroll>.kv-box+.kv-box{margin-top:12px}
+.kv-box{padding:8px 12px 6px}
+.kv-box .kv-h{margin:0 0 8px;font-size:21px}
+.kv-list li{margin:0 0 6px}
+.kv-m{font-size:17px;line-height:1.35}
+.kv-f{font-size:15.5px;line-height:1.35}
+.kv-d{font-size:13px;margin-top:0}
+.kv-box .kv-bl{margin:4px 0 2px;padding:7px 6px 0;max-width:none;border-top:1px solid rgba(168,131,58,.5);font-size:15px;line-height:1.65}
+.kv-pair .kv-row{gap:14px}
+.kv-pair .kv-col+.kv-col{border-inline-start:1px solid rgba(168,131,58,.45);padding-inline-start:14px}
+@media (max-width:760px){.kv-candle{width:22px;height:76px}.kv-pair .kv-col+.kv-col{border-inline-start:0;padding-inline-start:0;border-top:1px solid rgba(168,131,58,.45);padding-top:8px}}
 .bp-nus{gap:2px}
 .bp-n1{margin:0;font-family:var(--f-disp);font-size:16.5px;line-height:1.5;color:#5A4520}
 .bp-nb{margin:6px 0;font-family:var(--f-disp);font-size:clamp(26px,6vw,32px);font-weight:900;line-height:1.25;color:#7A5418}
@@ -3710,15 +3734,16 @@ function renderKvitel(){
   const reb=Array.isArray(KVX.rebbeim)&&KVX.rebbeim.length?`<div class="kv-reb">${KVX.rebbeim.map((l,i,a)=>`<p class="${i===a.length-1?'kv-reb-bl':''}">${esc(l)}</p>`).join('')}</div>`:'';
   const item=(r,d)=>{ const m=kvMaleS(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}${d&&r._w?`<small class="kv-d">${esc(hebLabel(r._w))}</small>`:''}</button></li>`; };
   const ul=(list,d,cls='')=>`<ul class="kv-list ${cls}">${list.map(r=>item(r,d)).join('')}</ul>`;
-  const box=(title,inner,cls='')=>`<section class="kv-box ${cls}"><h3 class="kv-h"><span>${title}</span></h3>${inner}</section>`;
-  const pk=Array.isArray(KVX.pokkei)&&KVX.pokkei.length?box('פוקקי פקוקים',`<ul class="kv-list kv-one">${KVX.pokkei.map(n=>`<li><span class="kv-m">${esc(n)}</span></li>`).join('')}</ul>`,'kv-b2'):'';
+  const box=(title,inner,cls='',bl='')=>`<section class="kv-box ${cls}"><h3 class="kv-h"><span>${title}</span></h3>${inner}${bl?`<p class="kv-bl">${esc(bl)}</p>`:''}</section>`;
+  const pkL=Array.isArray(KVX.pokkei)&&KVX.pokkei.length?`<ul class="kv-list kv-one">${KVX.pokkei.map(n=>`<li><span class="kv-m">${esc(n)}</span></li>`).join('')}</ul>`:'';
   const eng=rows.filter(r=>r._st==='engaged').sort((a,b)=>(a._w?.t??9e15)-(b._w?.t??9e15));
   const miss=rows.filter(r=>!ws(r.mother)).length, missK=rows.filter(r=>r._st!=='waiting'&&!ws(r.kala)).length;
   const adm=ROLE.ready&&ROLE.admin&&(miss||missK)?`<p class="kv-adm">למנהל: ${miss?`ל־${miss} בוגרים חסר שם האם`:''}${miss&&missK?', ':''}${missK?`ל־${missK} חסר שם הכלה`:''}. מוסיפים בכרטיס הבוגר, בעריכה.</p>`:'';
   const wt=rows.filter(r=>r._st==='waiting'), mr=kvByWed(rows.filter(r=>r._st==='married'));
-  const top1=(wt.length||pk)?`<div class="kv-row${pk?'':' kv-row1'}">${wt.length?box('בחורים',ul(wt,false,'kv-c3'),'kv-b1'):''}${pk}</div><p class="kv-bl">${esc(KV_BL.waiting)}</p>`:'';
-  const mid=mr.length?`<div class="kv-row kv-row1">${box('נשואים',ul(mr,false,'kv-c5'))}</div><p class="kv-bl">${esc(KV_BL.married)}</p>`:'';
-  const low=eng.length?`<div class="kv-row kv-row1">${box('חתנים',ul(eng,true,'kv-c4'))}</div><p class="kv-bl">${esc(KV_BL.engaged)}</p>`:'';
+  const sub=(t,inner)=>`<div class="kv-col"><h3 class="kv-h"><span>${t}</span></h3>${inner}</div>`;
+  const top1=(wt.length&&pkL)?`<section class="kv-box kv-pair"><div class="kv-row">${sub('בחורים',ul(wt,false,'kv-c3'))}${sub('פוקקי פקוקים',pkL)}</div><p class="kv-bl">${esc(KV_BL.waiting)}</p></section>`:(wt.length||pkL)?box(wt.length?'בחורים':'פוקקי פקוקים',wt.length?ul(wt,false,'kv-c3'):pkL,'',KV_BL.waiting):'';
+  const mid=mr.length?box('נשואים',ul(mr,false,'kv-c5'),'',KV_BL.married):'';
+  const low=eng.length?box('חתנים',ul(eng,true,'kv-c4'),'',KV_BL.engaged):'';
   box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><p class="kv-bsd">בס״ד</p><h2><span class="kv-t1">קוויטל השיעור</span></h2>${KV_FLOUR}<p class="kv-sub2">בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header><div class="kv-foot kv-tools"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></div>${reb}${top}<article class="kv-scroll">${top1}${low}${mid}</article>${adm}</div>`;
 }
 function kvNostalgia(r){
@@ -3785,35 +3810,38 @@ function kvDocHtml(word){
   const pk=Array.isArray(KVX.pokkei)?KVX.pokkei:[], reb=Array.isArray(KVX.rebbeim)?KVX.rebbeim:[];
   const cell=(r,d)=>`<p class="m">${esc(kvMaleS(r)||r.name)}</p>${kvFem(r)?`<p class="f">${esc(kvFem(r))}</p>`:''}${d&&r._w?`<p class="d">${esc(hebLabel(r._w))}</p>`:''}`;
   const grid=(items,n)=>{ if(!items.length) return ''; const per=Math.ceil(items.length/n), colsA=[]; for(let i=0;i<n;i++){ const c=items.slice(i*per,(i+1)*per); if(c.length) colsA.push(c); } return `<table class="g" width="100%" cellspacing="0" cellpadding="0"><tr>${colsA.map(c=>`<td class="gc" width="${Math.floor(100/colsA.length)}%" valign="top">${c.join('<p class="sp">&nbsp;</p>')}</td>`).join('')}</tr></table>`; };
-  const box=(title,inner)=>`<table class="bx" width="100%" cellspacing="0" cellpadding="0"><tr><td class="bxi"><p class="h">${title}</p>${inner}</td></tr></table>`;
   const bl=t=>`<p class="bl">${esc(t)}</p>`;
-  const left=(wt.length?box('בחורים',grid(wt.map(r=>cell(r)),4)):'')+(pk.length?box('פוקקי פקוקים',grid(pk.map(n=>`<p class="m">${esc(n)}</p>`),1)):'')+((wt.length||pk.length)?bl(KV_BL.waiting):'');
-  const right=eng.length?box('חתנים',grid(eng.map(r=>cell(r,true)),4))+bl(KV_BL.engaged):'';
+  const box=(title,inner,b)=>`<table class="bx" width="100%" cellspacing="0" cellpadding="0"><tr><td class="bxi">${title?`<p class="h">${title}</p>`:''}${inner}${b?bl(b):''}</td></tr></table>`;
+  const wG=wt.length?grid(wt.map(r=>cell(r)),pk.length?3:4):'', pG=pk.length?grid(pk.map(n=>`<p class="m">${esc(n)}</p>`),1):'';
+  const left=(wt.length&&pk.length)?box('',`<table class="g" width="100%" cellspacing="0" cellpadding="0"><tr><td class="pc" width="74%" valign="top"><p class="h">בחורים</p>${wG}</td><td class="pc pc2" width="26%" valign="top"><p class="h">פוקקי פקוקים</p>${pG}</td></tr></table>`,KV_BL.waiting):(wt.length||pk.length)?box(wt.length?'בחורים':'פוקקי פקוקים',wt.length?wG:pG,KV_BL.waiting):'';
+  const right=eng.length?box('חתנים',grid(eng.map(r=>cell(r,true)),4),KV_BL.engaged):'';
   const top=left+right;
-  const mid=mr.length?box('נשואים',grid(mr.map(r=>cell(r)),4))+bl(KV_BL.married):'';
+  const mid=mr.length?box('נשואים',grid(mr.map(r=>cell(r)),4),KV_BL.married):'';
   const low='';
   const css=`
-@page{size:A4 landscape;margin:12mm 12mm}
-${word?'@page Section1{size:841.9pt 595.3pt;mso-page-orientation:landscape;margin:34pt 34pt 34pt 34pt}div.Section1{page:Section1}':''}
+@page{size:A4 landscape;margin:9mm 10mm}
+${word?'@page Section1{size:841.9pt 595.3pt;mso-page-orientation:landscape;margin:24pt 28pt 24pt 28pt}div.Section1{page:Section1}':''}
 body{margin:0;direction:rtl;font-family:David,'David Libre','Frank Ruhl Libre',serif;color:#2A1E0E;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 p{margin:0}
-.frame{border:4px double #6B4A1C;padding:10pt 14pt 6pt}
-.ti{text-align:center;font-size:38pt;font-style:italic;color:#6B4A1C;margin:0;font-family:'Bona Nova','Frank Ruhl Libre',David,serif}
-.st{text-align:center;font-size:11pt;color:#8A6A30;margin:0 0 4pt}
-.rb{text-align:center;font-size:13.5pt;font-weight:bold;margin:0}
-.ti2{text-align:center;font-size:16pt;font-weight:bold;color:#5A3E17;margin:0 0 6pt}
-.rbl{text-align:center;font-size:11pt;color:#8A6A30;margin:1pt 0 4pt}
-.orn{text-align:center;color:#A8833A;font-size:9pt;margin:0 0 5pt;letter-spacing:4pt}
-.bx{border:3px double #8C6A2E;margin:0 0 4pt;background:#FFFCF3}
-.bxi{padding:6pt 8pt 4pt}
-.h{text-align:center;font-size:15pt;font-weight:bold;color:#5E4318;margin:0 0 6pt;border-bottom:1px solid #C9A55A;padding-bottom:3pt}
+.frame{border:4px double #6B4A1C;padding:5pt 10pt 4pt}
+.ti{text-align:center;font-size:26pt;line-height:1.1;font-style:italic;color:#6B4A1C;margin:0;font-family:'Bona Nova','Frank Ruhl Libre',David,serif}
+.st{text-align:center;font-size:10pt;color:#8A6A30;margin:0 0 2pt}
+.rb{text-align:center;font-size:12pt;font-weight:bold;margin:0}
+.ti2{text-align:center;font-size:15pt;font-weight:bold;color:#5A3E17;margin:0 0 4pt}
+.rbl{text-align:center;font-size:10pt;color:#8A6A30;margin:0 0 2pt}
+.orn{text-align:center;color:#A8833A;font-size:7pt;margin:0 0 3pt;letter-spacing:4pt}
+.bx{border:3px double #8C6A2E;margin:0 0 6pt;background:#FFFCF3}
+.bxi{padding:4pt 7pt 3pt}
+.h{text-align:center;font-size:13.5pt;font-weight:bold;color:#5E4318;margin:0 0 4pt;border-bottom:1px solid #C9A55A;padding-bottom:2pt}
+.pc{padding:0 3pt}
+.pc2{border-right:1px solid #C9A55A}
 .g{border-collapse:collapse}
 .gc{text-align:center;padding:0 4pt}
-.m{font-size:12.5pt;font-weight:bold;text-align:center}
-.f{font-size:11.5pt;text-align:center;color:#3A2A12}
+.m{font-size:12pt;font-weight:bold;text-align:center}
+.f{font-size:11pt;text-align:center;color:#3A2A12}
 .d{font-size:9pt;text-align:center;color:#8C6A2E}
-.sp{font-size:4pt;line-height:4pt}
-.bl{text-align:center;font-size:11pt;color:#3A2A12;margin:3pt 0 8pt;line-height:1.5}
+.sp{font-size:3pt;line-height:3pt}
+.bl{text-align:center;font-size:10.5pt;color:#3A2A12;margin:4pt 0 1pt;padding-top:3pt;border-top:1px solid #C9A55A;line-height:1.35}
 table{page-break-inside:auto}
 tr{page-break-inside:avoid}`;
   const pb=word?`<br clear="all" style="page-break-before:always">`:`<div style="page-break-before:always;break-before:page"></div>`;
