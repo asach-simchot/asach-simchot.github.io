@@ -4773,8 +4773,9 @@ window.loadHeb=loadHeb;
 function addHeb(){try{if(typeof MAP==='undefined'||!MAP||!window.L||MAP._heb)return;var M=MAP;M._heb=1;M.setMaxZoom(17);mapAttr(M);
  if(!HEB_OK)addTiles();else M._hebT=setTimeout(function(){if(MAP===M&&!M._glok)addTiles();},2500);
  loadHeb().then(function(style){if(MAP!==M||!L.maplibreGL)return;var gl=L.maplibreGL({style:style,interactive:false,pane:'tilePane'}).addTo(M);var m=gl.getMaplibreMap();
-  m.once('load',function(){M._glok=1;clearTimeout(M._hebT);var el=M.getContainer();if(el)el.classList.add('has-tiles');});
-  m.once('idle',function(){if(MAP===M&&M._tl){try{M.removeLayer(M._tl);}catch(e){}}});
+  var on=function(){if(M._glok)return;M._glok=1;clearTimeout(M._hebT);var el=M.getContainer();if(el)el.classList.add('has-tiles');};
+  var off=function(){on();if(MAP===M&&M._tl){try{M.removeLayer(M._tl);}catch(e){}}};
+  m.once('render',on);m.once('idle',off);m.once('load',off);if(m.loaded())off();
  }).catch(function(){if(MAP===M)addTiles();});}catch(e){}}
 wrapFn('mountMap',function(){addHeb();});try{loadHeb().catch(function(){});}catch(e){}mark();if(isMap()){try{renderView();}catch(e){}}addHeb();})();</script>
 <script>/* table: city after street, building+apt inside street */(function(){try{var i=COL_ORDER.indexOf('apt');if(i>-1)COL_ORDER.splice(i,1);var r=COL_ORDER.indexOf('res');if(r>-1){COL_ORDER.splice(r,1);COL_ORDER.splice(COL_ORDER.indexOf('street')+1,0,'res');}var c=window.cell;window.cell=function(row,k){if(k==='street'){var st=ws(row.street),ap=ws(row.apt);var t=[st,ap].filter(Boolean).join(' ');if(!t)return '<td></td>';return st?'<td><a class="ph" href="'+mapsHref(row)+'" target="_blank" rel="noopener" data-stop title="פתיחה במפות Google">'+esc(t)+'</a></td>':'<td>'+esc(t)+'</td>';}return c.apply(this,arguments);};try{renderView();}catch(e){}}catch(e){}})();</script>
