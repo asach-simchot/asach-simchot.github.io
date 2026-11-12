@@ -2398,6 +2398,14 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
 .tbl-wrap th button:hover,.tbl-wrap th[aria-sort] button{color:#fff!important}
 .tbl-wrap th+th{box-shadow:inset -1px 0 0 rgba(217,184,102,.22)}
 .tbl-wrap tbody tr:nth-child(even) td{background-image:linear-gradient(rgba(201,165,90,.06),rgba(201,165,90,.06))}
+/* ===== performance: calm, static decorations (no endless animations, no live blur) ===== */
+.rays,.glow,.pulse,.tn-live i,.ti.next .dot,.track::after,.cseg.married,.cyc-bar .cseg.married,.ns-scrim.on .ns-beam,.ns-art::after,.bp-t{animation:none!important}
+.rays{will-change:auto!important}
+.sparkles{display:none!important}
+.chatbtn::before,.cal-head::before,.nextcard::before,.ad-head::before,.cyc::before,.side.up::before,.ti.next .tcard::before{animation:none!important;display:none!important}
+.bar,body::before,.side{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.card{content-visibility:auto;contain-intrinsic-size:auto 330px}
+.logi{content-visibility:auto;contain-intrinsic-size:auto 56px}
 </style>
 </head>
 <body class="ro intro-done">
@@ -4760,8 +4768,9 @@ function tblFit(){ var w=document.querySelector('.tbl-wrap'); var on=false; try{
   if(window.scrollY) window.scrollTo(0,0);
   var top=w.getBoundingClientRect().top; w.style.height=Math.max(240,Math.floor(window.innerHeight-top-12))+'px'; }
 window.tblFit=tblFit;
-['renderView','setPage','setView','navGo'].forEach(function(n){ var f=window[n]; if(typeof f!=='function') return; window[n]=function(){ var r=f.apply(this,arguments); tblFit(); requestAnimationFrame(tblFit); setTimeout(tblFit,120); return r; }; });
-addEventListener('resize',function(){ requestAnimationFrame(tblFit); });
+['renderView','setPage','setView','navGo'].forEach(function(n){ var f=window[n]; if(typeof f!=='function') return; window[n]=function(){ DEPTH++; var r; try{ r=f.apply(this,arguments); } finally{ DEPTH--; } if(!DEPTH) schedFit(); return r; }; });
+var DEPTH=0, FIT_RAF=0, FIT_TO=0; function schedFit(){ if(!FIT_RAF) FIT_RAF=requestAnimationFrame(function(){ FIT_RAF=0; tblFit(); }); clearTimeout(FIT_TO); FIT_TO=setTimeout(tblFit,150); }
+addEventListener('resize',function(){ schedFit(); });
 setTimeout(tblFit,300);
 })();</script>
 <script>(function(){
