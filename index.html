@@ -3726,11 +3726,6 @@ function kvSorted(){ return [...S.rows].sort((a,b)=>(numOr(a.ord)??9999)-(numOr(
 function renderKvitel(){
   const box_=$('#kvBox'); if(!box_||document.body.dataset.page!=='kvitel') return;
   const rows=kvSorted();
-  const today=rows.filter(r=>r._w&&r._w.t===TODAY);
-  const next=rows.filter(r=>r._w&&r._w.t!=null&&r._w.t>TODAY).sort((a,b)=>a._w.t-b._w.t)[0];
-  let top='';
-  if(today.length) top=`<p class="kv-today-s"><span class="kv-tt-s">${today.length>1?'ביום שמחת לבם':'ביום שמחת לבו'}</span> נעתיר בתפילה לזכות ${today.map(r=>`<b>${[kvMaleS(r)||ws(r.name),kvFem(r)].filter(Boolean).map(esc).join(' ו')}</b>`).join(' · ')}</p>`;
-  else if(next) top=`<p class="kv-next">החתונה הבאה במחזור: <button data-id="${esc(next._k)}">${esc(next.name)}</button>${countdown(next._w)?', '+countdown(next._w):''}</p>`;
   const reb=Array.isArray(KVX.rebbeim)&&KVX.rebbeim.length?`<div class="kv-reb">${KVX.rebbeim.map((l,i,a)=>`<p class="${i===a.length-1?'kv-reb-bl':''}">${esc(l)}</p>`).join('')}</div>`:'';
   const item=(r,d)=>{ const m=kvMaleS(r), f=kvFem(r); return `<li><button data-id="${esc(r._k)}"><span class="kv-m">${esc(m||r.name)}</span>${f?`<span class="kv-f">ו${esc(f)}</span>`:''}${d&&r._w?`<small class="kv-d">${esc(hebLabel(r._w))}</small>`:''}</button></li>`; };
   const ul=(list,d,cls='')=>`<ul class="kv-list ${cls}">${list.map(r=>item(r,d)).join('')}</ul>`;
@@ -3744,7 +3739,7 @@ function renderKvitel(){
   const top1=(wt.length&&pkL)?`<section class="kv-box kv-pair"><div class="kv-row">${sub('בחורים',ul(wt,false,'kv-c3'))}${sub('פוקקי פקוקים',pkL)}</div><p class="kv-bl">${esc(KV_BL.waiting)}</p></section>`:(wt.length||pkL)?box(wt.length?'בחורים':'פוקקי פקוקים',wt.length?ul(wt,false,'kv-c3'):pkL,'',KV_BL.waiting):'';
   const mid=mr.length?box('נשואים',ul(mr,false,'kv-c5'),'',KV_BL.married):'';
   const low=eng.length?box('חתנים',ul(eng,true,'kv-c4'),'',KV_BL.engaged):'';
-  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><p class="kv-bsd">בס״ד</p><h2><span class="kv-t1">קוויטל השיעור</span></h2>${KV_FLOUR}<p class="kv-sub2">בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header><div class="kv-foot kv-tools"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></div>${reb}${top}<article class="kv-scroll">${top1}${low}${mid}</article>${adm}</div>`;
+  box_.innerHTML=`<div class="kv-wrap"><header class="kv-top">${KV_CANDLE}<div class="kv-tc"><p class="kv-bsd">בס״ד</p><h2><span class="kv-t1">קוויטל השיעור</span></h2>${KV_FLOUR}<p class="kv-sub2">בוגרי השיעור ובני ביתם</p></div>${KV_CANDLE}</header><div class="kv-foot kv-tools"><button class="kv-copy kv-act" data-kvprint><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>הדפסה</button><button class="kv-copy kv-act" data-kvword><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13l1.5 5 2.5-4 2.5 4 1.5-5"/></svg>ייצוא לוורד</button><button class="kv-copy" data-kvcopy>העתקת כל השמות</button></div>${reb}<article class="kv-scroll">${top1}${low}${mid}</article>${adm}</div>`;
 }
 function kvNostalgia(r){
   if(!r) return;
