@@ -3059,11 +3059,11 @@ function renderHero(){
   else if(days){ list=days.flatMap(d=>idx.get(d.t)||[]); title=`השמחות ב${MONTHS[hm.m][0]}`; }
   const upI=CALV.sel==null?list.findIndex(e=>e.t>=TODAY):-1;
   side+=`<div class="daylist"><h3>${esc(title)}<small>${list.length===1?'שמחה אחת':list.length?list.length+' שמחות':''}</small></h3><div class="list">${list.length?list.map((e,i)=>i===upI?evItem(e).replace('<div class="evwrap">','<div class="evwrap" data-upnext="1">'):evItem(e)).join(''):`<div class="evempty">${CALV.sel!=null?'אין שמחות ביום הזה':'אין שמחות בחודש הזה'}</div>`}</div>${CALV.sel!=null?'<button class="btn sm primary ro-only" data-cal="suggestday" style="margin:8px 6px 4px">דיווח על שמחה ביום הזה</button><button class="btn sm primary" data-cal="addbirth" style="margin:8px 6px 4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>הוספת שמחה ביום הזה</button>':'<p class="evempty" style="margin:4px 0 0">כדי להוסיף לידה או שמחה, גם כזו שכבר הייתה, לחצו על היום בלוח.</p>'}<div class="foot">${CALV.sel!=null?'<button class="linkbtn" data-cal="all">כל החודש</button>':'<span></span>'}<button class="linkbtn" data-goto="simchas">ללוח השמחות המלא</button></div></div>`;
-  const oldL=$('#calSide .daylist .list'), keep=oldL&&CALV.listKey===title&&CALV.listPosd?oldL.scrollTop:null;
+  const oldL=$('#calSide .daylist .list'), lkey=title+'|'+list.length+'|'+upI, keep=oldL&&CALV.listKey===lkey&&CALV.listPosd?oldL.scrollTop:null;
   $('#calSide').innerHTML=side;
   const lst=$('#calSide .daylist .list');
-  if(CALV.listKey!==title) CALV.listPosd=false;
-  CALV.listKey=title;
+  if(CALV.listKey!==lkey) CALV.listPosd=false;
+  CALV.listKey=lkey;
   if(lst){ if(keep!=null) lst.scrollTop=keep; else posUpNext(lst,0); }
   tickClock();
 }
