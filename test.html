@@ -2984,15 +2984,20 @@ function renderHero(){
   else if(days){ list=days.flatMap(d=>idx.get(d.t)||[]); title=`השמחות ב${MONTHS[hm.m][0]}`; }
   const upI=CALV.sel==null?list.findIndex(e=>e.t>=TODAY):-1;
   side+=`<div class="daylist"><h3>${esc(title)}<small>${list.length===1?'שמחה אחת':list.length?list.length+' שמחות':''}</small></h3><div class="list">${list.length?list.map((e,i)=>i===upI?evItem(e).replace('<div class="evwrap">','<div class="evwrap" data-upnext="1">'):evItem(e)).join(''):`<div class="evempty">${CALV.sel!=null?'אין שמחות ביום הזה':'אין שמחות בחודש הזה'}</div>`}</div>${CALV.sel!=null?'<button class="btn sm primary ro-only" data-cal="suggestday" style="margin:8px 6px 4px">דיווח על שמחה ביום הזה</button><button class="btn sm primary" data-cal="addbirth" style="margin:8px 6px 4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>הוספת שמחה ביום הזה</button>':'<p class="evempty" style="margin:4px 0 0">כדי להוסיף לידה או שמחה, גם כזו שכבר הייתה, לחצו על היום בלוח.</p>'}<div class="foot">${CALV.sel!=null?'<button class="linkbtn" data-cal="all">כל החודש</button>':'<span></span>'}<button class="linkbtn" data-goto="simchas">ללוח השמחות המלא</button></div></div>`;
-  const oldL=$('#calSide .daylist .list'), keep=oldL&&CALV.listKey===title?oldL.scrollTop:null;
+  const oldL=$('#calSide .daylist .list'), keep=oldL&&CALV.listKey===title&&CALV.listPosd?oldL.scrollTop:null;
   $('#calSide').innerHTML=side;
   const lst=$('#calSide .daylist .list');
-  if(lst){
-    if(keep!=null) lst.scrollTop=keep;
-    else{ const up=lst.querySelector('[data-upnext]'); lst.scrollTop=up&&up.previousElementSibling?Math.max(0,up.getBoundingClientRect().top-lst.getBoundingClientRect().top+lst.scrollTop-14):0; }
-  }
+  if(CALV.listKey!==title) CALV.listPosd=false;
   CALV.listKey=title;
+  if(lst){ if(keep!=null) lst.scrollTop=keep; else posUpNext(lst,0); }
   tickClock();
+}
+function posUpNext(lst,n){
+  if(!lst.isConnected) return;
+  if(!lst.clientHeight){ if(n<100) setTimeout(()=>posUpNext(lst,n+1),100); return; }
+  const up=lst.querySelector('[data-upnext]');
+  lst.scrollTop=up&&up.previousElementSibling?Math.max(0,up.getBoundingClientRect().top-lst.getBoundingClientRect().top+lst.scrollTop-14):0;
+  CALV.listPosd=true;
 }
 const WED_TZ=[[/לונדון|מנצ.סטר|גייטסהעד|גייטסהד|סטמפורד|לידס|גלזגו|אנגליה|בריטניה/,'Europe/London'],[/אנטוורפן|בריסל|בלגיה/,'Europe/Brussels'],[/ציריך|שוויץ|באזל|לוגאנו/,'Europe/Zurich'],[/פריז|צרפת|שטרסבורג/,'Europe/Paris'],[/אמסטרדם|הולנד/,'Europe/Amsterdam'],[/וינה|אוסטריה/,'Europe/Vienna'],[/טורונטו|מונטריאול|קנדה/,'America/Toronto'],[/שיקגו/,'America/Chicago'],[/לוס.?אנג|קליפורניה/,'America/Los_Angeles']];
 function wedTZ(r){ const v=ws(r&&r.res); if(!v||region(v)!=='חוץ לארץ') return 'Asia/Jerusalem'; for(const [re,tz] of WED_TZ) if(re.test(v)) return tz; return 'America/New_York'; }
