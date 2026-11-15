@@ -437,7 +437,7 @@ renderAll();
 </script>
 <script>
 /* תמונה בקובייה: תמונה רגילה ממלאת הכול, לוגו מוצג במלואו על רקע מטושטש של עצמו */
-(function(){function fit(i){var l=i.parentElement,w=l.clientWidth,h=l.clientHeight;if(!i.naturalWidth||!h)return;var r=(i.naturalWidth/i.naturalHeight)/(w/h);l.classList.toggle('fill',r>0.7&&r<1.45)}function f(){document.querySelectorAll('.logo img').forEach(function(i){var l=i.parentElement;if(l.dataset.bg!==i.src){l.dataset.bg=i.src;l.style.setProperty('--lg','url("'+i.src+'")')}if(i.complete)fit(i);else i.onload=function(){fit(i)}})}f();new MutationObserver(f).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});addEventListener('resize',f)})();
+(function(){function fit(i){var l=i.parentElement,w=l.clientWidth,h=l.clientHeight;if(!i.naturalWidth||!h)return;var r=(i.naturalWidth/i.naturalHeight)/(w/h);l.classList.toggle('fill',r>0.88&&r<1.14)}function f(){document.querySelectorAll('.logo img').forEach(function(i){var l=i.parentElement;if(l.dataset.bg!==i.src){l.dataset.bg=i.src;l.style.setProperty('--lg','url("'+i.src+'")')}if(i.complete)fit(i);else i.onload=function(){fit(i)}})}f();new MutationObserver(f).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});addEventListener('resize',f)})();
 </script>
 </body>
 </html>
