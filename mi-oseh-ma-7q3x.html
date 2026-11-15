@@ -145,6 +145,15 @@ textarea.in{height:160px;padding:10px;direction:ltr;font-family:ui-monospace,mon
 footer{position:relative;z-index:1;text-align:center;color:var(--muted);font-size:13px;padding:0 0 40px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
 </style>
+<style>
+/* תיקון: לוגו מוצג במלואו */
+.logo img{position:absolute;top:8%;left:8%;width:84%;height:84%;max-width:none;max-height:none;object-fit:contain}
+/* תיקון: בלי הטיה חזקה של הקוביות - רק דגדוג עדין במעבר עכבר */
+.card{transform:none !important}
+.card:hover .logo img{transform:none}
+@keyframes tickle{0%,100%{translate:0 0}30%{translate:0 -2px}60%{translate:0 1px}}
+.card:hover{animation:tickle .6s ease-in-out}
+</style>
 </head>
 <body>
 <canvas id="bg" aria-hidden="true"></canvas><div class="glow"></div>
