@@ -2350,6 +2350,11 @@ html.gated,html.gated body{overflow:hidden}
 .gate-form button:hover{filter:brightness(1.06)}
 .gate-form button:focus-visible{outline:2px solid #FFF6E2;outline-offset:2px}
 .gate-err{margin:0;min-height:1.3em;font-weight:700;color:#FF9C8A}
+.gate-form input.gate-phone{font-size:21px;letter-spacing:1px;font-weight:700;text-align:left}
+.gate-form input.gate-phone::placeholder{color:rgba(255,246,226,.35)}
+.gate-fine{margin:2px 0 0;font-size:12.5px;line-height:1.5;color:rgba(246,227,168,.7)}
+.gate.resuming .gate-form{opacity:.55;pointer-events:none}
+.mem-out{background:none;border:0;color:inherit;opacity:.7;font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;margin-inline-start:12px}
 .gate-card.shake{animation:gateShake .4s}
 @keyframes gateShake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 @media (prefers-reduced-motion:reduce){ .gate,.gate-card.shake{transition:none;animation:none} }
@@ -2485,35 +2490,64 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
     <form class="gate-form" id="gateForm" autocomplete="off" novalidate>
       <label for="gateName">שם מלא</label>
       <input id="gateName" class="gate-name" maxlength="60" autocomplete="name" dir="rtl" placeholder="למשל: ישראל ישראלי">
-      <label for="gateCode">נא להזין את הקוד</label>
-      <input id="gateCode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" data-lpignore="true" data-1p-ignore spellcheck="false" dir="ltr" aria-describedby="gateErr">
-      <button type="submit">כניסה</button>
+      <label for="gatePhone">מספר הפלאפון שלך</label>
+      <input id="gatePhone" class="gate-phone" type="tel" inputmode="tel" maxlength="20" autocomplete="tel" spellcheck="false" dir="ltr" placeholder="050-0000000" aria-describedby="gateErr">
+      <button type="submit" id="gateBtn">כניסה</button>
       <p class="gate-err" id="gateErr" role="alert"></p>
+      <p class="gate-fine">הכניסה מיועדת לבוגרי השיעור בלבד, לפי השם ומספר הפלאפון שברשימה. הכניסה והשימוש באתר נרשמים לצורך ניהולו. במכשיר זה תזוהו אוטומטית בפעם הבאה.</p>
     </form>
   </div>
 </div>
 <script>
 (function(){
   var g=document.getElementById('gate'), A=window.ASACH;
-  var f=document.getElementById('gateForm'), inp=document.getElementById('gateCode'), err=document.getElementById('gateErr');
-  try{ if(inp&&!(window.CSS&&CSS.supports&&CSS.supports('-webkit-text-security','disc'))) inp.type='password'; }catch(e){}
-  function pass(c,n){ A.setCode(c,n); if(!g.parentNode) return; g.classList.add('out'); document.documentElement.classList.remove('gated'); setTimeout(function(){ g.remove(); A.gateOpen(); },450); }
+  var f=document.getElementById('gateForm'), ph=document.getElementById('gatePhone'), err=document.getElementById('gateErr'), btn=document.getElementById('gateBtn');
+  var nm=document.getElementById('gateName');
+  /* ---- member token: cookie (1 year) + localStorage backup ---- */
+  var MT={
+    get:function(){ var m=document.cookie.match(/(?:^|;\s*)asach_member=([0-9a-f-]{36})/); if(m) return m[1]; try{ var l=localStorage.getItem('asach-member'); return /^[0-9a-f-]{36}$/.test(l||'')?l:null; }catch(e){ return null; } },
+    set:function(t,n){ var a='; Max-Age=31536000; Path=/; SameSite=Lax; Secure'; document.cookie='asach_member='+t+a; if(n) document.cookie='asach_name='+encodeURIComponent(n)+a; try{ localStorage.setItem('asach-member',t); if(n) localStorage.setItem('asach-name',n); }catch(e){} },
+    name:function(){ var m=document.cookie.match(/(?:^|;\s*)asach_name=([^;]+)/); if(m){ try{ return decodeURIComponent(m[1]); }catch(e){} } try{ return localStorage.getItem('asach-name')||''; }catch(e){ return ''; } },
+    clear:function(){ var a='=; Max-Age=0; Path=/; SameSite=Lax; Secure'; document.cookie='asach_member'+a; try{ localStorage.removeItem('asach-member'); }catch(e){} }
+  };
+  A.MT=MT;
+  var passed=false;
+  function pass(c,n){ if(passed) return; passed=true; A.setCode(c,n); if(!g.parentNode) return; g.classList.add('out'); document.documentElement.classList.remove('gated'); setTimeout(function(){ g.remove(); A.gateOpen(); },450); }
   document.documentElement.classList.add('gated');
-  var saved=null;
-    A.adminReady.then(function(ok){ if(ok) pass(saved||''); });
-  var nm=document.getElementById('gateName'); setTimeout(function(){ try{ nm.focus(); }catch(e){} },80);
+  A.adminReady.then(function(ok){ if(ok) pass(''); });
+  var known=MT.name(); if(known) nm.value=known;
+  setTimeout(function(){ try{ (known?ph:nm).focus(); }catch(e){} },80);
+  /* ---- automatic recognition from the cookie ---- */
+  var tok=MT.get();
+  if(tok){
+    g.classList.add('resuming'); btn.textContent='מזהה אותך…';
+    A.sb.rpc('member_resume',{p_token:tok}).then(function(r){
+      var d=r&&!r.error&&r.data;
+      if(d&&d.ok&&d.code){ A.member={token:tok,name:d.name,who:d.who,how:'resume'}; MT.set(tok,d.name); pass(d.code,d.name); }
+      else if(!passed){ if(!r||!r.error) MT.clear(); g.classList.remove('resuming'); btn.textContent='כניסה'; }
+    }).catch(function(){ g.classList.remove('resuming'); btn.textContent='כניסה'; });
+  }
+  function shake(){ var c=g.querySelector('.gate-card'); c.classList.remove('shake'); void g.offsetWidth; c.classList.add('shake'); }
   var busy=false;
   f.addEventListener('submit',async function(e){
-    e.preventDefault(); if(busy) return; busy=true;
-    var n=(nm.value||'').trim().replace(/\s+/g,' '); if(n.length<2){ busy=false; err.textContent='נא לכתוב את השם המלא'; nm.focus(); return; }
-    var c=inp.value.trim(); var ok=c&&await A.checkCode(c); busy=false;
-    if(ok) pass(c,n);
-    else {
-      err.textContent='הקוד שגוי. נסו שוב.'; inp.value=''; inp.focus();
-      g.querySelector('.gate-card').classList.remove('shake'); void g.offsetWidth; g.querySelector('.gate-card').classList.add('shake');
-    }
+    e.preventDefault(); if(busy) return;
+    var n=(nm.value||'').trim().replace(/\s+/g,' ');
+    if(n.split(' ').length<2){ err.textContent='נא לכתוב שם פרטי ושם משפחה'; nm.focus(); return; }
+    var p=(ph.value||'').replace(/\D/g,'');
+    if(p.length<9){ err.textContent='נא להזין את מספר הפלאפון המלא'; ph.focus(); return; }
+    busy=true; btn.textContent='בודק…';
+    var r=null; try{ r=await A.sb.rpc('member_login',{p_name:n,p_phone:p,p_ua:(navigator.userAgent||'').slice(0,240)}); }catch(x){}
+    busy=false; btn.textContent='כניסה';
+    var d=r&&!r.error&&r.data;
+    if(d&&d.ok){ A.member={token:d.token,name:d.name,who:d.who,how:'login'}; MT.set(d.token,d.name); pass(d.code,d.name); return; }
+    var why=d&&d.reason;
+    err.textContent= why==='rate'?'יותר מדי ניסיונות. נסו שוב בעוד רבע שעה.'
+      : why==='setup'?'האתר בהגדרה. נסו שוב מאוחר יותר.'
+      : (!d)?'אין חיבור כרגע. בדקו את האינטרנט ונסו שוב.'
+      : 'השם או מספר הפלאפון אינם תואמים לרשימת הבוגרים. אם הפרטים נכונים, פנו למנהל האתר.';
+    shake();
   });
-  inp.addEventListener('input',function(){ err.textContent=''; }); nm.addEventListener('input',function(){ err.textContent=''; });
+  ph.addEventListener('input',function(){ err.textContent=''; }); nm.addEventListener('input',function(){ err.textContent=''; });
 })();
 </script>
 <nav class="topnav" id="topnav" aria-label="ניווט ראשי">
@@ -4895,5 +4929,56 @@ function setup(){ var box=document.querySelector('.fbox'); if(!box) return false
   count(); if(window.tblFit) setTimeout(window.tblFit,60); return true; }
 var tries=0; (function t(){ if(!setup()&&tries++<60) setTimeout(t,250); })();
 })();</script>
+<script>
+/* ================= member activity tracking (what was viewed, for how long, what was done) ================= */
+(function(){
+  var A=window.ASACH; if(!A) return;
+  var Q=[], acc={}, last=Date.now(), curKey=null, curPerson='', on=false, lastClick={l:'',t:0};
+  var LBL={table:'יאכנע צעטיל – טבלה',cards:'יאכנע צעטיל – כרטיסים',simchas:'יאכנע צעטיל – שמחות',timeline:'יאכנע צעטיל – ציר זמן',map:'מפה',log:'לוח פעולות',inbox:'תיבת הודעות',upcoming:'השמחות הקרובות',glance:'המחזור במבט אחד',tree:'עץ השיעור',stats:'נתוני השיעור',kvitel:'קוויטל',home:'דף הבית'};
+  function viewKey(){ try{ var p=document.body.dataset.page||''; if(p==='table'&&typeof S!=='undefined'&&S.view) return S.view; return p||'home'; }catch(e){ return 'home'; } }
+  function person(){ try{ if(typeof D!=='undefined'&&D&&D.key&&typeof S!=='undefined'){ var r=S.rows.find(function(x){ return x._k===D.key; }); return r?(r.name||''):''; } }catch(e){} return ''; }
+  function push(ev){ if(!on) return; ev.t=Date.now(); Q.push(ev); if(Q.length>=40) flush(); }
+  function tick(){
+    var now=Date.now(), dt=now-last; last=now; if(!on) return;
+    var k=viewKey(), pn=person();
+    if(!document.hidden && curKey && dt>0 && dt<10000){ var id=curKey+'\u0001'+curPerson; acc[id]=(acc[id]||0)+dt; }
+    if(k!==curKey){ curKey=k; push({k:'view',v:k,l:LBL[k]||k}); }
+    if(pn!==curPerson){ curPerson=pn; if(pn) push({k:'person',v:k,l:pn}); }
+  }
+  function drainTime(){ Object.keys(acc).forEach(function(id){ var ms=Math.round(acc[id]); if(ms>=1000){ var p=id.split('\u0001'); Q.push({k:'time',v:p[0],l:p[1]||'',ms:ms,t:Date.now()}); } }); acc={}; }
+  function payload(){ drainTime(); if(!Q.length) return null; var now=Date.now(); var ev=Q.splice(0,80).map(function(e){ var o={k:e.k,v:e.v||'',l:e.l||'',ago:Math.max(0,now-e.t)}; if(e.ms) o.ms=e.ms; return o; }); return ev; }
+  function flush(final){
+    if(!on||!A.member) return; var ev=payload(); if(!ev) return;
+    var body={p_token:A.member.token,p_events:ev};
+    if(final){ try{ var u=(A.sb.supabaseUrl||'').replace(/\/$/,''), key=A.sb.supabaseKey; if(u&&key){ fetch(u+'/rest/v1/rpc/member_track',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:key,Authorization:'Bearer '+key},body:JSON.stringify(body)}).catch(function(){}); return; } }catch(e){} }
+    A.sb.rpc('member_track',body).then(function(r){ if(r&&r.error) console.warn('track',r.error.message); },function(){});
+  }
+  function start(){
+    on=true; last=Date.now();
+    push({k:'enter',l:A.member.how==='resume'?'כניסה (זוהה אוטומטית)':'כניסה עם שם ופלאפון'});
+    tick(); flush();
+    setInterval(tick,1000); setInterval(function(){ tick(); flush(); },30000);
+    document.addEventListener('visibilitychange',function(){ tick(); if(document.hidden) flush(true); });
+    window.addEventListener('pagehide',function(){ tick(); push({k:'leave',v:curKey,l:'יציאה מהאתר'}); flush(true); });
+    var qt=null; document.addEventListener('input',function(e){ var t=e.target; if(!t||t.tagName!=='INPUT'||t.type==='password') return; if(t.id!=='q'&&t.type!=='search') return; clearTimeout(qt); qt=setTimeout(function(){ var v=(t.value||'').trim(); if(v.length>=2) push({k:'search',v:viewKey(),l:v.slice(0,80)}); },1500); },true);
+    document.addEventListener('click',function(e){
+      var el=e.target&&e.target.closest&&e.target.closest('a,button,[role=button],[data-nav],[data-view],summary,.chip,.fbtn'); if(!el||el.closest('#gate')) return;
+      var href=el.getAttribute('href')||'', lab=(el.getAttribute('aria-label')||el.getAttribute('title')||el.textContent||'').replace(/\s+/g,' ').trim().slice(0,70);
+      if(/^tel:/.test(href)) lab='התקשר: '+(lab||href.slice(4)); else if(/^mailto:/.test(href)) lab='שליחת מייל: '+lab; else if(/wa\.me|whatsapp/.test(href)) lab='וואטסאפ: '+lab; else if(el.hasAttribute('download')) lab='הורדה: '+lab;
+      if(!lab) return; var pn=person(); if(pn&&lab.indexOf(pn)<0&&/^(התקשר|שליחת מייל|וואטסאפ)/.test(lab)) lab+=' ('+pn+')';
+      var now=Date.now(); if(lab===lastClick.l&&now-lastClick.t<1500) return; lastClick={l:lab,t:now};
+      push({k:'click',v:viewKey(),l:lab});
+    },true);
+  }
+  (function wait(){
+    if(A.gateDone&&A.member){ A.adminReady.then(function(isAdm){ if(!isAdm) start(); }); return; }
+    if(A.gateDone&&!A.member) return; /* admin entering without member login – not tracked */
+    setTimeout(wait,300);
+  })();
+  /* "לא אתה? יציאה" – forget this device */
+  (function addOut(){ var ft=document.querySelector('footer'); if(!ft){ return setTimeout(addOut,400); } if(!A.member){ if(A.gateDone) return; return setTimeout(addOut,800); }
+    var b=document.createElement('button'); b.type='button'; b.className='mem-out'; b.textContent='לא '+(A.member.name||'אתה')+'? יציאה'; b.onclick=function(){ flush(true); if(A.MT) A.MT.clear(); setTimeout(function(){ location.reload(); },150); }; ft.appendChild(b); })();
+})();
+</script>
 </body>
 </html>
