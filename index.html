@@ -2589,7 +2589,7 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
       var cc=null; for(var k=1;k<=3&&k<=d.length;k++){ if(CC[d.slice(0,k)]){ cc=d.slice(0,k); break; } }
       if(cc){ o.total=cc.length+CC[cc][0]; o.groups=[cc.length]; o.known=true;
         o.hint=(cc==='972'?'מספר ישראלי בקידומת בינלאומית':'מספר מחו״ל · '+CC[cc][1])+' · '+o.total+' ספרות'; }
-      else if(d.length<3){ o.total=Math.max(d.length+1,3); o.groups=[]; o.more=true; o.hint=d?'ממשיכים להקיש את קידומת המדינה…':'מספר מחו״ל · הקישו את קידומת המדינה'; }
+      else if(d.length<3){ o.total=Math.max(d.length+1,3); o.groups=[]; o.more=true; o.hint='מספר מחו״ל · ממשיכים להקיש את קידומת המדינה…'; }
       else{ o.total=MAX; o.groups=[]; o.known=true; o.hint='מספר מחו״ל · עד '+MAX+' ספרות'; }
     }
     o.d=o.d.slice(0,o.total);
@@ -2606,7 +2606,7 @@ body.tbl-lock .fbox{max-width:none;padding-inline:max(16px,1.4vw)}
       h+='<span class="pb-cell'+(c?' on':'')+(focused&&i===cur?' cur':'')+(o.more&&i===o.total-1&&!c?' more':'')+'">'+c+'</span>';
     }
     cells.innerHTML=h;
-    var t=ph.value?o.hint:'למספר מחו״ל: הקישו + או 00 ואז את קידומת המדינה';
+    var t=ph.value?o.hint:'מתחיל ב-0 = מספר ישראלי · אחרת מקישים ישר את קידומת המדינה';
     if(t!==lastHint){ hint.textContent=t; lastHint=t; }
     try{ var L=ph.value.length; ph.setSelectionRange(L,L); }catch(e){}
   }
